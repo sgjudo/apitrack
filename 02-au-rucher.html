@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ApiTrack — Au Rucher · Le Rucher de Céline</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&family=Josefin+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --honey:#D4920A;--honey-bright:#F0A800;--honey-light:#F5C842;
+    --honey-pale:#FBE8A0;--honey-cream:#FDF3D0;
+    --cream:#FAF0D0;--cream-deep:#F0E0A8;
+    --green:#00B050;--green-dark:#007A38;--green-light:#33C46E;--green-pale:#D0F2E0;
+    --bark:#5C3608;--bark-mid:#8B5A20;--bark-light:#B8864A;--bark-pale:#D4AA78;
+    --white:#FFFDF4;
+    --shadow:rgba(92,54,8,0.13);--shadow-deep:rgba(92,54,8,0.26);
+    --red:#B03020;--red-pale:#FDEAEA;
+    --blue:#2756A8;--blue-pale:#E8F0FA;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--cream);font-family:'Josefin Sans',sans-serif;color:var(--bark);min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
+  body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='104'%3E%3Cpath d='M30 2l28 16v32L30 66 2 50V18L30 2zm0 8L8 24v24l22 13 22-13V24L30 10z' fill='%2300B050' fill-opacity='0.05'/%3E%3Cpath d='M30 66l28 16v32L30 130 2 114V82L30 66zm0 8L8 88v24l22 13 22-13V88L30 74z' fill='%2300B050' fill-opacity='0.05'/%3E%3C/svg%3E");}
+
+  /* ── SIDEBAR ── */
+  .sidebar{position:fixed;left:0;top:0;bottom:0;width:70px;background:linear-gradient(180deg,var(--green) 0%,var(--green-dark) 100%);display:flex;flex-direction:column;align-items:center;padding:18px 0;z-index:100;box-shadow:4px 0 22px var(--shadow-deep);transition:width 0.38s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+  .sidebar:hover{width:235px;}
+  .sidebar-brand{width:100%;padding:0 12px;display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+  .sidebar-logo{width:46px;height:46px;flex-shrink:0;background:linear-gradient(135deg,var(--honey-bright),var(--honey));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 14px rgba(240,168,0,0.4);}
+  .sidebar-brand-text{opacity:0;transition:opacity 0.2s;white-space:nowrap;}
+  .sidebar:hover .sidebar-brand-text{opacity:1;transition-delay:0.14s;}
+  .sidebar-brand-name{font-family:'Dancing Script',cursive;font-size:16px;color:var(--honey-pale);line-height:1.1;}
+  .sidebar-brand-sub{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(251,232,160,0.55);}
+  .nav-group{width:100%;margin-bottom:2px;}
+  .nav-group-label{font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(208,242,224,0.4);padding:10px 14px 4px;white-space:nowrap;opacity:0;transition:opacity 0.2s;}
+  .sidebar:hover .nav-group-label{opacity:1;transition-delay:0.1s;}
+  .nav-item{width:100%;padding:11px 12px;display:flex;align-items:center;gap:12px;cursor:pointer;border:none;background:none;color:rgba(208,242,224,0.72);text-align:left;transition:background 0.2s,color 0.2s;position:relative;}
+  .nav-item:hover{background:rgba(255,255,255,0.1);color:var(--honey-pale);}
+  .nav-item.active{background:linear-gradient(90deg,rgba(240,168,0,0.22),rgba(240,168,0,0.04));color:var(--honey-light);}
+  .nav-item.active::before{content:'';position:absolute;left:0;top:18%;bottom:18%;width:3px;background:var(--honey-bright);border-radius:0 3px 3px 0;}
+  .nav-icon{font-size:20px;width:46px;text-align:center;flex-shrink:0;}
+  .nav-label{font-size:12px;font-weight:600;letter-spacing:0.04em;white-space:nowrap;opacity:0;transition:opacity 0.2s;}
+  .sidebar:hover .nav-label{opacity:1;transition-delay:0.12s;}
+  .nav-sep{width:36px;height:1px;background:rgba(208,242,224,0.14);margin:8px auto;transition:width 0.38s;}
+  .sidebar:hover .nav-sep{width:195px;}
+  .sidebar-user{margin-top:auto;width:100%;padding:12px;display:flex;align-items:center;gap:12px;border-top:1px solid rgba(208,242,224,0.1);}
+  .user-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--honey),var(--honey-light));display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;border:2px solid rgba(255,255,255,0.18);}
+  .user-info{opacity:0;transition:opacity 0.2s;white-space:nowrap;}
+  .sidebar:hover .user-info{opacity:1;transition-delay:0.14s;}
+  .user-name-txt{font-size:12px;font-weight:600;color:var(--honey-pale);}
+  .user-role{font-size:10px;color:rgba(208,242,224,0.5);letter-spacing:0.05em;}
+
+  /* ── MAIN ── */
+  .main{margin-left:70px;min-height:100vh;position:relative;z-index:1;padding:32px 40px 60px;}
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:20px;font-size:12px;font-weight:600;letter-spacing:0.06em;color:var(--bark-light);animation:fadeUp 0.5s ease both;}
+  .breadcrumb span{cursor:pointer;transition:color 0.2s;}
+  .breadcrumb span:hover{color:var(--green);}
+  .breadcrumb .sep{color:var(--bark-pale);cursor:default;}
+  .breadcrumb .current{color:var(--green);cursor:default;}
+
+  /* ── BUTTONS ── */
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:50px;border:none;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.04em;transition:all 0.2s;}
+  .btn-primary{background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;box-shadow:0 4px 14px rgba(0,176,80,0.3);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,176,80,0.42);}
+  .btn-secondary{background:var(--white);border:1.5px solid var(--cream-deep);color:var(--bark-mid);}
+  .btn-secondary:hover{border-color:var(--honey);color:var(--bark);}
+  .btn-sm{padding:7px 14px;font-size:11px;}
+
+  /* ════════════════════════════════
+     VUE LISTE
+  ════════════════════════════════ */
+  #vue-liste{display:block;}
+  #vue-rucher{display:none;}
+
+  .page-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:26px;animation:fadeUp 0.55s ease both;}
+  .page-title{font-family:'Dancing Script',cursive;font-size:42px;font-weight:700;color:var(--green);line-height:1;}
+  .page-subtitle{font-family:'Crimson Pro',serif;font-style:italic;font-size:15px;color:var(--bark-mid);margin-top:4px;}
+  .header-actions{display:flex;gap:10px;align-items:center;}
+
+  /* Stats globales */
+  .global-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:28px;animation:fadeUp 0.55s 0.06s ease both;}
+  .gstat{background:var(--white);border:1.5px solid var(--cream-deep);border-radius:16px;padding:16px 18px;box-shadow:0 3px 12px var(--shadow);position:relative;overflow:hidden;}
+  .gstat::after{content:attr(data-icon);position:absolute;right:-2px;bottom:-6px;font-size:46px;opacity:0.07;line-height:1;pointer-events:none;}
+  .gstat-val{font-family:'Dancing Script',cursive;font-size:32px;color:var(--bark);line-height:1;}
+  .gstat-lab{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--bark-pale);margin-top:3px;}
+
+  /* Ruchers grid */
+  .ruchers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;animation:fadeUp 0.6s 0.1s ease both;}
+  .rucher-card{background:var(--white);border:1.5px solid var(--cream-deep);border-radius:22px;overflow:hidden;cursor:pointer;box-shadow:0 4px 16px var(--shadow);transition:transform 0.28s cubic-bezier(.4,0,.2,1),box-shadow 0.28s,border-color 0.28s;}
+  .rucher-card:hover{transform:translateY(-7px) scale(1.015);box-shadow:0 14px 36px var(--shadow-deep);border-color:var(--honey);}
+  .rucher-card-top{padding:22px 20px 16px;position:relative;}
+  .rc-badges{display:flex;gap:6px;margin-bottom:12px;}
+  .rc-badge{font-size:9px;font-weight:700;letter-spacing:0.08em;padding:3px 10px;border-radius:20px;text-transform:uppercase;}
+  .type-fixe{background:var(--green-pale);color:var(--green);}
+  .type-transhu{background:var(--honey-pale);color:var(--honey);}
+  .rc-days-badge{background:var(--cream-deep);color:var(--bark-mid);}
+  .rc-days-badge.old{background:#FDEAEA;color:var(--red);}
+  .rucher-name{font-family:'Dancing Script',cursive;font-size:26px;font-weight:700;color:var(--green);}
+  .rucher-loc{font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;color:var(--bark-mid);margin-top:2px;}
+  .rucher-card-stats{display:grid;grid-template-columns:repeat(3,1fr);background:var(--cream);border-top:1.5px solid var(--cream-deep);padding:12px 20px;}
+  .rcs{text-align:center;}
+  .rcs-val{font-family:'Dancing Script',cursive;font-size:22px;color:var(--bark);}
+  .rcs-lab{font-size:9px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--bark-pale);}
+  /* Mini aperçu reines */
+  .rc-queens{display:flex;gap:4px;flex-wrap:wrap;padding:10px 20px;border-top:1px solid var(--cream-deep);}
+  .rc-queen-dot{width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.8);box-shadow:0 1px 3px var(--shadow);}
+  .rucher-card-footer{padding:12px 20px;border-top:1.5px solid var(--cream-deep);display:flex;align-items:center;justify-content:space-between;}
+  .rc-last{font-family:'Crimson Pro',serif;font-style:italic;font-size:12px;color:var(--bark-light);}
+  .rc-arrow{font-size:16px;color:var(--bark-pale);transition:transform 0.2s,color 0.2s;}
+  .rucher-card:hover .rc-arrow{transform:translateX(4px);color:var(--honey);}
+
+  /* ════════════════════════════════
+     VUE DÉTAIL RUCHER
+  ════════════════════════════════ */
+  .rdh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;animation:fadeUp 0.5s ease both;}
+  .rdh-left{display:flex;align-items:center;gap:14px;}
+  .rdh-back{width:40px;height:40px;border-radius:12px;background:var(--white);border:1.5px solid var(--cream-deep);display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 8px var(--shadow);flex-shrink:0;}
+  .rdh-back:hover{border-color:var(--green);background:var(--green-pale);}
+  .rdh-title{font-family:'Dancing Script',cursive;font-size:34px;font-weight:700;color:var(--green);}
+  .rdh-meta{font-family:'Crimson Pro',serif;font-style:italic;font-size:14px;color:var(--bark-mid);margin-top:3px;}
+  .rdh-stats{display:flex;gap:10px;}
+  .rdh-stat{background:var(--white);border:1.5px solid var(--cream-deep);border-radius:13px;padding:9px 14px;text-align:center;box-shadow:0 2px 8px var(--shadow);}
+  .rdh-stat-val{font-family:'Dancing Script',cursive;font-size:20px;color:var(--bark);}
+  .rdh-stat-lab{font-size:9px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--bark-pale);}
+
+  /* Légende */
+  .legend-bar{display:flex;align-items:center;flex-wrap:wrap;gap:14px;background:var(--white);border:1.5px solid var(--cream-deep);border-radius:14px;padding:11px 18px;margin-bottom:20px;box-shadow:0 2px 8px var(--shadow);animation:fadeUp 0.55s 0.05s ease both;}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--bark-mid);}
+  .legend-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0;}
+  .legend-sep{width:1px;height:18px;background:var(--cream-deep);}
+
+  /* Ruches grid */
+  .ruches-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:14px;animation:fadeUp 0.6s 0.1s ease both;}
+
+  /* ── RUCHE CARD ── */
+  .ruche-card{background:var(--white);border:2px solid var(--cream-deep);border-radius:18px;padding:14px 12px 12px;cursor:pointer;transition:transform 0.25s,box-shadow 0.25s,border-color 0.25s;box-shadow:0 3px 10px var(--shadow);position:relative;display:flex;flex-direction:column;gap:7px;}
+  .ruche-card:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 10px 26px var(--shadow-deep);border-color:var(--honey);}
+  .ruche-card.no-queen{border-color:#FDEAEA;}
+  .ruche-top{display:flex;justify-content:space-between;align-items:flex-start;}
+  .ruche-nom{font-size:13px;font-weight:700;color:var(--bark);letter-spacing:0.04em;}
+  .ruche-queen-name{font-family:'Crimson Pro',serif;font-style:italic;font-size:10px;color:var(--bark-mid);line-height:1.3;margin-top:1px;}
+  .reine-badge{width:20px;height:20px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px var(--shadow-deep);flex-shrink:0;}
+  .ruche-svg{width:76px;height:auto;margin:0 auto;display:block;}
+  .cadres-info{display:flex;flex-direction:column;gap:3px;}
+  .cadres-row{display:flex;align-items:center;gap:5px;}
+  .cadres-label{font-size:9px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--bark-pale);width:46px;flex-shrink:0;}
+  .cadres-bar{flex:1;height:5px;background:var(--cream-deep);border-radius:3px;overflow:hidden;}
+  .cadres-fill{height:100%;border-radius:3px;transition:width 0.5s ease;}
+  .cadres-num{font-size:10px;font-weight:700;color:var(--bark-mid);min-width:20px;text-align:right;}
+  .ruche-flags{display:flex;flex-wrap:wrap;gap:3px;margin-top:1px;}
+  .flag{font-size:12px;background:var(--cream);border-radius:5px;padding:1px 4px;cursor:default;position:relative;}
+  .flag:hover::after{content:attr(title);position:absolute;bottom:calc(100%+4px);left:50%;transform:translateX(-50%);background:var(--bark);color:var(--honey-pale);font-size:10px;padding:3px 8px;border-radius:6px;white-space:nowrap;z-index:10;font-family:'Josefin Sans',sans-serif;font-weight:600;}
+  .ruche-comment{font-family:'Crimson Pro',serif;font-style:italic;font-size:10px;color:var(--bark-mid);border-top:1px solid var(--cream-deep);padding-top:5px;line-height:1.4;}
+  .ruche-alert-dot{position:absolute;top:-5px;right:-5px;width:18px;height:18px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700;border:2px solid var(--white);animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(176,48,32,0.4)}50%{box-shadow:0 0 0 5px rgba(176,48,32,0)}}
+  .ruche-add{background:none;border:2px dashed var(--cream-deep);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;padding:20px;min-height:170px;transition:border-color 0.2s,background 0.2s;}
+  .ruche-add:hover{border-color:var(--green);background:rgba(0,176,80,0.04);}
+  .ruche-add-icon{width:40px;height:40px;border-radius:12px;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:20px;transition:background 0.2s;}
+  .ruche-add:hover .ruche-add-icon{background:var(--green);color:#fff;}
+
+  /* ── DRAWER VISITE ── */
+  .overlay{position:fixed;inset:0;background:rgba(92,54,8,0.35);z-index:200;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+  .overlay.open{opacity:1;pointer-events:all;}
+  .drawer{position:fixed;right:-520px;top:0;bottom:0;width:500px;background:var(--white);z-index:201;box-shadow:-8px 0 40px var(--shadow-deep);transition:right 0.38s cubic-bezier(.4,0,.2,1);overflow-y:auto;display:flex;flex-direction:column;}
+  .drawer.open{right:0;}
+  .drawer-header{padding:22px 26px 18px;border-bottom:1.5px solid var(--cream-deep);flex-shrink:0;background:linear-gradient(135deg,var(--cream),var(--white));position:sticky;top:0;z-index:10;}
+  .drawer-title-row{display:flex;align-items:center;justify-content:space-between;}
+  .drawer-title{font-family:'Dancing Script',cursive;font-size:26px;font-weight:700;color:var(--green);}
+  .drawer-sub{font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;color:var(--bark-mid);margin-top:2px;}
+  .drawer-close{width:34px;height:34px;border-radius:9px;background:var(--cream);border:1.5px solid var(--cream-deep);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;color:var(--bark-light);transition:all 0.2s;flex-shrink:0;}
+  .drawer-close:hover{background:#FDEAEA;border-color:var(--red);color:var(--red);}
+  .drawer-body{padding:22px 26px;flex:1;display:flex;flex-direction:column;gap:18px;}
+  .drawer-footer{padding:18px 26px;border-top:1.5px solid var(--cream-deep);flex-shrink:0;background:var(--white);position:sticky;bottom:0;display:flex;gap:10px;}
+  .form-section{display:flex;flex-direction:column;gap:9px;}
+  .form-sec-title{font-size:10px;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:var(--bark-pale);padding-bottom:6px;border-bottom:1.5px solid var(--cream-deep);}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .form-group{display:flex;flex-direction:column;gap:4px;}
+  .form-label{font-size:11px;font-weight:700;letter-spacing:0.05em;color:var(--bark-mid);}
+  .form-input,.form-select,.form-textarea{background:var(--cream);border:1.5px solid var(--cream-deep);border-radius:11px;padding:9px 13px;font-family:'Josefin Sans',sans-serif;font-size:13px;color:var(--bark);transition:border-color 0.2s;outline:none;width:100%;}
+  .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--green);background:var(--white);box-shadow:0 0 0 3px rgba(0,176,80,0.1);}
+  .form-textarea{resize:vertical;min-height:72px;line-height:1.5;}
+  .slider-wrap{display:flex;align-items:center;gap:8px;}
+  .slider{flex:1;-webkit-appearance:none;height:5px;border-radius:3px;background:var(--cream-deep);outline:none;cursor:pointer;}
+  .slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--green);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,176,80,0.4);cursor:pointer;}
+  .slider-val{min-width:24px;text-align:center;font-size:14px;font-weight:700;color:var(--green);}
+  .toggles-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;}
+  .toggle-item{display:flex;align-items:center;gap:8px;background:var(--cream);border:1.5px solid var(--cream-deep);border-radius:11px;padding:9px 11px;cursor:pointer;transition:all 0.2s;user-select:none;}
+  .toggle-item.on{background:var(--green-pale);border-color:var(--green);}
+  .toggle-cb{width:17px;height:17px;border-radius:4px;border:2px solid var(--bark-pale);display:flex;align-items:center;justify-content:center;font-size:10px;transition:all 0.2s;flex-shrink:0;}
+  .toggle-item.on .toggle-cb{background:var(--green);border-color:var(--green);color:#fff;}
+  .toggle-label{font-size:11px;font-weight:600;color:var(--bark-mid);line-height:1.2;}
+  .toggle-item.on .toggle-label{color:var(--green-dark);}
+  .reine-selector{display:flex;gap:7px;flex-wrap:wrap;}
+  .reine-opt{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all 0.2s;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.4);}
+  .reine-opt.sel{border-color:var(--bark);transform:scale(1.18);box-shadow:0 2px 8px var(--shadow-deep);}
+  .histo-item{display:flex;gap:10px;padding:9px 11px;background:var(--cream);border-radius:11px;border-left:3px solid var(--honey);}
+  .histo-date{font-size:11px;font-weight:700;color:var(--bark-mid);white-space:nowrap;}
+  .histo-text{font-family:'Crimson Pro',serif;font-size:13px;color:var(--bark);line-height:1.4;}
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+  @media(max-width:1100px){.ruchers-grid{grid-template-columns:repeat(2,1fr)}.global-stats{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:768px){.main{padding:20px 16px}.ruchers-grid{grid-template-columns:1fr}.drawer{width:100%;right:-100%}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-logo">🐝</div>
+    <div class="sidebar-brand-text">
+      <div class="sidebar-brand-name">Le Rucher de Céline</div>
+      <div class="sidebar-brand-sub">ApiTrack · Gestion</div>
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Principal</div>
+    <button class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Tableau de bord</span></button>
+    <button class="nav-item active"><span class="nav-icon">🏕️</span><span class="nav-label">Au Rucher</span></button>
+    <button class="nav-item"><span class="nav-icon">🔧</span><span class="nav-label">Atelier</span></button>
+    <button class="nav-item"><span class="nav-icon">🍯</span><span class="nav-label">Récoltes</span></button>
+  </div>
+  <div class="nav-sep"></div>
+  <div class="nav-group">
+    <div class="nav-group-label">Commerce</div>
+    <button class="nav-item"><span class="nav-icon">🛒</span><span class="nav-label">Vente</span></button>
+    <button class="nav-item"><span class="nav-icon">📦</span><span class="nav-label">Achats</span></button>
+  </div>
+  <div class="nav-sep"></div>
+  <div class="nav-group">
+    <div class="nav-group-label">Élevage & Résultats</div>
+    <button class="nav-item"><span class="nav-icon">👑</span><span class="nav-label">Élevage Reines</span></button>
+    <button class="nav-item"><span class="nav-icon">📊</span><span class="nav-label">Résultats</span></button>
+    <button class="nav-item"><span class="nav-icon">🌤️</span><span class="nav-label">Météo Ruchers</span></button>
+  </div>
+  <div class="sidebar-user">
+    <div class="user-avatar">👩</div>
+    <div class="user-info"><div class="user-name-txt">Céline</div><div class="user-role">Apicultrice récoltante</div></div>
+  </div>
+</nav>
+
+<!-- OVERLAY + DRAWER -->
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="drawer-title-row">
+      <div>
+        <div class="drawer-title" id="d-title">Visite</div>
+        <div class="drawer-sub" id="d-sub">—</div>
+      </div>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+  </div>
+  <div class="drawer-body">
+    <div class="form-section">
+      <div class="form-sec-title">📅 Date de visite</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="v-date"></div>
+        <div class="form-group"><label class="form-label">Météo</label>
+          <select class="form-select"><option>☀️ Ensoleillé</option><option>⛅ Nuageux</option><option>🌧️ Pluvieux</option><option>💨 Venteux</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="form-section">
+      <div class="form-sec-title">👑 Reine</div>
+      <div class="form-group">
+        <label class="form-label">Année de naissance</label>
+        <div class="reine-selector">
+          <div class="reine-opt" style="background:#DDDDDD;color:#555;border:1px solid #bbb" data-year="2026" onclick="selReine(this)">26</div>
+          <div class="reine-opt sel" style="background:#2756A8" data-year="2025" onclick="selReine(this)">25</div>
+          <div class="reine-opt" style="background:#00B050" data-year="2024" onclick="selReine(this)">24</div>
+          <div class="reine-opt" style="background:#B03020" data-year="2023" onclick="selReine(this)">23</div>
+          <div class="reine-opt" style="background:#F5C842;color:#555" data-year="2022" onclick="selReine(this)">22</div>
+          <div class="reine-opt" style="background:#DDDDDD;color:#555;border:1px solid #bbb" data-year="2021" onclick="selReine(this)">21</div>
+        </div>
+        <div style="font-size:10px;color:var(--bark-pale);font-weight:600;margin-top:5px">🔵 0&5 · ⚪ 1&6 · 🟡 2&7 · 🔴 3&8 · 🟢 4&9</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Présence reine</label>
+          <select class="form-select"><option>✅ Vue</option><option>🔍 Présumée</option><option>❌ Non trouvée</option><option>⚠️ Cellule royale</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Comportement</label>
+          <select class="form-select"><option>😊 Calme</option><option>😐 Normal</option><option>😤 Défensive</option><option>⚠️ Essaimage</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="form-section">
+      <div class="form-sec-title">🖼️ Cadres</div>
+      <div class="form-group">
+        <label class="form-label">Cadres de couvain : <span id="v-couvain-val" style="color:var(--green);font-weight:700">0</span></label>
+        <div class="slider-wrap"><span style="font-size:10px;color:var(--bark-pale)">0</span><input type="range" class="slider" id="v-couvain" min="0" max="10" value="0" oninput="document.getElementById('v-couvain-val').textContent=this.value"><span style="font-size:10px;color:var(--bark-pale)" id="v-max-c">10</span></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cadres total : <span id="v-cadres-val" style="color:var(--honey);font-weight:700">10</span></label>
+        <div class="slider-wrap"><span style="font-size:10px;color:var(--bark-pale)">0</span><input type="range" class="slider" id="v-cadres" min="0" max="10" value="10" oninput="document.getElementById('v-cadres-val').textContent=this.value" style="accent-color:var(--honey)"><span style="font-size:10px;color:var(--bark-pale)" id="v-max-t">10</span></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Partitions</label><select class="form-select"><option>Aucune</option><option>1</option><option>2</option></select></div>
+        <div class="form-group"><label class="form-label">Réducteur</label><select class="form-select"><option>Non</option><option>Petit</option><option>Moyen</option></select></div>
+      </div>
+    </div>
+    <div class="form-section">
+      <div class="form-sec-title">💊 Santé & Traitements</div>
+      <div class="toggles-grid">
+        <div class="toggle-item" onclick="tog(this)"><div class="toggle-cb"></div><span style="font-size:14px">🪲</span><span class="toggle-label">Traitement Varroa</span></div>
+        <div class="toggle-item" onclick="tog(this)"><div class="toggle-cb"></div><span style="font-size:14px">🍽️</span><span class="toggle-label">Nourrissage</span></div>
+        <div class="toggle-item" onclick="tog(this)"><div class="toggle-cb"></div><span style="font-size:14px">🏠</span><span class="toggle-label">Hausse posée</span></div>
+        <div class="toggle-item" onclick="tog(this)"><div class="toggle-cb"></div><span style="font-size:14px">🌿</span><span class="toggle-label">Essaimage préventif</span></div>
+        <div class="toggle-item" onclick="tog(this)"><div class="toggle-cb"></div><span style="font-size:14px">🚨</span><span class="toggle-label">Loque suspectée</span></div>
+        <div class="toggle-item" onclick="tog(this)"><div class="toggle-cb"></div><span style="font-size:14px">✂️</span><span class="toggle-label">Reine clippée</span></div>
+      </div>
+      <div class="form-group" style="margin-top:4px"><label class="form-label">Produit traitement</label>
+        <select class="form-select"><option>— Aucun —</option><option>Apivar (bandelettes)</option><option>Apiguard (thymol)</option><option>Acide oxalique (sublimation)</option><option>Acide oxalique (dégouttement)</option><option>MAQS</option></select>
+      </div>
+    </div>
+    <div class="form-section">
+      <div class="form-sec-title">📝 Notes libres</div>
+      <textarea class="form-textarea" id="v-comment" placeholder="Observations, comportement, particularités…"></textarea>
+    </div>
+    <div class="form-section" id="d-histo">
+      <div class="form-sec-title">📋 Visites précédentes</div>
+      <div id="d-histo-list"></div>
+    </div>
+  </div>
+  <div class="drawer-footer">
+    <button class="btn btn-primary" style="flex:1" onclick="saveVisite()">💾 Enregistrer la visite</button>
+    <button class="btn btn-secondary" onclick="closeDrawer()">Annuler</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- ══ VUE LISTE ══ -->
+  <div id="vue-liste">
+    <div class="breadcrumb"><span>🏠 Accueil</span><span class="sep">›</span><span class="current">🏕️ Au Rucher</span></div>
+    <div class="page-header">
+      <div>
+        <div class="page-title">Au Rucher</div>
+        <div class="page-subtitle" id="liste-subtitle">Chargement…</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary">📄 Registre PDF</button>
+        <button class="btn btn-primary">＋ Nouveau rucher</button>
+      </div>
+    </div>
+    <div class="global-stats" id="global-stats"></div>
+    <div class="ruchers-grid" id="ruchers-grid"></div>
+  </div>
+
+  <!-- ══ VUE DÉTAIL RUCHER ══ -->
+  <div id="vue-rucher">
+    <div class="breadcrumb">
+      <span onclick="showVue('liste')">🏠 Accueil</span><span class="sep">›</span>
+      <span onclick="showVue('liste')">🏕️ Au Rucher</span><span class="sep">›</span>
+      <span class="current" id="r-breadcrumb">—</span>
+    </div>
+    <div class="rdh">
+      <div class="rdh-left">
+        <div class="rdh-back" onclick="showVue('liste')">←</div>
+        <div>
+          <div class="rdh-title" id="r-title">—</div>
+          <div class="rdh-meta" id="r-meta">—</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div class="rdh-stats">
+          <div class="rdh-stat"><div class="rdh-stat-val" id="rs-total">—</div><div class="rdh-stat-lab">Ruches</div></div>
+          <div class="rdh-stat"><div class="rdh-stat-val" id="rs-queens" style="color:var(--green)">—</div><div class="rdh-stat-lab">Avec reine</div></div>
+          <div class="rdh-stat"><div class="rdh-stat-val" id="rs-noq" style="color:var(--red)">—</div><div class="rdh-stat-lab">Sans reine</div></div>
+        </div>
+        <button class="btn btn-secondary btn-sm">📄 Registre PDF</button>
+        <button class="btn btn-primary btn-sm">＋ Ruche</button>
+      </div>
+    </div>
+    <div class="legend-bar">
+      <div class="legend-item"><div class="legend-dot" style="background:#2756A8"></div>Bleue (0&5)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#DDDDDD;border:1px solid #bbb"></div>Blanche (1&6)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#F5C842"></div>Jaune (2&7)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#B03020"></div>Rouge (3&8)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#00B050"></div>Verte (4&9)</div>
+      <div class="legend-sep"></div>
+      <div class="legend-item">🟠 Couvain centré · 🟡 Occupé · ⬜ Vide</div>
+      <div class="legend-item">💊 Traitement · 🍽️ Nourrissage · 🏠 Hausse</div>
+    </div>
+    <div class="ruches-grid" id="ruches-grid"></div>
+  </div>
+
+</main>
+
+<script>
+// ════ DONNÉES BEEKUBE IMPORTÉES ════
+const DATA = {"exploitation":{"name":"Le Rucher de Céline"},"apiaries":[{"id":"5763","name":"La Montagne","location":"Bellegarde-en-Forez","lat":"45.6466027","lng":"4.2988922","type":"fixe","last_visit":"2025-07-08","beehives":[{"id":"39445","ref":"CG04","frames":6,"frames_brood":0,"queen_name":"Élisabeth d'Autriche","queen_year":2025,"queen_color":"blue","last_check":"2025-07-08","comments":"Ponte fraiche pas sure"},{"id":"39246","ref":"CG15","frames":10,"frames_brood":0,"queen_name":"Marie Ire","queen_year":2025,"queen_color":"blue","last_check":"2025-07-08","comments":"Hausse = 5/8"},{"id":"39248","ref":"CG17","frames":10,"frames_brood":0,"queen_name":"Isabelle","queen_year":2025,"queen_color":"blue","last_check":"2025-07-08","comments":""},{"id":"39277","ref":"CG21","frames":10,"frames_brood":0,"queen_name":"Hyacinthe-Gabrielle Roland","queen_year":null,"queen_color":"none","last_check":"2024-08-08","comments":"Reine vierge semble-t-il"},{"id":"39283","ref":"CG27","frames":10,"frames_brood":4,"queen_name":"","queen_year":null,"queen_color":"","last_check":"2025-07-04","comments":"+2 NB -1 couvain O/F"},{"id":"39256","ref":"CG38","frames":10,"frames_brood":0,"queen_name":"Louise-Hyppolyte de Monaco","queen_year":2025,"queen_color":"blue","last_check":"2025-07-08","comments":"Pond?"},{"id":"39268","ref":"CG50","frames":6,"frames_brood":0,"queen_name":"Nicole de Lorraine","queen_year":2025,"queen_color":"blue","last_check":"2025-07-08","comments":"Pond?"},{"id":"39969","ref":"CG53","frames":10,"frames_brood":0,"queen_name":"Charlotte-Aglaé d'Orléans","queen_year":2025,"queen_color":"blue","last_check":"2025-07-08","comments":"Pond?"},{"id":"39272","ref":"CG56","frames":6,"frames_brood":0,"queen_name":"Diane de Joannis de Chateaublanc","queen_year":2025,"queen_color":"blue","last_check":"2025-07-08","comments":"Pond?"},{"id":"39967","ref":"CG57","frames":6,"frames_brood":3,"queen_name":"Maryvonne de Saint-Pulgent","queen_year":2025,"queen_color":"blue","last_check":"2025-07-08","comments":""},{"id":"42189","ref":"CG63","frames":6,"frames_brood":0,"queen_name":"Catherine Cornaro","queen_year":2025,"queen_color":"blue","last_check":"2025-07-08","comments":""},{"id":"66518","ref":"CG74","frames":6,"frames_brood":0,"queen_name":"Michelle de Valois 2","queen_year":2025,"queen_color":"blue","last_check":"2025-07-08","comments":"Essaim de chez Dupré? Pond?"}]},{"id":"5764","name":"Dupré","location":"Saint-Galmier","lat":"45.5903147","lng":"4.3183716","type":"fixe","last_visit":"2025-07-10","beehives":[{"id":"39352","ref":"CG09","frames":10,"frames_brood":0,"queen_name":"Isabelle de Portugal","queen_year":2025,"queen_color":"blue","last_check":"2025-07-10","comments":"Hausse = 0"},{"id":"39240","ref":"CG10","frames":6,"frames_brood":0,"queen_name":"Marguerite-Philippe","queen_year":2023,"queen_color":"red","last_check":"2025-07-10","comments":"Orpheline?"},{"id":"39281","ref":"CG25","frames":6,"frames_brood":2,"queen_name":"Anne-Marie de Bourbon-Condé","queen_year":2025,"queen_color":"blue","last_check":"2025-07-10","comments":"+1 NB"},{"id":"39285","ref":"CG29","frames":10,"frames_brood":0,"queen_name":"","queen_year":null,"queen_color":"","last_check":"2025-07-10","comments":"+1 ptt bouffe"},{"id":"39962","ref":"CG31","frames":10,"frames_brood":2,"queen_name":"Marie II-Thérèse","queen_year":2025,"queen_color":"blue","last_check":"2025-07-10","comments":""},{"id":"39257","ref":"CG39","frames":10,"frames_brood":4,"queen_name":"Élisabeth de France","queen_year":2025,"queen_color":"blue","last_check":"2025-07-10","comments":""},{"id":"39259","ref":"CG41","frames":10,"frames_brood":2,"queen_name":"Louise-Henriette de Bourbon","queen_year":2025,"queen_color":"blue","last_check":"2025-07-10","comments":""},{"id":"39265","ref":"CG46","frames":10,"frames_brood":0,"queen_name":"Éléonore","queen_year":2025,"queen_color":"blue","last_check":"2025-07-04","comments":"Pond sur 4? 1 couvain O/F"},{"id":"39267","ref":"CG49","frames":6,"frames_brood":0,"queen_name":"Jeanne-Baptiste d'Albert de Luynes","queen_year":2025,"queen_color":"blue","last_check":"2025-07-10","comments":"Reine vierge a priori"},{"id":"39968","ref":"CG59","frames":6,"frames_brood":0,"queen_name":"Hélène II","queen_year":2025,"queen_color":"blue","last_check":"2025-07-10","comments":""},{"id":"39274","ref":"CG60","frames":10,"frames_brood":0,"queen_name":"Agnès de France","queen_year":2023,"queen_color":"red","last_check":"2025-07-10","comments":"Pond sur 4? Cellules lustrées"},{"id":"66548","ref":"CG61","frames":6,"frames_brood":0,"queen_name":"Béatrix de Cusance","queen_year":2025,"queen_color":"blue","last_check":"2025-07-10","comments":"Pond sur 4?"},{"id":"53987","ref":"CG64","frames":10,"frames_brood":0,"queen_name":"Gertrude","queen_year":2024,"queen_color":"green","last_check":"2025-07-10","comments":"Hausse presque 0"},{"id":"65657","ref":"CG73","frames":6,"frames_brood":2,"queen_name":"","queen_year":null,"queen_color":"","last_check":"2025-07-10","comments":""}]},{"id":"5765","name":"Besson","location":"Saint-Galmier","lat":"45.5903147","lng":"4.3183716","type":"fixe","last_visit":"2025-07-08","beehives":[{"id":"39275","ref":"CG19","frames":6,"frames_brood":3,"queen_name":"Catherine de Noailles","queen_year":2025,"queen_color":"blue","last_check":"2025-07-08","comments":"+1 couvain et bouffe"},{"id":"39278","ref":"CG22","frames":10,"frames_brood":6,"queen_name":"Christine","queen_year":2023,"queen_color":"red","last_check":"2025-07-08","comments":"-1 couvain et bouffe +1 NB Hausse = 0"},{"id":"39284","ref":"CG28","frames":10,"frames_brood":2,"queen_name":"Anne-Geneviève de Bourbon-Condé","queen_year":2023,"queen_color":"red","last_check":"2025-07-08","comments":"Changer la reine +1 NB"}]},{"id":"6087","name":"Sapin-Saint Jeures","location":"Saint-Jeures","lat":"45.0956681","lng":"4.2050915","type":"transhu","last_visit":"2025-07-07","beehives":[{"id":"39242","ref":"CG12","frames":10,"frames_brood":0,"queen_name":"Marie-Anne de Bourbon-Condé","queen_year":2024,"queen_color":"green","last_check":"2025-06-16","comments":"-1 couvain O/F + 2 hausses à murir"},{"id":"39245","ref":"CG14","frames":10,"frames_brood":6,"queen_name":"Elvire de Cerny","queen_year":2025,"queen_color":"blue","last_check":"2025-07-07","comments":"Hausse = 1.5/8"},{"id":"39258","ref":"CG40","frames":10,"frames_brood":0,"queen_name":"Jacqueline de Guillenchmidt","queen_year":2025,"queen_color":"blue","last_check":"2025-06-19","comments":""},{"id":"39260","ref":"CG42","frames":10,"frames_brood":0,"queen_name":"Aimée de Coigny","queen_year":2025,"queen_color":"blue","last_check":"2025-07-07","comments":"Hausse = 2.5/8"},{"id":"39269","ref":"CG48","frames":10,"frames_brood":1,"queen_name":"Nicole Bonvalot","queen_year":2025,"queen_color":"blue","last_check":"2025-07-07","comments":"Nouvelle reine Hausse = 1/8"},{"id":"39273","ref":"CG58","frames":10,"frames_brood":0,"queen_name":"","queen_year":null,"queen_color":"","last_check":"2025-07-07","comments":"Hausse = 3/8"},{"id":"41664","ref":"CG66","frames":10,"frames_brood":2,"queen_name":"Aglaé de Polignac","queen_year":2025,"queen_color":"blue","last_check":"2025-07-07","comments":"Hausse = 0"}]},{"id":"6181","name":"Sapin-Bruyère-Garnier","location":"Garnier (Ardèche)","lat":"44.8211399","lng":"4.4243774","type":"transhu","last_visit":"2024-11-19","beehives":[{"id":"39244","ref":"CG13","frames":10,"frames_brood":10,"queen_name":"Claire de Charnacé","queen_year":2024,"queen_color":"green","last_check":"2025-06-05","comments":""},{"id":"39282","ref":"CG26","frames":10,"frames_brood":9,"queen_name":"Marie-Adélaïde de Savoie","queen_year":2024,"queen_color":"green","last_check":"2025-06-05","comments":""},{"id":"39252","ref":"CG34","frames":10,"frames_brood":10,"queen_name":"Alix","queen_year":2024,"queen_color":"green","last_check":"2025-06-05","comments":""},{"id":"39253","ref":"CG35","frames":10,"frames_brood":9,"queen_name":"Valentine Visconti","queen_year":2024,"queen_color":"green","last_check":"2025-06-05","comments":""},{"id":"39264","ref":"CG44","frames":10,"frames_brood":0,"queen_name":"Élisa Bonaparte","queen_year":2023,"queen_color":"red","last_check":"2025-06-09","comments":"Hausse = 4/8"},{"id":"39263","ref":"CG45","frames":10,"frames_brood":0,"queen_name":"Renée de Bourbon-Montpensier","queen_year":2025,"queen_color":"blue","last_check":"2025-06-09","comments":"Reine vierge envolée Hausse = 1/8"},{"id":"39271","ref":"CG54","frames":10,"frames_brood":0,"queen_name":"Bathilde d'Orléans","queen_year":2023,"queen_color":"red","last_check":"2025-06-09","comments":"Hausse = 4/8 Couvain magnifique"},{"id":"42179","ref":"CG65","frames":10,"frames_brood":8,"queen_name":"Gina Palerme","queen_year":2024,"queen_color":"green","last_check":"2025-06-05","comments":""}]},{"id":"8646","name":"Ferrari","location":"Chambœuf","lat":"47.2301089","lng":"4.9049675","type":"fixe","last_visit":"2025-07-08","beehives":[{"id":"39241","ref":"CG11","frames":6,"frames_brood":0,"queen_name":"Isabelle de France","queen_year":2025,"queen_color":"blue","last_check":"2025-07-08","comments":"Sur 4 cadres"},{"id":"39280","ref":"CG24","frames":6,"frames_brood":0,"queen_name":"Maria","queen_year":2025,"queen_color":"blue","last_check":"2025-07-08","comments":"Sur 4 cadres"}]}]};
+
+// ════ COULEURS REINES par dernier chiffre année ════
+function getReineColor(year, colorField) {
+  // Priorité au champ color de Beekube si cohérent
+  const MAP = {blue:'#2756A8', white:'#DDDDDD', yellow:'#F5C842', red:'#B03020', green:'#00B050'};
+  if(colorField && MAP[colorField]) return MAP[colorField];
+  if(!year) return '#AAAAAA';
+  const d = year % 10;
+  if(d===0||d===5) return '#2756A8';
+  if(d===1||d===6) return '#DDDDDD';
+  if(d===2||d===7) return '#F5C842';
+  if(d===3||d===8) return '#B03020';
+  if(d===4||d===9) return '#00B050';
+  return '#AAAAAA';
+}
+
+// ════ SVG RUCHE ════
+function rucheSVG(frames, brood, reineColor) {
+  const maxC = frames <= 6 ? 6 : 10;
+  const isSmall = maxC === 6;
+
+  function buildFrames(count, fw, fh, fy, sx, gap) {
+    const offsetTotal  = Math.floor((count - frames) / 2);
+    const offsetBrood  = Math.floor((frames - brood) / 2);
+    let out = '';
+    for(let i=0;i<count;i++){
+      const x = sx + i*(fw+gap);
+      const posT = i - offsetTotal;
+      const posB = posT - offsetBrood;
+      const isOcc   = posT>=0 && posT<frames;
+      const isBrood = isOcc && posB>=0 && posB<brood;
+      const fill = isBrood?'#D4920A':isOcc?'#F0E0A8':'#E8D4A0';
+      const stroke = isOcc?'#B8864A':'#D4C88A';
+      out += `<rect x="${x.toFixed(1)}" y="${fy}" width="${fw}" height="${fh}" rx="1.5" fill="${fill}" stroke="${stroke}" stroke-width="0.5"/>`;
+    }
+    return out;
+  }
+
+  const rc = reineColor === '#DDDDDD' ? '#999' : '#fff';
+
+  if(isSmall) return `<svg viewBox="0 0 90 100" class="ruche-svg" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="12,26 45,8 78,26" fill="#8B5A20"/><polygon points="15,26 45,11 75,26" fill="#B8864A"/>
+    <rect x="14" y="26" width="62" height="46" rx="4" fill="#D4AA78"/><rect x="16" y="28" width="58" height="42" rx="3" fill="#FAF0D0"/>
+    ${buildFrames(6,6.5,34,32,18,2)}
+    <rect x="28" y="72" width="34" height="3" rx="1.5" fill="#8B5A20"/><rect x="12" y="75" width="66" height="5" rx="2" fill="#8B5A20"/>
+    <rect x="18" y="80" width="7" height="12" rx="2" fill="#5C3608"/><rect x="65" y="80" width="7" height="12" rx="2" fill="#5C3608"/>
+    <circle cx="45" cy="49" r="5" fill="${reineColor}" stroke="${rc}" stroke-width="1.5"/>
+  </svg>`;
+
+  return `<svg viewBox="0 0 100 110" class="ruche-svg" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="10,28 50,8 90,28" fill="#8B5A20"/><polygon points="14,28 50,12 86,28" fill="#B8864A"/>
+    <rect x="16" y="28" width="68" height="52" rx="4" fill="#D4AA78"/><rect x="18" y="30" width="64" height="48" rx="3" fill="#FAF0D0"/>
+    ${buildFrames(10,4.8,40,34,20,1.4)}
+    <rect x="30" y="78" width="40" height="4" rx="2" fill="#8B5A20"/><rect x="14" y="82" width="72" height="5" rx="2" fill="#8B5A20"/>
+    <rect x="20" y="87" width="8" height="14" rx="2" fill="#5C3608"/><rect x="72" y="87" width="8" height="14" rx="2" fill="#5C3608"/>
+    <circle cx="50" cy="54" r="5" fill="${reineColor}" stroke="${rc}" stroke-width="1.5"/>
+  </svg>`;
+}
+
+// ════ CALCUL JOURS ════
+function daysSince(dateStr) {
+  if(!dateStr) return 9999;
+  const d = new Date(dateStr);
+  const today = new Date('2026-03-12');
+  return Math.floor((today - d) / 86400000);
+}
+function fmtDate(dateStr) {
+  if(!dateStr) return '—';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'});
+}
+
+// ════ VUE LISTE ════
+function renderListe() {
+  const total_ruches = DATA.apiaries.reduce((s,a)=>s+a.beehives.length,0);
+  const total_queens = DATA.apiaries.reduce((s,a)=>s+a.beehives.filter(h=>h.queen_name).length,0);
+  const total_noq    = total_ruches - total_queens;
+  const apiaries_fixe   = DATA.apiaries.filter(a=>a.type==='fixe').length;
+  const apiaries_transhu= DATA.apiaries.filter(a=>a.type==='transhu').length;
+
+  document.getElementById('liste-subtitle').textContent =
+    `${DATA.apiaries.length} ruchers · ${total_ruches} ruches · ${total_queens} reines identifiées · Données au 12 mars 2026`;
+
+  // Stats globales
+  const gs = document.getElementById('global-stats');
+  gs.innerHTML = `
+    <div class="gstat" data-icon="🏕️"><div class="gstat-val">${DATA.apiaries.length}</div><div class="gstat-lab">Ruchers</div></div>
+    <div class="gstat" data-icon="🐝"><div class="gstat-val">${total_ruches}</div><div class="gstat-lab">Ruches</div></div>
+    <div class="gstat" data-icon="👑"><div class="gstat-val">${total_queens}</div><div class="gstat-lab">Reines ID</div></div>
+    <div class="gstat" data-icon="⚠️"><div class="gstat-val" style="color:var(--red)">${total_noq}</div><div class="gstat-lab">Sans reine</div></div>
+    <div class="gstat" data-icon="🌸"><div class="gstat-val">${apiaries_transhu}</div><div class="gstat-lab">Transhumances</div></div>
+  `;
+
+  // Grille ruchers
+  const grid = document.getElementById('ruchers-grid');
+  grid.innerHTML = '';
+  DATA.apiaries.forEach(a => {
+    const days = daysSince(a.last_visit);
+    const noQ  = a.beehives.filter(h=>!h.queen_name).length;
+    const daysLabel = days > 300 ? `${Math.round(days/30)} mois` : `${days}j`;
+    const daysClass = days > 60 ? 'old' : '';
+
+    // Mini dots reines
+    const dots = a.beehives.map(h => {
+      const c = getReineColor(h.queen_year, h.queen_color);
+      const border = c==='#DDDDDD' ? 'border:1px solid #bbb' : '';
+      return `<div class="rc-queen-dot" style="background:${c};${border}" title="${h.ref}${h.queen_name?' — '+h.queen_name:''}"></div>`;
+    }).join('');
+
+    const card = document.createElement('div');
+    card.className = 'rucher-card';
+    card.onclick = () => openRucher(a);
+    card.innerHTML = `
+      <div class="rucher-card-top">
+        <div class="rc-badges">
+          <span class="rc-badge ${a.type==='fixe'?'type-fixe':'type-transhu'}">${a.type==='fixe'?'Fixe':'Transhumance'}</span>
+          <span class="rc-badge rc-days-badge ${daysClass}">Visite il y a ${daysLabel}</span>
+          ${noQ>0?`<span class="rc-badge" style="background:#FDEAEA;color:var(--red)">⚠️ ${noQ} sans reine</span>`:''}
+        </div>
+        <div class="rucher-name">${a.name}</div>
+        <div class="rucher-loc">📍 ${a.location}</div>
+      </div>
+      <div class="rucher-card-stats">
+        <div class="rcs"><div class="rcs-val">${a.beehives.length}</div><div class="rcs-lab">Ruches</div></div>
+        <div class="rcs"><div class="rcs-val">${a.beehives.filter(h=>h.queen_name).length}</div><div class="rcs-lab">Avec reine</div></div>
+        <div class="rcs"><div class="rcs-val">${a.beehives.filter(h=>h.frames_brood>0).length}</div><div class="rcs-lab">Couvain</div></div>
+      </div>
+      <div class="rc-queens">${dots}</div>
+      <div class="rucher-card-footer">
+        <span class="rc-last">Dernière visite : ${fmtDate(a.last_visit)}</span>
+        <span class="rc-arrow">→</span>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+// ════ VUE DÉTAIL RUCHER ════
+let currentApiary = null;
+function openRucher(a) {
+  currentApiary = a;
+  document.getElementById('r-breadcrumb').textContent = a.name;
+  document.getElementById('r-title').textContent = a.name;
+  const days = daysSince(a.last_visit);
+  document.getElementById('r-meta').textContent =
+    `📍 ${a.location} · ${a.type==='fixe'?'Fixe':'Transhumance'} · Dernière visite il y a ${days} jours`;
+  document.getElementById('rs-total').textContent = a.beehives.length;
+  document.getElementById('rs-queens').textContent = a.beehives.filter(h=>h.queen_name).length;
+  document.getElementById('rs-noq').textContent = a.beehives.filter(h=>!h.queen_name).length;
+  renderRuches(a);
+  showVue('rucher');
+  window.scrollTo(0,0);
+}
+
+function renderRuches(a) {
+  const grid = document.getElementById('ruches-grid');
+  grid.innerHTML = '';
+  a.beehives.forEach(h => {
+    const rc = getReineColor(h.queen_year, h.queen_color);
+    const noQ = !h.queen_name;
+    const daysSinceCheck = daysSince(h.last_check);
+
+    let flags = '';
+    if(h.comments && /hausse/i.test(h.comments)) flags+=`<span class="flag" title="Hausse mentionnée">🏠</span>`;
+    if(h.comments && /nourrissage|bouffe|NB/i.test(h.comments)) flags+=`<span class="flag" title="Nourrissage">🍽️</span>`;
+    if(h.comments && /traitement|apivar|oxalique|apiguard/i.test(h.comments)) flags+=`<span class="flag" title="Traitement">💊</span>`;
+    if(h.comments && /changer la reine/i.test(h.comments)) flags+=`<span class="flag" title="⚠️ Changer la reine">⚠️</span>`;
+    if(noQ) flags+=`<span class="flag" title="Sans reine identifiée">❓</span>`;
+    if(daysSinceCheck > 60) flags+=`<span class="flag" title="Pas visitée depuis ${daysSinceCheck}j">📅</span>`;
+
+    const card = document.createElement('div');
+    card.className = 'ruche-card' + (noQ?' no-queen':'');
+    card.onclick = () => openVisite(h, a);
+    card.innerHTML = `
+      ${(noQ||daysSinceCheck>60)?'<div class="ruche-alert-dot">!</div>':''}
+      <div class="ruche-top">
+        <div>
+          <div class="ruche-nom">${h.ref}</div>
+          <div class="ruche-queen-name">${h.queen_name||'— sans reine —'}</div>
+        </div>
+        <div class="reine-badge" style="background:${rc};${rc==='#DDDDDD'?'border:1.5px solid #bbb':''}" title="${h.queen_year?'Reine '+h.queen_year:'Reine inconnue'}"></div>
+      </div>
+      <div style="text-align:center">${rucheSVG(h.frames, h.frames_brood, rc)}</div>
+      <div style="font-size:9px;font-weight:600;color:var(--bark-pale);text-align:center">${h.frames} cadres</div>
+      <div class="cadres-info">
+        <div class="cadres-row"><span class="cadres-label">Couvain</span><div class="cadres-bar"><div class="cadres-fill" style="width:${(h.frames_brood/h.frames)*100}%;background:var(--honey)"></div></div><span class="cadres-num">${h.frames_brood}/${h.frames}</span></div>
+      </div>
+      ${flags?`<div class="ruche-flags">${flags}</div>`:''}
+      ${h.comments?`<div class="ruche-comment">${h.comments}</div>`:''}
+    `;
+    grid.appendChild(card);
+  });
+  // Bouton ajout
+  const add = document.createElement('div');
+  add.className = 'ruche-add';
+  add.innerHTML = `<div class="ruche-add-icon">＋</div><div style="font-size:11px;font-weight:600;color:var(--bark-light)">Ajouter une ruche</div>`;
+  grid.appendChild(add);
+}
+
+// ════ DRAWER VISITE ════
+let currentHive = null;
+function openVisite(h, a) {
+  currentHive = h;
+  document.getElementById('d-title').textContent = `Visite — ${h.ref}`;
+  document.getElementById('d-sub').textContent   = `${h.queen_name||'sans reine'} · ${a.name} · ${h.frames} cadres`;
+  document.getElementById('v-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('v-couvain').max   = h.frames;
+  document.getElementById('v-cadres').max    = h.frames;
+  document.getElementById('v-max-c').textContent = h.frames;
+  document.getElementById('v-max-t').textContent = h.frames;
+  document.getElementById('v-couvain').value = h.frames_brood;
+  document.getElementById('v-cadres').value  = h.frames;
+  document.getElementById('v-couvain-val').textContent = h.frames_brood;
+  document.getElementById('v-cadres-val').textContent  = h.frames;
+  document.getElementById('v-comment').value = '';
+  // Reine selector
+  document.querySelectorAll('.reine-opt').forEach(o => {
+    o.classList.toggle('sel', parseInt(o.dataset.year)===(h.queen_year||2025));
+  });
+  // Histo (dernière visite)
+  const hl = document.getElementById('d-histo-list');
+  if(h.last_check && h.comments) {
+    hl.innerHTML = `<div class="histo-item"><div class="histo-date">${fmtDate(h.last_check)}</div><div class="histo-text">${h.comments}</div></div>`;
+  } else {
+    hl.innerHTML = `<div style="font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;color:var(--bark-pale)">Aucun historique importé</div>`;
+  }
+  openDrawer();
+}
+function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('overlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('overlay').classList.remove('open');document.body.style.overflow='';}
+function selReine(el){document.querySelectorAll('.reine-opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}
+function tog(el){el.classList.toggle('on');el.querySelector('.toggle-cb').textContent=el.classList.contains('on')?'✓':'';}
+function showVue(v){document.getElementById('vue-liste').style.display=v==='liste'?'block':'none';document.getElementById('vue-rucher').style.display=v==='rucher'?'block':'none';}
+function saveVisite(){
+  const btn=document.querySelector('.drawer-footer .btn-primary');
+  btn.textContent='✓ Enregistré !';btn.style.background='linear-gradient(135deg,#00B050,#007A38)';
+  setTimeout(()=>{btn.textContent='💾 Enregistrer la visite';btn.style.background='';closeDrawer();},1400);
+}
+
+// ════ INIT ════
+showVue('liste');
+renderListe();
+</script>
+<script src="firebase-config.js"></script>
+<script src="apitrack-nav.js"></script>
+</body>
+</html>

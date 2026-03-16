@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="theme-color" content="#007A38">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ApiTrack">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/logo.jpg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ApiTrack — Récoltes · Le Rucher de Céline</title>
+<link href="./ApiTrack — Récoltes · Le Rucher de Céline_files/css2" rel="stylesheet">
+<style>
+:root{
+  --honey:#D4920A;--honey-bright:#F0A800;--honey-light:#F5C842;
+  --honey-pale:#FBE8A0;--honey-cream:#FDF3D0;
+  --cream:#FAF0D0;--cream-deep:#F0E0A8;
+  --green:#00B050;--green-dark:#007A38;--green-pale:#D0F2E0;
+  --bark:#5C3608;--bark-mid:#8B5A20;--bark-light:#B8864A;--bark-pale:#D4AA78;
+  --white:#FFFDF4;--shadow:rgba(92,54,8,0.12);--shadow-deep:rgba(92,54,8,0.24);
+  --red:#B03020;--red-pale:#FDEAEA;--blue:#2756A8;--blue-pale:#E8F0FA;
+  --teal:#0A7A5A;--teal-pale:#D0EEE6;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);font-family:'Josefin Sans',sans-serif;color:var(--bark);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='104'%3E%3Cpath d='M30 2l28 16v32L30 66 2 50V18L30 2zm0 8L8 24v24l22 13 22-13V24L30 10z' fill='%2300B050' fill-opacity='0.045'/%3E%3C/svg%3E");}
+/* SIDEBAR */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:70px;background:linear-gradient(180deg,var(--green),var(--green-dark));display:flex;flex-direction:column;align-items:center;padding:18px 0;z-index:100;box-shadow:4px 0 22px var(--shadow-deep);transition:width .38s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+.sidebar:hover{width:235px;}
+.sb-brand{width:100%;padding:0 12px;display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+.sb-logo{width:46px;height:46px;flex-shrink:0;background:linear-gradient(135deg,var(--honey-bright),var(--honey));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 14px rgba(240,168,0,.4);}
+.sb-brand-text{opacity:0;transition:opacity .2s;white-space:nowrap;}
+.sidebar:hover .sb-brand-text{opacity:1;transition-delay:.14s;}
+.sb-name{font-family:'Dancing Script',cursive;font-size:16px;color:var(--honey-pale);line-height:1.1;}
+.sb-sub{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(251,232,160,.55);}
+.nav-grp-label{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(208,242,224,.38);padding:10px 14px 4px;white-space:nowrap;opacity:0;transition:opacity .2s;width:100%;}
+.sidebar:hover .nav-grp-label{opacity:1;transition-delay:.1s;}
+.nav-item{width:100%;padding:11px 12px;display:flex;align-items:center;gap:12px;cursor:pointer;border:none;background:none;color:rgba(208,242,224,.72);text-align:left;transition:background .2s,color .2s;position:relative;}
+.nav-item:hover{background:rgba(255,255,255,.1);color:var(--honey-pale);}
+.nav-item.active{background:linear-gradient(90deg,rgba(240,168,0,.22),rgba(240,168,0,.04));color:var(--honey-light);}
+.nav-item.active::before{content:'';position:absolute;left:0;top:18%;bottom:18%;width:3px;background:var(--honey-bright);border-radius:0 3px 3px 0;}
+.nav-icon{font-size:20px;width:46px;text-align:center;flex-shrink:0;}
+.nav-label{font-size:12px;font-weight:600;letter-spacing:.04em;white-space:nowrap;opacity:0;transition:opacity .2s;}
+.sidebar:hover .nav-label{opacity:1;transition-delay:.12s;}
+.nav-sep{width:36px;height:1px;background:rgba(208,242,224,.14);margin:8px auto;transition:width .38s;}
+.sidebar:hover .nav-sep{width:195px;}
+.sb-user{margin-top:auto;width:100%;padding:12px;display:flex;align-items:center;gap:12px;border-top:1px solid rgba(208,242,224,.1);}
+.sb-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--honey),var(--honey-light));display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;border:2px solid rgba(255,255,255,.18);}
+.sb-user-info{opacity:0;transition:opacity .2s;white-space:nowrap;}
+.sidebar:hover .sb-user-info{opacity:1;transition-delay:.14s;}
+.sb-user-name{font-size:12px;font-weight:600;color:var(--honey-pale);}
+.sb-user-role{font-size:10px;color:rgba(208,242,224,.5);}
+/* LAYOUT */
+.main{margin-left:70px;padding:28px 28px 60px;position:relative;z-index:1;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+/* HEADER */
+.page-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;animation:fadeUp .5s ease both;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--bark-light);margin-bottom:6px;}
+.breadcrumb .cur{color:var(--green);}
+.pg-title{font-family:'Dancing Script',cursive;font-size:42px;font-weight:700;color:var(--green);line-height:1;}
+.pg-sub{font-family:'Crimson Pro',serif;font-style:italic;font-size:14px;color:var(--bark-mid);margin-top:3px;}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:50px;border:none;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.04em;transition:all .2s;}
+.btn-primary{background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;box-shadow:0 4px 14px rgba(0,176,80,.3);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,176,80,.4);}
+.btn-secondary{background:var(--white);border:1.5px solid var(--cream-deep);color:var(--bark-mid);}
+.btn-secondary:hover{border-color:var(--honey);}
+/* KPI STRIP */
+.kpi-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px;animation:fadeUp .5s .04s ease both;}
+.kpi{background:var(--white);border:1.5px solid var(--cream-deep);border-radius:18px;padding:16px 18px;box-shadow:0 3px 10px var(--shadow);position:relative;overflow:hidden;transition:transform .2s,border-color .2s;}
+.kpi:hover{transform:translateY(-3px);border-color:var(--honey);}
+.kpi::after{content:attr(data-icon);position:absolute;right:-4px;bottom:-8px;font-size:46px;opacity:.07;pointer-events:none;}
+.kpi-val{font-family:'Dancing Script',cursive;font-size:30px;line-height:1;font-weight:700;}
+.kpi-unit{font-size:13px;font-family:'Crimson Pro',serif;color:var(--bark-light);margin-left:2px;}
+.kpi-lab{font-size:9px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--bark-pale);margin-top:3px;}
+.kpi-trend{font-size:10px;font-weight:700;margin-top:4px;display:flex;align-items:center;gap:3px;}
+.trend-up{color:var(--green);}
+.trend-label{color:var(--bark-pale);}
+/* GRILLE 2 COLS */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;}
+/* CARD */
+.card{background:var(--white);border:1.5px solid var(--cream-deep);border-radius:20px;padding:20px 22px;box-shadow:0 4px 14px var(--shadow);animation:fadeUp .5s ease both;}
+.card-title{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--bark-pale);margin-bottom:14px;display:flex;align-items:center;gap:8px;justify-content:space-between;}
+/* RUCHERS — palette de couleurs */
+.rc-Tilleul{--rc:#D4920A;}
+.rc-Chataignier{--rc:#8B5A20;}
+.rc-Sapin{--rc:#007A38;}
+.rc-SapinSJ{--rc:#00B050;}
+.rc-SapinBG{--rc:#2E8B57;}
+.rc-Besson{--rc:#6B3FA0;}
+.rc-Montagne{--rc:#2756A8;}
+.rc-Dupre{--rc:#B03020;}
+.rc-Ferrari{--rc:#C8640A;}
+.rc-Vaure{--rc:#8B7A20;}
+/* BARRE HORIZONTALE */
+.hbar-wrap{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.hbar-label{font-size:11px;font-weight:700;color:var(--bark);min-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hbar-track{flex:1;height:12px;background:var(--cream-deep);border-radius:6px;overflow:hidden;}
+.hbar-fill{height:100%;border-radius:6px;transition:width .8s cubic-bezier(.4,0,.2,1);}
+.hbar-val{font-family:'Dancing Script',cursive;font-size:16px;color:var(--honey);min-width:56px;text-align:right;flex-shrink:0;}
+/* GRAPHE MENSUEL */
+.monthly-chart{display:flex;align-items:flex-end;gap:5px;height:130px;padding:0 2px;}
+.month-col{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:0;}
+.month-bar{width:100%;border-radius:5px 5px 0 0;position:relative;transition:height .7s cubic-bezier(.4,0,.2,1),opacity .3s;cursor:pointer;}
+.month-bar:hover{filter:brightness(1.1);}
+.month-tip{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--bark);color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;margin-bottom:3px;z-index:5;}
+.month-bar:hover .month-tip{opacity:1;}
+.month-label{font-size:8px;font-weight:700;color:var(--bark-pale);text-align:center;white-space:nowrap;}
+.month-yr{font-size:7px;color:var(--bark-pale);opacity:.6;}
+/* GRAPHE CAMEMBERT TEXTE (type de miel) */
+.miel-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.miel-row{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--cream);border-radius:11px;}
+.miel-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.miel-nom{font-size:11px;font-weight:700;color:var(--bark);flex:1;}
+.miel-kg{font-family:'Dancing Script',cursive;font-size:16px;color:var(--honey);}
+.miel-pct{font-size:10px;font-weight:700;color:var(--bark-pale);}
+/* VUE TABS */
+.view-tabs{display:flex;gap:8px;margin-bottom:20px;animation:fadeUp .5s .03s ease both;}
+.vtab{padding:8px 18px;border-radius:50px;border:1.5px solid var(--cream-deep);background:var(--white);cursor:pointer;font-size:11px;font-weight:700;color:var(--bark-mid);transition:all .2s;box-shadow:0 2px 6px var(--shadow);}
+.vtab:hover{border-color:var(--honey);}
+.vtab.active{background:var(--honey-bright);border-color:var(--honey-bright);color:#fff;box-shadow:0 4px 12px rgba(240,168,0,.35);}
+/* FILTRES */
+.filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+.filter-chip{padding:6px 14px;border-radius:20px;border:1.5px solid var(--cream-deep);background:var(--white);cursor:pointer;font-size:11px;font-weight:700;color:var(--bark-mid);transition:all .2s;}
+.filter-chip:hover{border-color:var(--honey);}
+.filter-chip.active{background:var(--bark);border-color:var(--bark);color:#fff;}
+/* HISTORIQUE RÉCOLTES */
+.session-card{background:var(--white);border:1.5px solid var(--cream-deep);border-radius:16px;padding:14px 18px;margin-bottom:10px;display:grid;grid-template-columns:auto 1fr auto auto;gap:12px;align-items:center;transition:all .2s;cursor:pointer;}
+.session-card:hover{border-color:var(--honey);transform:translateX(4px);box-shadow:0 6px 18px var(--shadow);}
+.session-date{text-align:center;flex-shrink:0;}
+.session-day{font-family:'Dancing Script',cursive;font-size:28px;color:var(--green);line-height:1;}
+.session-mois{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bark-pale);}
+.session-rucher{font-size:13px;font-weight:700;color:var(--bark);}
+.session-detail{font-family:'Crimson Pro',serif;font-style:italic;font-size:12px;color:var(--bark-mid);margin-top:2px;}
+.session-miel-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;background:var(--honey-pale);color:var(--honey);margin-top:4px;display:inline-block;}
+.session-kg{font-family:'Dancing Script',cursive;font-size:32px;color:var(--honey);text-align:right;flex-shrink:0;}
+.session-kg-unit{font-family:'Crimson Pro',serif;font-size:12px;color:var(--bark-pale);}
+.session-actions{display:flex;flex-direction:column;gap:4px;flex-shrink:0;}
+.session-btn{width:28px;height:28px;border-radius:8px;border:1.5px solid var(--cream-deep);background:var(--cream);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;transition:all .2s;}
+.session-btn:hover{background:var(--green-pale);border-color:var(--green);}
+/* TIMELINE par année */
+.year-group{margin-bottom:28px;}
+.year-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.year-title{font-family:'Dancing Script',cursive;font-size:32px;font-weight:700;color:var(--bark);}
+.year-total{font-family:'Dancing Script',cursive;font-size:22px;color:var(--honey);}
+.year-badge{font-size:10px;font-weight:700;background:var(--honey-pale);color:var(--honey);padding:4px 12px;border-radius:20px;}
+/* MODAL SAISIE */
+.modal-overlay{position:fixed;inset:0;background:rgba(92,54,8,.4);z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(3px);}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--white);border-radius:24px;padding:30px;width:520px;max-width:96vw;box-shadow:0 20px 60px var(--shadow-deep);animation:popIn .3s ease both;max-height:90vh;overflow-y:auto;}
+.modal-title{font-family:'Dancing Script',cursive;font-size:30px;font-weight:700;color:var(--green);margin-bottom:4px;}
+.modal-sub{font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;color:var(--bark-mid);margin-bottom:20px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.form-group{display:flex;flex-direction:column;gap:4px;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bark-mid);}
+.form-input,.form-select,.form-textarea{background:var(--cream);border:1.5px solid var(--cream-deep);border-radius:11px;padding:9px 13px;font-family:'Josefin Sans',sans-serif;font-size:13px;color:var(--bark);outline:none;transition:border-color .2s;width:100%;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--green);background:var(--white);}
+.form-textarea{resize:vertical;min-height:60px;}
+.modal-btns{display:flex;gap:10px;margin-top:18px;}
+.modal-btns .btn{flex:1;justify-content:center;padding:13px;}
+/* RUCHER COLORS inline */
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;flex-shrink:0;}
+/* Arc visuel par rucher */
+.rucher-arc{display:flex;height:14px;border-radius:7px;overflow:hidden;margin-bottom:16px;}
+.arc-seg{height:100%;transition:width .8s cubic-bezier(.4,0,.2,1);}
+/* Ligne de détail session (hover) */
+.ruches-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.ruche-tag{font-size:9px;font-weight:700;background:var(--green-pale);color:var(--green);padding:2px 8px;border-radius:8px;}
+/* Progression annuelle */
+.year-progress{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.yp-label{font-size:11px;font-weight:700;color:var(--bark);min-width:40px;}
+.yp-track{flex:1;height:16px;background:var(--cream-deep);border-radius:8px;overflow:hidden;position:relative;}
+.yp-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--honey-bright),var(--honey));transition:width .8s cubic-bezier(.4,0,.2,1);}
+.yp-val{font-family:'Dancing Script',cursive;font-size:18px;color:var(--honey);min-width:60px;text-align:right;}
+/* Donut SVG */
+.donut-wrap{display:flex;align-items:center;gap:20px;}
+
+  /* ── AUTH LOADING OVERLAY ── */
+  50%{opacity:1;transform:scale(1)}}
+
+  
+  .sb-logo-link{display:flex;align-items:center;justify-content:center;}
+  .sb-logo-img{width:44px;height:44px;object-fit:contain;border-radius:12px;background:var(--white);flex-shrink:0;}
+  .nav-item{text-decoration:none;display:flex;align-items:center;gap:12px;width:100%;padding:11px 12px;cursor:pointer;border:none;background:none;color:rgba(208,242,224,.72);text-align:left;transition:background .2s,color .2s;position:relative;font-family:'Josefin Sans',sans-serif;font-size:12px;}
+
+  
+  /* ── MOBILE TOPBAR (PWA) ── */
+  .mobile-topbar{display:none;position:fixed;top:0;left:0;right:0;height:54px;background:linear-gradient(135deg,var(--green),var(--green-dark));z-index:300;align-items:center;padding:0 14px;gap:12px;box-shadow:0 2px 12px var(--shadow-deep);}
+  .mobile-menu-btn{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+  .mobile-topbar-title{font-family:'Dancing Script',cursive;font-size:22px;color:var(--honey-pale);flex:1;}
+  .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:299;}
+  .sb-overlay.open{display:block;}
+  .sidebar.mobile-open{width:235px!important;}
+  .sidebar.mobile-open .nav-label,.sidebar.mobile-open .sb-brand-text,.sidebar.mobile-open .nav-grp-label,.sidebar.mobile-open .sb-user-info{opacity:1!important;transition-delay:0s!important;}
+  .sidebar.mobile-open .nav-sep{width:195px!important;}
+  /* ── BOTTOM NAV BAR (PWA) ── */
+  .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--white);border-top:1.5px solid var(--cream-deep);z-index:200;align-items:stretch;padding:0;box-shadow:0 -4px 16px var(--shadow);}
+  .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-decoration:none;color:var(--bark-light);font-size:9px;font-weight:700;letter-spacing:.04em;padding:6px 0;transition:color .15s;border:none;background:none;cursor:pointer;}
+  .bn-item.active{color:var(--green);}
+  .bn-item span:first-child{font-size:20px;line-height:1;}
+  @media(max-width:660px){
+    .mobile-topbar{display:flex;}
+    .bottom-nav{display:flex;}
+  }
+  @media(max-width:900px){
+    .charts-row{grid-template-columns:1fr!important;}
+  }
+  @media(max-width:660px){
+    :root{--sb-w:0px;}
+    .sidebar{display:none;} .sidebar.mobile-open{display:flex;width:235px;}
+    .mobile-topbar{display:flex;}
+    .main{margin-left:0;padding:70px 14px 90px;}
+    .page-header,.header-actions{flex-direction:column;gap:10px;}
+    .page-title{font-size:32px;}
+    .stat-grid{grid-template-columns:repeat(2,1fr)!important;}
+    .recolte-card{padding:14px 12px;}
+    .drawer{width:100%;right:-100%;border-radius:20px 20px 0 0;top:auto;height:92vh;}
+    .drawer.open{right:0;}
+    .form-row{grid-template-columns:1fr!important;}
+  }
+  @media(max-width:380px){
+    .stat-grid{grid-template-columns:1fr!important;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="ao-text">Le Rucher de Céline</div>
+  <div class="ao-dots"><span></span><span></span><span></span></div>
+
+<div class="mobile-topbar" id="mobile-topbar">
+  <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">☰</button>
+  <div class="mobile-topbar-title">🍯 Récoltes</div>
+</div>
+<div class="sb-overlay" id="sb-overlay" onclick="closeMobileSidebar()"></div>
+
+
+
+<nav class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <a href="https://rucher-9bb59.web.app/index.html" class="sb-logo-link"><img src="./ApiTrack — Récoltes · Le Rucher de Céline_files/logo.jpg" alt="logo" class="sb-logo-img"></a>
+    <div class="sb-brand-text"><div class="sb-title">ApiTrack</div><div class="sb-sub">Le Rucher de Céline</div></div>
+  </div>
+  <div class="nav-sep"></div>
+  <div class="nav-grp-label">Ruchers</div>
+  <a href="https://rucher-9bb59.web.app/index.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Tableau de bord</span></a>
+  <a href="https://rucher-9bb59.web.app/02-au-rucher.html" class="nav-item"><span class="nav-icon">🏕️</span><span class="nav-label">Au Rucher</span></a>
+  <a href="https://rucher-9bb59.web.app/03-atelier.html" class="nav-item"><span class="nav-icon">🔧</span><span class="nav-label">Atelier</span></a>
+  <div class="nav-sep"></div>
+  <div class="nav-grp-label">Commerce</div>
+  <a href="https://rucher-9bb59.web.app/05-recoltes.html" class="nav-item active"><span class="nav-icon">🍯</span><span class="nav-label">Récoltes</span></a>
+  <a href="https://rucher-9bb59.web.app/06-vente.html" class="nav-item"><span class="nav-icon">🛒</span><span class="nav-label">Vente</span></a>
+  <a href="https://rucher-9bb59.web.app/07-achats.html" class="nav-item"><span class="nav-icon">📦</span><span class="nav-label">Achats</span></a>
+  <div class="nav-sep"></div>
+  <div class="nav-grp-label">Élevage &amp; Résultats</div>
+  <a href="https://rucher-9bb59.web.app/04-elevage-reines.html" class="nav-item"><span class="nav-icon">👑</span><span class="nav-label">Élevage Reines</span></a>
+  <a href="https://rucher-9bb59.web.app/08-resultats.html" class="nav-item"><span class="nav-icon">📊</span><span class="nav-label">Résultats</span></a>
+  <a href="https://rucher-9bb59.web.app/09-meteo-ruchers.html" class="nav-item"><span class="nav-icon">🌤️</span><span class="nav-label">Météo Ruchers</span></a>
+  <div class="nav-sep"></div>
+  <div class="sb-user">
+    <div class="sb-avatar">👩</div>
+    <div class="sb-user-info"><div class="sb-user-name">Christelle</div><div class="sb-user-role">Apicultrice</div></div>
+  </div>
+  <button class="nav-item" onclick="handleLogout()" style="margin-top:4px;color:rgba(208,242,224,.5);"><span class="nav-icon">↩</span><span class="nav-label">Déconnexion</span></button>
+</nav>
+
+
+<!-- MODAL SAISIE -->
+<div class="modal-overlay" id="modal-saisie">
+  <div class="modal">
+    <div class="modal-title">🍯 Nouvelle récolte</div>
+    <div class="modal-sub">Enregistrer une session de récolte</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input class="form-input" type="date" id="f-date" value="2026-03-13">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Rucher</label>
+        <select class="form-select" id="f-rucher">
+          <option value="Tilleul-La Fouillouse">Tilleul-La Fouillouse</option>
+          <option value="Chataignier-Chambles">Châtaignier-Chambles</option>
+          <option value="La Montagne">La Montagne</option>
+          <option value="Dupré">Dupré</option>
+          <option value="Besson">Besson</option>
+          <option value="Sapin-Saint Jeures">Sapin-Saint Jeures</option>
+          <option value="Sapin-Bruyère-Garnier">Sapin-Bruyère-Garnier</option>
+          <option value="Ferrari">Ferrari</option>
+          <option value="La Teillère">La Teillère</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type de miel</label>
+        <select class="form-select" id="f-type">
+          <option>Toutes fleurs</option>
+          <option>Fleurs / Montagne</option>
+          <option>Montagne</option>
+          <option>Tilleul</option>
+          <option>Châtaignier</option>
+          <option>Sapin</option>
+          <option>Acacia</option>
+          <option>Bruyère</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Quantité (kg miel brut)</label>
+        <input class="form-input" type="number" id="f-kg" step="0.1" min="0" placeholder="ex : 24,5">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nombre de ruches</label>
+        <input class="form-input" type="number" id="f-ruches" min="1" placeholder="ex : 6">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Hausses posées</label>
+        <input class="form-input" type="number" id="f-hausses" min="0" placeholder="facultatif">
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Observations (qualité, couleur, conditions...)</label>
+        <textarea class="form-textarea" id="f-obs" placeholder="ex : Miel de belle couleur ambre, très fluide. Temps sec."></textarea>
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="enregistrerRecolte()">✓ Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="page-header">
+    <div>
+      <div class="breadcrumb"><span>🏠</span><span style="color:var(--bark-pale)">›</span><span class="cur">🍯 Récoltes</span></div>
+      <div class="pg-title">Récoltes</div>
+      <div class="pg-sub">535,7 kg récoltés · 2 saisons · 6 ruchers actifs</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn btn-secondary" onclick="exportCSV()">⬇ Export CSV</button>
+      <button class="btn btn-primary" onclick="openModal()">＋ Nouvelle récolte</button>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-strip" id="kpi-strip">
+    <div class="kpi" data-icon="⚖️"><div class="kpi-val" style="color:var(--honey)">535.6<span class="kpi-unit">kg</span></div><div class="kpi-lab">Total récolté</div><div class="kpi-trend trend-label">Toutes saisons</div></div>
+    <div class="kpi" data-icon="📅"><div class="kpi-val" style="color:var(--bark-mid)">204.8<span class="kpi-unit">kg</span></div><div class="kpi-lab">Saison 2024</div><div class="kpi-trend trend-label">17 sessions</div></div>
+    <div class="kpi" data-icon="📆"><div class="kpi-val" style="color:var(--green)">330.8<span class="kpi-unit">kg</span></div><div class="kpi-lab">Saison 2025</div><div class="kpi-trend trend-up">↑ +61,6% vs 2024</div></div>
+    <div class="kpi" data-icon="🏕️"><div class="kpi-val" style="color:var(--blue)">10</div><div class="kpi-lab">Ruchers actifs</div><div class="kpi-trend trend-label">29 sessions</div></div>
+    <div class="kpi" data-icon="🏆"><div class="kpi-val" style="color:var(--bark-mid);font-size:20px">Châtaignier</div><div class="kpi-lab">Meilleur rucher</div><div class="kpi-trend trend-label">148.6 kg cumulés</div></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="view-tabs">
+    <div class="vtab active" onclick="switchVue(&#39;dashboard&#39;,this)">📊 Tableau de bord</div>
+    <div class="vtab" onclick="switchVue(&#39;historique&#39;,this)">📋 Historique</div>
+    <div class="vtab" onclick="switchVue(&#39;ruchers&#39;,this)">🏕️ Par rucher</div>
+    <div class="vtab" onclick="switchVue(&#39;stock&#39;,this)">🍯 Stock de miel</div>
+  </div>
+
+  <!-- VUE DASHBOARD -->
+  <div id="vue-dashboard">
+    <div class="grid-2" style="margin-bottom:20px">
+      <!-- Graphe mensuel -->
+      <div class="card" style="animation-delay:.05s">
+        <div class="card-title">
+          <span>📈 Production mensuelle (kg)</span>
+          <div style="display:flex;gap:6px">
+            <span class="filter-chip active" onclick="filterYear(&#39;all&#39;,this)" style="font-size:10px;padding:4px 10px">Toutes</span>
+            <span class="filter-chip" onclick="filterYear(&#39;2024&#39;,this)" style="font-size:10px;padding:4px 10px">2024</span>
+            <span class="filter-chip" onclick="filterYear(&#39;2025&#39;,this)" style="font-size:10px;padding:4px 10px">2025</span>
+          </div>
+        </div>
+        <div class="monthly-chart" id="monthly-chart">
+    <div class="month-col">
+      <div class="month-bar" style="height:33.77622377622377px;background:linear-gradient(180deg,#D4920A,#B8864A)">
+        <span class="month-tip">37.8 kg</span>
+      </div>
+      <div class="month-label">Jun</div>
+      <div class="month-yr">2024</div>
+    </div>
+    <div class="month-col">
+      <div class="month-bar" style="height:109.45998445998445px;background:linear-gradient(180deg,#D4920A,#B8864A)">
+        <span class="month-tip">122.5 kg</span>
+      </div>
+      <div class="month-label">Jul</div>
+      <div class="month-yr">2024</div>
+    </div>
+    <div class="month-col">
+      <div class="month-bar" style="height:16.262626262626263px;background:linear-gradient(180deg,#D4920A,#B8864A)">
+        <span class="month-tip">18.2 kg</span>
+      </div>
+      <div class="month-label">Aoû</div>
+      <div class="month-yr">2024</div>
+    </div>
+    <div class="month-col">
+      <div class="month-bar" style="height:23.500388500388503px;background:linear-gradient(180deg,#D4920A,#B8864A)">
+        <span class="month-tip">26.3 kg</span>
+      </div>
+      <div class="month-label">Sep</div>
+      <div class="month-yr">2024</div>
+    </div>
+    <div class="month-col">
+      <div class="month-bar" style="height:76.93473193473194px;background:linear-gradient(180deg,#00B050,#007A38)">
+        <span class="month-tip">86.1 kg</span>
+      </div>
+      <div class="month-label">Mai</div>
+      <div class="month-yr">2025</div>
+    </div>
+    <div class="month-col">
+      <div class="month-bar" style="height:115px;background:linear-gradient(180deg,#00B050,#007A38)">
+        <span class="month-tip">128.7 kg</span>
+      </div>
+      <div class="month-label">Jun</div>
+      <div class="month-yr">2025</div>
+    </div>
+    <div class="month-col">
+      <div class="month-bar" style="height:103.65190365190365px;background:linear-gradient(180deg,#00B050,#007A38)">
+        <span class="month-tip">116.0 kg</span>
+      </div>
+      <div class="month-label">Jul</div>
+      <div class="month-yr">2025</div>
+    </div></div>
+      </div>
+      <!-- Par rucher -->
+      <div class="card" style="animation-delay:.07s">
+        <div class="card-title"><span>🏕️ Production par rucher</span><span id="rucher-annee-label" style="font-size:10px;color:var(--bark-pale)">Toutes années</span></div>
+        <div id="rucher-bars">
+    <div class="hbar-wrap">
+      <div class="hbar-label"><span class="dot" style="background:#8B5A20"></span>Châtaignier-Chambles</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:100%;background:#8B5A20"></div></div>
+      <div class="hbar-val">148.6 kg</div>
+    </div>
+    <div class="hbar-wrap">
+      <div class="hbar-label"><span class="dot" style="background:#D4920A"></span>Tilleul-La Fouillouse</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:87.3485868102288%;background:#D4920A"></div></div>
+      <div class="hbar-val">129.8 kg</div>
+    </div>
+    <div class="hbar-wrap">
+      <div class="hbar-label"><span class="dot" style="background:#6B3FA0"></span>Besson</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:42.39569313593539%;background:#6B3FA0"></div></div>
+      <div class="hbar-val">63.0 kg</div>
+    </div>
+    <div class="hbar-wrap">
+      <div class="hbar-label"><span class="dot" style="background:#2756A8"></span>La Montagne</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:34.38761776581426%;background:#2756A8"></div></div>
+      <div class="hbar-val">51.1 kg</div>
+    </div>
+    <div class="hbar-wrap">
+      <div class="hbar-label"><span class="dot" style="background:#B03020"></span>Dupré</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:25.841184387617762%;background:#B03020"></div></div>
+      <div class="hbar-val">38.4 kg</div>
+    </div>
+    <div class="hbar-wrap">
+      <div class="hbar-label"><span class="dot" style="background:#5C8A00"></span>La Teillère</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:25.100942126514127%;background:#5C8A00"></div></div>
+      <div class="hbar-val">37.3 kg</div>
+    </div>
+    <div class="hbar-wrap">
+      <div class="hbar-label"><span class="dot" style="background:#00B050"></span>Sapin-Saint Jeures</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:23.082099596231494%;background:#00B050"></div></div>
+      <div class="hbar-val">34.3 kg</div>
+    </div>
+    <div class="hbar-wrap">
+      <div class="hbar-label"><span class="dot" style="background:#007A38"></span>Sapin-Lichemiaille</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:12.786002691790038%;background:#007A38"></div></div>
+      <div class="hbar-val">19.0 kg</div>
+    </div>
+    <div class="hbar-wrap">
+      <div class="hbar-label"><span class="dot" style="background:#8B7A20"></span>La Vaure</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:7.267833109017497%;background:#8B7A20"></div></div>
+      <div class="hbar-val">10.8 kg</div>
+    </div>
+    <div class="hbar-wrap">
+      <div class="hbar-label"><span class="dot" style="background:#2E8B57"></span>Sapin-Bruyère-Garnier</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:2.220726783310901%;background:#2E8B57"></div></div>
+      <div class="hbar-val">3.3 kg</div>
+    </div></div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <!-- Types de miel -->
+      <div class="card" style="animation-delay:.09s">
+        <div class="card-title">🍶 Répartition par type de miel</div>
+        <div class="donut-wrap">
+          <svg width="110" height="110" viewBox="0 0 110 110" id="donut-svg"><path d="M55,15 A40,40 0 0,1 94.40671039315833,61.86375815350062 L78.64402623589501,59.11825489210037 A24,24 0 0,0 55,31 Z" fill="#8B5A20" opacity=".92"><title>Châtaignier : 148.6 kg (28%)</title></path><path d="M94.40671039315833,61.86375815350062 A40,40 0 0,1 50.03881595081502,94.6911407348052 L52.02328957048901,78.81468444088313 A24,24 0 0,0 78.64402623589501,59.11825489210037 Z" fill="#D4920A" opacity=".92"><title>Tilleul : 129.8 kg (24%)</title></path><path d="M50.03881595081502,94.6911407348052 A40,40 0 0,1 15.039737804414216,53.21746100742859 L31.023842682648528,53.930476604457155 A24,24 0 0,0 52.023289570489005,78.81468444088313 Z" fill="#2756A8" opacity=".92"><title>Fleurs / Montagne : 127.1 kg (24%)</title></path><path d="M15.039737804414216,53.21746100742859 A40,40 0 0,1 24.627994107768387,28.970377296582875 L36.77679646466103,39.38222637794973 A24,24 0 0,0 31.023842682648528,53.930476604457155 Z" fill="#007A38" opacity=".92"><title>Sapin : 56.6 kg (11%)</title></path><path d="M24.627994107768387,28.970377296582875 A40,40 0 0,1 43.25677687992931,16.76262678017438 L47.95406612795759,32.05757606810463 A24,24 0 0,0 36.77679646466103,39.38222637794973 Z" fill="#B8864A" opacity=".92"><title>Toutes fleurs : 48.1 kg (9%)</title></path><path d="M43.25677687992931,16.76262678017438 A40,40 0 0,1 54.3900056546829,15.004651434214487 L54.63400339280974,31.00279086052869 A24,24 0 0,0 47.95406612795759,32.05757606810463 Z" fill="#6B3FA0" opacity=".92"><title>Montagne : 24.1 kg (4%)</title></path><path d="M54.3900056546829,15.004651434214487 A40,40 0 0,1 54.99999999999996,15 L54.99999999999997,31 A24,24 0 0,0 54.63400339280974,31.00279086052869 Z" fill="#C8640A" opacity=".92"><title>Fleurs : 1.3 kg (0%)</title></path><circle cx="55" cy="55" r="14" fill="var(--white)"></circle><text x="55" y="59" text-anchor="middle" font-family="Dancing Script,cursive" font-size="11" fill="#5C3608">536kg</text></svg>
+          <div id="miel-legend" style="flex:1"><div class="miel-grid">
+    <div class="miel-row">
+      <div class="miel-dot" style="background:#8B5A20"></div>
+      <div class="miel-nom">Châtaignier</div>
+      <div>
+        <div class="miel-kg">148.6 kg</div>
+        <div class="miel-pct">28%</div>
+      </div>
+    </div>
+    <div class="miel-row">
+      <div class="miel-dot" style="background:#D4920A"></div>
+      <div class="miel-nom">Tilleul</div>
+      <div>
+        <div class="miel-kg">129.8 kg</div>
+        <div class="miel-pct">24%</div>
+      </div>
+    </div>
+    <div class="miel-row">
+      <div class="miel-dot" style="background:#2756A8"></div>
+      <div class="miel-nom">Fleurs / Montagne</div>
+      <div>
+        <div class="miel-kg">127.1 kg</div>
+        <div class="miel-pct">24%</div>
+      </div>
+    </div>
+    <div class="miel-row">
+      <div class="miel-dot" style="background:#007A38"></div>
+      <div class="miel-nom">Sapin</div>
+      <div>
+        <div class="miel-kg">56.6 kg</div>
+        <div class="miel-pct">11%</div>
+      </div>
+    </div>
+    <div class="miel-row">
+      <div class="miel-dot" style="background:#B8864A"></div>
+      <div class="miel-nom">Toutes fleurs</div>
+      <div>
+        <div class="miel-kg">48.1 kg</div>
+        <div class="miel-pct">9%</div>
+      </div>
+    </div>
+    <div class="miel-row">
+      <div class="miel-dot" style="background:#6B3FA0"></div>
+      <div class="miel-nom">Montagne</div>
+      <div>
+        <div class="miel-kg">24.1 kg</div>
+        <div class="miel-pct">4%</div>
+      </div>
+    </div>
+    <div class="miel-row">
+      <div class="miel-dot" style="background:#C8640A"></div>
+      <div class="miel-nom">Fleurs</div>
+      <div>
+        <div class="miel-kg">1.3 kg</div>
+        <div class="miel-pct">0%</div>
+      </div>
+    </div></div></div>
+        </div>
+      </div>
+      <!-- Comparatif années -->
+      <div class="card" style="animation-delay:.1s">
+        <div class="card-title">📅 Comparatif 2024 vs 2025</div>
+        <div id="year-compare">
+    <div class="year-progress"><div class="yp-label" style="color:var(--bark-mid)">2024</div>
+      <div class="yp-track"><div class="yp-fill" style="width:61.9105199516324%;background:linear-gradient(90deg,#D4920A,#B8864A)"></div></div>
+      <div class="yp-val">204.8 kg</div></div>
+    <div class="year-progress"><div class="yp-label" style="color:var(--green)">2025</div>
+      <div class="yp-track"><div class="yp-fill" style="width:100%;background:linear-gradient(90deg,var(--green),var(--green-dark))"></div></div>
+      <div class="yp-val">330.8 kg</div></div></div>
+        <div style="margin-top:14px;padding:12px;background:var(--green-pale);border-radius:12px;display:flex;align-items:center;gap:10px">
+          <span style="font-size:22px">📈</span>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--green)">Progression 2024→2025</div>
+            <div style="font-family:&#39;Dancing Script&#39;,cursive;font-size:22px;color:var(--green)">+61,6% <span style="font-size:14px;font-family:&#39;Josefin Sans&#39;,sans-serif">(+126,1 kg)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VUE HISTORIQUE -->
+  <div id="vue-historique" style="display:none">
+    <div class="filters" id="histo-filters"></div>
+    <div id="histo-list"></div>
+  </div>
+
+  <!-- VUE PAR RUCHER -->
+  <div id="vue-ruchers" style="display:none">
+    <div id="ruchers-detail"></div>
+  </div>
+
+  <!-- VUE STOCK MIEL -->
+  <div id="vue-stock" style="display:none">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px">
+      <div style="background:var(--white);border:1.5px solid var(--cream-deep);border-radius:20px;padding:20px 22px;box-shadow:0 4px 14px var(--shadow)">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--bark-pale);margin-bottom:14px">🍯 Stock estimé par type de miel</div>
+        <div id="stock-bars"></div>
+        <div style="margin-top:14px;padding:10px 14px;background:var(--honey-pale);border-radius:12px;font-size:11px;color:var(--honey);font-weight:700">
+          ℹ️ Estimation : récolte − ventes enregistrées. Approximatif (perte humidite, remplissage pots).
+        </div>
+      </div>
+      <div style="background:var(--white);border:1.5px solid var(--cream-deep);border-radius:20px;padding:20px 22px;box-shadow:0 4px 14px var(--shadow)">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--bark-pale);margin-bottom:14px">✏️ Saisie manuelle du stock réel</div>
+        <div style="font-family:&#39;Crimson Pro&#39;,serif;font-style:italic;font-size:12px;color:var(--bark-mid);margin-bottom:12px">
+          Si vous connaissez le stock réel (pesage), entrez-le ici. Il remplacera l’estimation.
+        </div>
+        <div id="stock-manual-form"></div>
+        <button class="btn btn-primary" onclick="sauvegarderStockManuel()" style="width:100%;justify-content:center;margin-top:12px">
+          ✓ Enregistrer le stock réel
+        </button>
+      </div>
+    </div>
+    <div style="background:var(--white);border:1.5px solid var(--cream-deep);border-radius:20px;padding:20px 22px;box-shadow:0 4px 14px var(--shadow)">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--bark-pale);margin-bottom:14px">📊 Total stock miel</div>
+      <div id="stock-total" style="font-family:&#39;Dancing Script&#39;,cursive;font-size:48px;color:var(--honey);text-align:center;padding:10px 0">—</div>
+      <div style="font-size:11px;font-weight:700;color:var(--bark-pale);text-align:center" id="stock-total-label">—</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Détecteur de blocage Firebase SDK — si le module ne démarre pas en 6s, afficher aide
+window._fbLoadTimer = setTimeout(function() {
+  if (!window._fbLoaded) {
+    var msg = document.createElement('div');
+    msg.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#B03020;color:#fff;padding:14px 20px;font-family:sans-serif;font-size:13px;font-weight:700;text-align:center;';
+    msg.innerHTML = '⚠️ Connexion Firebase lente. <a href="javascript:location.reload()" style="color:#FBE8A0;text-decoration:underline;">Recharger la page</a> · <a href="login.html" style="color:#FBE8A0;text-decoration:underline;">Retour connexion</a>';
+    document.body.appendChild(msg);
+  }
+}, 10000);
+</script>
+<script type="module">
+import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut }
+                           from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, collection, getDoc, getDocs, addDoc, setDoc,
+         updateDoc, deleteDoc, serverTimestamp, query, orderBy }
+                           from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+window._fbLoaded = true;
+const FB={apiKey:"AIzaSyBMwN1idPo4QdWQn0sG-bB7o-SfXbK8SGg",authDomain:"rucher-9bb59.firebaseapp.com",projectId:"rucher-9bb59",storageBucket:"rucher-9bb59.firebasestorage.app",messagingSenderId:"1041501775027",appId:"1:1041501775027:web:dc9bfe120366b0696d3cc6"};
+const app=initializeApp(FB),auth=getAuth(app),db=getFirestore(app);
+let UID=null;
+const _authTO=setTimeout(()=>window.location.replace('login.html'),8000);
+onAuthStateChanged(auth,async user=>{
+  if(!user){window.location.replace('login.html');return;}
+  UID=user.uid;
+  clearTimeout(_authTO);
+  // ── Partage collaborateur : utiliser l'UID propriétaire si différent ──
+  const OWNER_UID = 'qQK5KKjiMrSRVhebGNBcHPxBnx02';
+  if (UID !== OWNER_UID) {
+    try {
+      const sharedSnap = await getDoc(doc(db,'users',UID,'config','shared'));
+      if (sharedSnap.exists() && sharedSnap.data().ownerUid) {
+        UID = sharedSnap.data().ownerUid;
+      } else {
+        // Premier login collaborateur : enregistrer le lien
+        await setDoc(doc(db,'users',UID,'config','shared'), {ownerUid: OWNER_UID, updated_at: serverTimestamp()});
+        UID = OWNER_UID;
+      }
+    } catch(e) { console.warn('shared config:', e); UID = OWNER_UID; }
+  }
+  const el=document.querySelector('.sb-user-name');
+  if(el) el.textContent=(user.displayName||'Apicultrice').split(' ')[0];
+  initData();
+});
+window.handleLogout=async()=>{if(confirm('Se déconnecter ?')){await signOut(auth);window.location.href='login.html';}};
+// ══ DONNÉES BEEKUBE (85 récoltes, 29 sessions) ══
+const SESSIONS_RAW = [
+  {id:'2024-06-24_5876',date:'2024-06-24',rucher:'Tilleul-La Fouillouse',kg:37.8,type:'Tilleul',nb_ruches:5,ruches:['CG34','CG54','CG44','CG45','CG33']},
+  {id:'2024-07-08_5762',date:'2024-07-08',rucher:'La Vaure',kg:6.1,type:'Toutes fleurs',nb_ruches:1,ruches:['CG10']},
+  {id:'2024-07-10_5946',date:'2024-07-10',rucher:'Ch\u00e2taignier-Chambles',kg:10.8,type:'Ch\u00e2taignier',nb_ruches:1,ruches:['CG16']},
+  {id:'2024-07-14_5946',date:'2024-07-14',rucher:'Ch\u00e2taignier-Chambles',kg:45.8,type:'Ch\u00e2taignier',nb_ruches:8,ruches:['CG12','CG14','CG01','CG09','CG16']},
+  {id:'2024-07-22_5765',date:'2024-07-22',rucher:'Besson',kg:10.6,type:'Montagne',nb_ruches:2,ruches:['CG22','CG23']},
+  {id:'2024-07-22_5766',date:'2024-07-22',rucher:'La Teill\u00e8re',kg:20.4,type:'Toutes fleurs',nb_ruches:3,ruches:['CG25','CG29','CG30']},
+  {id:'2024-07-24_6022',date:'2024-07-24',rucher:'Sapin-Lichemiaille',kg:19.0,type:'Sapin',nb_ruches:3,ruches:['CG44','CG34','CG54']},
+  {id:'2024-07-26_5762',date:'2024-07-26',rucher:'La Vaure',kg:2.1,type:'Toutes fleurs',nb_ruches:1,ruches:['CG10']},
+  {id:'2024-07-26_6087',date:'2024-07-26',rucher:'Sapin-Saint Jeures',kg:7.7,type:'Sapin',nb_ruches:2,ruches:['CG38','CG41']},
+  {id:'2024-08-05_5766',date:'2024-08-05',rucher:'La Teill\u00e8re',kg:15.6,type:'Toutes fleurs',nb_ruches:2,ruches:['CG27','CG29']},
+  {id:'2024-08-06_6087',date:'2024-08-06',rucher:'Sapin-Saint Jeures',kg:2.6,type:'Sapin',nb_ruches:1,ruches:['CG35']},
+  {id:'2024-09-04_5762',date:'2024-09-04',rucher:'La Vaure',kg:2.6,type:'Toutes fleurs',nb_ruches:2,ruches:['CG10','CG04']},
+  {id:'2024-09-04_5763',date:'2024-09-04',rucher:'La Montagne',kg:4.3,type:'Fleurs / Montagne',nb_ruches:2,ruches:['CG35','CG51']},
+  {id:'2024-09-04_5764',date:'2024-09-04',rucher:'Dupr\u00e9',kg:1.3,type:'Fleurs',nb_ruches:1,ruches:['CG75']},
+  {id:'2024-09-04_5766',date:'2024-09-04',rucher:'La Teill\u00e8re',kg:1.3,type:'Toutes fleurs',nb_ruches:1,ruches:['CG29']},
+  {id:'2024-09-04_6087',date:'2024-09-04',rucher:'Sapin-Saint Jeures',kg:13.5,type:'Sapin',nb_ruches:2,ruches:['CG38','CG43']},
+  {id:'2024-09-04_6181',date:'2024-09-04',rucher:'Sapin-Bruy\u00e8re-Garnier',kg:3.3,type:'Sapin',nb_ruches:9,ruches:['CG01','CG12','CG40','CG47','CG48']},
+  {id:'2025-05-19_5764',date:'2025-05-19',rucher:'Dupr\u00e9',kg:5.3,type:'Fleurs / Montagne',nb_ruches:1,ruches:['CG40']},
+  {id:'2025-05-19_5765',date:'2025-05-19',rucher:'Besson',kg:15.4,type:'Fleurs / Montagne',nb_ruches:1,ruches:['CG22']},
+  {id:'2025-05-29_5763',date:'2025-05-29',rucher:'La Montagne',kg:25.8,type:'Fleurs / Montagne',nb_ruches:3,ruches:['CG34','CG13','CG48']},
+  {id:'2025-05-29_5764',date:'2025-05-29',rucher:'Dupr\u00e9',kg:31.8,type:'Fleurs / Montagne',nb_ruches:4,ruches:['CG14','CG40','CG12','CG44']},
+  {id:'2025-05-29_5765',date:'2025-05-29',rucher:'Besson',kg:7.8,type:'Fleurs / Montagne',nb_ruches:1,ruches:['CG22']},
+  {id:'2025-06-05_5763',date:'2025-06-05',rucher:'La Montagne',kg:21.0,type:'Fleurs / Montagne',nb_ruches:5,ruches:['CG13','CG35','CG48','CG26','CG65']},
+  {id:'2025-06-16_5876',date:'2025-06-16',rucher:'Tilleul-La Fouillouse',kg:65.7,type:'Tilleul',nb_ruches:8,ruches:['CG26','CG45','CG13','CG54','CG44']},
+  {id:'2025-06-18_5765',date:'2025-06-18',rucher:'Besson',kg:15.7,type:'Fleurs / Montagne',nb_ruches:1,ruches:['CG22']},
+  {id:'2025-06-19_5876',date:'2025-06-19',rucher:'Tilleul-La Fouillouse',kg:26.3,type:'Tilleul',nb_ruches:4,ruches:['CG48','CG40','CG14','CG12']},
+  {id:'2025-07-03_5765',date:'2025-07-03',rucher:'Besson',kg:13.5,type:'Montagne',nb_ruches:1,ruches:['CG22']},
+  {id:'2025-07-06_5946',date:'2025-07-06',rucher:'Ch\u00e2taignier-Chambles',kg:92.0,type:'Ch\u00e2taignier',nb_ruches:8,ruches:['CG35','CG44','CG45','CG26','CG54']},
+  {id:'2025-07-07_6087',date:'2025-07-07',rucher:'Sapin-Saint Jeures',kg:10.5,type:'Sapin',nb_ruches:1,ruches:['CG12']},
+];
+
+let SESSIONS = []; // chargé depuis Firestore
+
+async function initData() {
+  try {
+    const snap = await getDocs(query(collection(db,'users',UID,'harvests'), orderBy('date','desc')));
+    if (!snap.empty) {
+      SESSIONS = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+    } else {
+      for (const s of SESSIONS_RAW) {
+        const { id, ...data } = s;
+        await addDoc(collection(db,'users',UID,'harvests'), { ...data, created_at:serverTimestamp() });
+      }
+      const snap2 = await getDocs(query(collection(db,'users',UID,'harvests'), orderBy('date','desc')));
+      SESSIONS = snap2.docs.map(d => ({ id:d.id, ...d.data() }));
+    }
+  } catch(e) {
+    console.error('Recoltes Firestore:', e);
+    SESSIONS = [...SESSIONS_RAW];
+  }
+  renderKPIs(); renderMonthly('all'); renderRucherBars('all'); renderDonut(); renderYearCompare();
+}
+let yearFilter = 'all';
+let rucherFilter = 'all';
+let histoFilter = 'all';
+
+// Couleurs par rucher
+const RUCHER_COLORS = {
+  'Tilleul-La Fouillouse':'#D4920A',
+  'Ch\u00e2taignier-Chambles':'#8B5A20',
+  'La Montagne':'#2756A8',
+  'Dupr\u00e9':'#B03020',
+  'Besson':'#6B3FA0',
+  'Sapin-Saint Jeures':'#00B050',
+  'Sapin-Bruy\u00e8re-Garnier':'#2E8B57',
+  'Sapin-Lichemiaille':'#007A38',
+  'Ferrari':'#C8640A',
+  'La Vaure':'#8B7A20',
+  'La Teill\u00e8re':'#5C8A00',
+};
+const MIEL_COLORS = {
+  'Tilleul':'#D4920A','Ch\u00e2taignier':'#8B5A20','Sapin':'#007A38',
+  'Fleurs / Montagne':'#2756A8','Montagne':'#6B3FA0','Toutes fleurs':'#B8864A',
+  'Fleurs':'#C8640A'
+};
+
+// ── HELPERS ──
+const fmtDate = d => new Date(d).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+const fmtDay  = d => new Date(d).getDate();
+const fmtMois = d => new Date(d).toLocaleDateString('fr-FR',{month:'short'}).replace('.','');
+const fmtAn   = d => d.substring(0,4);
+
+function sessionsFiltered(yr=yearFilter, ru=rucherFilter){
+  return SESSIONS.filter(s => {
+    if(yr!=='all' && !s.date.startsWith(yr)) return false;
+    if(ru!=='all' && s.rucher!==ru) return false;
+    return true;
+  });
+}
+function totalKg(arr){ return arr.reduce((s,x)=>s+x.kg,0); }
+
+// ── KPIs ──
+function renderKPIs(){
+  const all = SESSIONS;
+  const tot = totalKg(all);
+  const y24 = totalKg(all.filter(s=>s.date.startsWith('2024')));
+  const y25 = totalKg(all.filter(s=>s.date.startsWith('2025')));
+  const nbS = all.length;
+  const ruchers = [...new Set(all.map(s=>s.rucher))].length;
+  const best = Object.entries(all.reduce((m,s)=>{m[s.rucher]=(m[s.rucher]||0)+s.kg;return m},{})).sort((a,b)=>b[1]-a[1])[0];
+
+  document.getElementById('kpi-strip').innerHTML = `
+    <div class="kpi" data-icon="&#x2696;&#xFE0F;"><div class="kpi-val" style="color:var(--honey)">${tot.toFixed(1)}<span class="kpi-unit">kg</span></div><div class="kpi-lab">Total r&eacute;colt&eacute;</div><div class="kpi-trend trend-label">Toutes saisons</div></div>
+    <div class="kpi" data-icon="&#x1F4C5;"><div class="kpi-val" style="color:var(--bark-mid)">${y24.toFixed(1)}<span class="kpi-unit">kg</span></div><div class="kpi-lab">Saison 2024</div><div class="kpi-trend trend-label">${SESSIONS.filter(s=>s.date.startsWith('2024')).length} sessions</div></div>
+    <div class="kpi" data-icon="&#x1F4C6;"><div class="kpi-val" style="color:var(--green)">${y25.toFixed(1)}<span class="kpi-unit">kg</span></div><div class="kpi-lab">Saison 2025</div><div class="kpi-trend trend-up">&#x2191; +61,6% vs 2024</div></div>
+    <div class="kpi" data-icon="&#x1F3D5;&#xFE0F;"><div class="kpi-val" style="color:var(--blue)">${ruchers}</div><div class="kpi-lab">Ruchers actifs</div><div class="kpi-trend trend-label">${nbS} sessions</div></div>
+    <div class="kpi" data-icon="&#x1F3C6;"><div class="kpi-val" style="color:var(--bark-mid);font-size:20px">${best[0].split('-')[0]}</div><div class="kpi-lab">Meilleur rucher</div><div class="kpi-trend trend-label">${best[1].toFixed(1)} kg cumul&eacute;s</div></div>
+  `;
+}
+
+// ── GRAPHE MENSUEL ──
+function renderMonthly(yr='all'){
+  const moisLabels = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+  // Sessions filtrées
+  const src = yr==='all' ? SESSIONS : SESSIONS.filter(s=>s.date.startsWith(yr));
+  // Grouper par année-mois
+  const byYM = {};
+  src.forEach(s=>{
+    const ym = s.date.substring(0,7);
+    byYM[ym] = (byYM[ym]||0) + s.kg;
+  });
+  // Afficher les mois qui ont des données + quelques vides autour
+  const months = yr==='all'
+    ? ['2024-06','2024-07','2024-08','2024-09','2025-05','2025-06','2025-07']
+    : yr==='2024'
+    ? ['2024-05','2024-06','2024-07','2024-08','2024-09']
+    : ['2025-04','2025-05','2025-06','2025-07'];
+  const vals = months.map(m=>byYM[m]||0);
+  const max = Math.max(...vals, 1);
+  const barColors = months.map(m=>m.startsWith('2024')
+    ? 'linear-gradient(180deg,#D4920A,#B8864A)'
+    : 'linear-gradient(180deg,#00B050,#007A38)');
+  document.getElementById('monthly-chart').innerHTML = months.map((m,i)=>`
+    <div class="month-col">
+      <div class="month-bar" style="height:${Math.max(4,(vals[i]/max)*115)}px;background:${vals[i]>0?barColors[i]:'var(--cream-deep)'}">
+        ${vals[i]>0?`<span class="month-tip">${vals[i].toFixed(1)} kg</span>`:''}
+      </div>
+      <div class="month-label">${moisLabels[parseInt(m.split('-')[1])-1]}</div>
+      <div class="month-yr">${m.split('-')[0]}</div>
+    </div>`).join('');
+}
+
+// ── BARRES RUCHERS ──
+function renderRucherBars(yr='all'){
+  const src = yr==='all' ? SESSIONS : SESSIONS.filter(s=>s.date.startsWith(yr));
+  const byR = {};
+  src.forEach(s=>{ byR[s.rucher]=(byR[s.rucher]||0)+s.kg; });
+  const sorted = Object.entries(byR).sort((a,b)=>b[1]-a[1]);
+  const max = sorted[0]?.[1]||1;
+  document.getElementById('rucher-bars').innerHTML = sorted.map(([r,kg])=>`
+    <div class="hbar-wrap">
+      <div class="hbar-label"><span class="dot" style="background:${RUCHER_COLORS[r]||'#8B5A20'}"></span>${r}</div>
+      <div class="hbar-track"><div class="hbar-fill" style="width:${(kg/max)*100}%;background:${RUCHER_COLORS[r]||'#D4920A'}"></div></div>
+      <div class="hbar-val">${kg.toFixed(1)} kg</div>
+    </div>`).join('');
+}
+
+// ── DONUT TYPES DE MIEL ──
+function renderDonut(){
+  const byT = {};
+  SESSIONS.forEach(s=>{ byT[s.type]=(byT[s.type]||0)+s.kg; });
+  const sorted = Object.entries(byT).sort((a,b)=>b[1]-a[1]);
+  const tot = totalKg(SESSIONS);
+  // SVG donut
+  const R=40, r=24, cx=55, cy=55;
+  let angle = -Math.PI/2;
+  const arcs = sorted.map(([t,kg])=>{
+    const pct = kg/tot;
+    const a = pct*2*Math.PI;
+    const x1=cx+R*Math.cos(angle), y1=cy+R*Math.sin(angle);
+    angle+=a;
+    const x2=cx+R*Math.cos(angle), y2=cy+R*Math.sin(angle);
+    const xi1=cx+r*Math.cos(angle-a), yi1=cy+r*Math.sin(angle-a);
+    const xi2=cx+r*Math.cos(angle), yi2=cy+r*Math.sin(angle);
+    const large=a>Math.PI?1:0;
+    const col=MIEL_COLORS[t]||'#B8864A';
+    return `<path d="M${x1},${y1} A${R},${R} 0 ${large},1 ${x2},${y2} L${xi2},${yi2} A${r},${r} 0 ${large},0 ${xi1},${yi1} Z" fill="${col}" opacity=".92"><title>${t} : ${kg.toFixed(1)} kg (${(pct*100).toFixed(0)}%)</title></path>`;
+  }).join('');
+  document.getElementById('donut-svg').innerHTML=arcs+`<circle cx="${cx}" cy="${cy}" r="14" fill="var(--white)"/><text x="${cx}" y="${cy+4}" text-anchor="middle" font-family="Dancing Script,cursive" font-size="11" fill="#5C3608">${tot.toFixed(0)}kg</text>`;
+  document.getElementById('miel-legend').innerHTML='<div class="miel-grid">'+sorted.map(([t,kg])=>`
+    <div class="miel-row">
+      <div class="miel-dot" style="background:${MIEL_COLORS[t]||'#B8864A'}"></div>
+      <div class="miel-nom">${t}</div>
+      <div>
+        <div class="miel-kg">${kg.toFixed(1)} kg</div>
+        <div class="miel-pct">${(kg/tot*100).toFixed(0)}%</div>
+      </div>
+    </div>`).join('')+'</div>';
+}
+
+// ── COMPARATIF ANNÉES ──
+function renderYearCompare(){
+  const y24 = totalKg(SESSIONS.filter(s=>s.date.startsWith('2024')));
+  const y25 = totalKg(SESSIONS.filter(s=>s.date.startsWith('2025')));
+  const max = Math.max(y24,y25);
+  document.getElementById('year-compare').innerHTML=`
+    <div class="year-progress"><div class="yp-label" style="color:var(--bark-mid)">2024</div>
+      <div class="yp-track"><div class="yp-fill" style="width:${(y24/max)*100}%;background:linear-gradient(90deg,#D4920A,#B8864A)"></div></div>
+      <div class="yp-val">${y24.toFixed(1)} kg</div></div>
+    <div class="year-progress"><div class="yp-label" style="color:var(--green)">2025</div>
+      <div class="yp-track"><div class="yp-fill" style="width:${(y25/max)*100}%;background:linear-gradient(90deg,var(--green),var(--green-dark))"></div></div>
+      <div class="yp-val">${y25.toFixed(1)} kg</div></div>`;
+}
+
+// ── HISTORIQUE ──
+function buildHistoFilters(){
+  const ruchers = [...new Set(SESSIONS.map(s=>s.rucher))].sort();
+  const el=document.getElementById('histo-filters');
+  el.innerHTML=`<span class="filter-chip active" onclick="setHistoFilter('all',this)">Tous</span>
+    ${ruchers.map(r=>`<span class="filter-chip" onclick="setHistoFilter('${r}',this)">${r}</span>`).join('')}
+    <span style="flex:1"></span>
+    <span class="filter-chip" onclick="setHistoFilter('2024',this)">2024</span>
+    <span class="filter-chip" onclick="setHistoFilter('2025',this)">2025</span>`;
+}
+function setHistoFilter(f,el){
+  histoFilter=f;
+  document.querySelectorAll('#histo-filters .filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderHistorique();
+}
+function renderHistorique(){
+  const filtered = SESSIONS.filter(s=>{
+    if(histoFilter==='all') return true;
+    if(histoFilter==='2024'||histoFilter==='2025') return s.date.startsWith(histoFilter);
+    return s.rucher===histoFilter;
+  });
+  // Grouper par année
+  const byYear = {};
+  filtered.forEach(s=>{ const y=s.date.substring(0,4); if(!byYear[y]) byYear[y]=[]; byYear[y].push(s); });
+  const el=document.getElementById('histo-list');
+  el.innerHTML=Object.keys(byYear).sort().reverse().map(yr=>{
+    const tot=totalKg(byYear[yr]);
+    const rows=byYear[yr].sort((a,b)=>b.date.localeCompare(a.date)).map(s=>`
+      <div class="session-card">
+        <div class="session-date">
+          <div class="session-day">${fmtDay(s.date)}</div>
+          <div class="session-mois">${fmtMois(s.date)} ${s.date.substring(0,4)}</div>
+        </div>
+        <div>
+          <div class="session-rucher"><span class="dot" style="background:${RUCHER_COLORS[s.rucher]||'#8B5A20'}"></span>${s.rucher}</div>
+          <div class="session-detail">${s.nb_ruches} ruche${s.nb_ruches>1?'s':''} r&eacute;colt&eacute;e${s.nb_ruches>1?'s':''}${s.obs?' &middot; '+s.obs:''}</div>
+          <span class="session-miel-badge">&#x1F36F; ${s.type}</span>
+          <div class="ruches-list">${s.ruches.map(r=>`<span class="ruche-tag">${r}</span>`).join('')}${s.nb_ruches>5?`<span class="ruche-tag">+${s.nb_ruches-5}</span>`:''}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="session-kg">${s.kg.toFixed(1)}</div>
+          <div class="session-kg-unit">kg</div>
+        </div>
+        <div class="session-actions">
+          <div class="session-btn" onclick="supprimerSession('${s.id}')" title="Supprimer">&#x1F5D1;</div>
+        </div>
+      </div>`).join('');
+    return `<div class="year-group">
+      <div class="year-header">
+        <div class="year-title">${yr}</div>
+        <div class="year-total">${tot.toFixed(1)} kg</div>
+        <div class="year-badge">${byYear[yr].length} sessions</div>
+      </div>
+      ${rows}
+    </div>`;
+  }).join('') || '<div style="font-family:\'Crimson Pro\',serif;font-style:italic;color:var(--bark-pale);padding:20px">Aucune r\u00e9colte pour ce filtre.</div>';
+}
+
+// ── PAR RUCHER (vue détail) ──
+function renderVueRuchers(){
+  const ruchers = [...new Set(SESSIONS.map(s=>s.rucher))];
+  const byR = {};
+  SESSIONS.forEach(s=>{ if(!byR[s.rucher]) byR[s.rucher]=[]; byR[s.rucher].push(s); });
+  const sorted = Object.entries(byR).sort((a,b)=>totalKg(b[1])-totalKg(a[1]));
+  document.getElementById('ruchers-detail').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">'+
+    sorted.map(([r,sessions])=>{
+      const tot=totalKg(sessions);
+      const y24=totalKg(sessions.filter(s=>s.date.startsWith('2024')));
+      const y25=totalKg(sessions.filter(s=>s.date.startsWith('2025')));
+      const color=RUCHER_COLORS[r]||'#8B5A20';
+      const types=[...new Set(sessions.map(s=>s.type))].join(', ');
+      return `<div class="card" style="border-top:4px solid ${color}">
+        <div class="card-title"><span style="color:${color}">${r}</span><span style="font-family:'Dancing Script',cursive;font-size:18px;color:var(--honey)">${tot.toFixed(1)} kg</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div style="background:var(--cream);border-radius:10px;padding:8px 12px">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bark-pale)">2024</div>
+            <div style="font-family:'Dancing Script',cursive;font-size:20px;color:var(--bark-mid)">${y24>0?y24.toFixed(1)+' kg':'—'}</div>
+          </div>
+          <div style="background:var(--green-pale);border-radius:10px;padding:8px 12px">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bark-pale)">2025</div>
+            <div style="font-family:'Dancing Script',cursive;font-size:20px;color:var(--green)">${y25>0?y25.toFixed(1)+' kg':'—'}</div>
+          </div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:var(--bark-pale);margin-bottom:4px">Miels produits</div>
+        <div style="font-size:12px;font-weight:700;color:var(--bark)">${types}</div>
+        <div style="font-size:10px;font-weight:700;color:var(--bark-pale);margin-top:6px">${sessions.length} session${sessions.length>1?'s':''} enregistr&eacute;e${sessions.length>1?'s':''}</div>
+      </div>`;
+    }).join('')+'</div>';
+}
+
+// ── FILTRE ANNEE GRAPHE ──
+function filterYear(yr, el){
+  yearFilter=yr;
+  document.querySelectorAll('.card-title .filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderMonthly(yr);
+  renderRucherBars(yr);
+  document.getElementById('rucher-annee-label').textContent=yr==='all'?'Toutes ann\u00e9es':yr;
+}
+
+// ── SWITCH VUE ──
+function switchVue(vue,el){
+  document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('active')); el.classList.add('active');
+  ['dashboard','historique','ruchers','stock'].forEach(v=>document.getElementById('vue-'+v).style.display='none');
+  document.getElementById('vue-'+vue).style.display='block';
+  if(vue==='historique'){ buildHistoFilters(); renderHistorique(); }
+  if(vue==='stock'){ renderStockMiel(); }
+  if(vue==='ruchers') renderVueRuchers();
+}
+
+// ── MODAL ──
+function openModal(){ document.getElementById('modal-saisie').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeModal(){ document.getElementById('modal-saisie').classList.remove('open'); document.body.style.overflow=''; }
+async function enregistrerRecolte(){
+  const date=document.getElementById('f-date').value;
+  const rucher=document.getElementById('f-rucher').value;
+  const type=document.getElementById('f-type').value;
+  const kg=parseFloat(document.getElementById('f-kg').value);
+  const nb=parseInt(document.getElementById('f-ruches').value)||1;
+  const obs=document.getElementById('f-obs').value;
+  if(!date||!kg||kg<=0){ alert('Veuillez renseigner la date et le poids.'); return; }
+  const data={date,rucher,kg,type,nb_ruches:nb,ruches:[],obs};
+  let s={id:'new_'+Date.now(),...data};
+  try{
+    const ref=await addDoc(collection(db,'users',UID,'harvests'),{...data,created_at:serverTimestamp()});
+    s={id:ref.id,...data};
+  }catch(e){console.warn(e);}
+  SESSIONS.unshift(s);
+  closeModal();
+  renderKPIs(); renderMonthly(yearFilter); renderRucherBars(yearFilter); renderDonut(); renderYearCompare();
+}
+function supprimerSession(id){
+  if(!confirm('Supprimer cette r\u00e9colte ?')) return;
+  SESSIONS=SESSIONS.filter(s=>s.id!==id);
+  renderHistorique(); renderKPIs();
+}
+
+// ── EXPORT CSV ──
+function exportCSV(){
+  const rows=[['Date','Rucher','Type de miel','kg','Nb ruches','Ruches','Observations']];
+  SESSIONS.forEach(s=>rows.push([s.date,s.rucher,s.type,s.kg,s.nb_ruches,s.ruches.join(' '),s.obs||'']));
+  const csv=rows.map(r=>r.join(';')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download='recoltes-rucher-celine.csv'; a.click();
+}
+
+// ── INIT déclenché par onAuthStateChanged ──
+
+// ── Exposer les fonctions pour les onclick HTML (requis avec type="module") ──
+// ── STOCK MIEL ──
+let STOCK_MIEL_MANUEL = {}; // {type: kg_reel} saisi manuellement
+
+// Catalogue poids pour calculer les kg vendus depuis les ventes
+const PRODUITS_INFO = {
+  1:{nom:'Fleurs',poids:500},2:{nom:'Crémeux',poids:500},3:{nom:'Montagne',poids:500},
+  4:{nom:'Montagne corsé',poids:500},5:{nom:'Tilleul',poids:500},6:{nom:'Tilleul crémeux',poids:500},
+  7:{nom:'Châtaignier',poids:500},8:{nom:'Sapin',poids:500},9:{nom:'Acacia',poids:500},
+  10:{nom:'Sarrasin',poids:500},11:{nom:'Fleurs',poids:250},12:{nom:'Crémeux',poids:250},
+  13:{nom:'Montagne',poids:250},14:{nom:'Tilleul',poids:250},15:{nom:'Tilleul crémeux',poids:250},
+  16:{nom:'Châtaignier',poids:250},17:{nom:'Sapin',poids:250},18:{nom:'Acacia',poids:250},
+  19:{nom:'Sarrasin',poids:250},20:{nom:'Fleurs',poids:1000},21:{nom:'Toutes fleurs',poids:1000},
+  22:{nom:'Châtaignier',poids:500},23:{nom:'Toutes fleurs',poids:500}
+};
+// Mapping nom produit vente → type récolte
+const PRODUIT_TYPE_MAP = {
+  'Fleurs':'Toutes fleurs','Fleurs / Montagne':'Fleurs / Montagne',
+  'Crémeux':'Toutes fleurs','Montagne':'Montagne','Montagne corsé':'Montagne',
+  'Tilleul':'Tilleul','Tilleul crémeux':'Tilleul',
+  'Châtaignier':'Châtaignier','Sapin':'Sapin',
+  'Acacia':'Acacia','Sarrasin':'Sarrasin','Toutes fleurs':'Toutes fleurs'
+};
+
+async function renderStockMiel(){
+  // Charger stock manuel depuis Firestore
+  try{
+    const snap=await getDoc(doc(db,'users',UID,'config','stock_miel'));
+    if(snap.exists()) STOCK_MIEL_MANUEL=snap.data().manuel||{};
+  }catch(e){console.warn('stock_miel load:',e);}
+
+  // Récoltes par type
+  const kgRecolte={};
+  SESSIONS.forEach(s=>{ kgRecolte[s.type]=(kgRecolte[s.type]||0)+s.kg; });
+
+  // Ventes par type (depuis Firestore ventes/)
+  const kgVendu={};
+  try{
+    const vsnap=await getDocs(query(collection(db,'users',UID,'ventes'),orderBy('date','asc')));
+    vsnap.docs.forEach(d=>{
+      const v=d.data();
+      if(!v.items) return;
+      v.items.forEach(it=>{
+        const p=PRODUITS_INFO[it.id];
+        if(!p) return;
+        const type=PRODUIT_TYPE_MAP[p.nom]||p.nom;
+        kgVendu[type]=(kgVendu[type]||0)+((p.poids/1000)*(it.qty||1));
+      });
+    });
+  }catch(e){console.warn('ventes stock:',e);}
+
+  // Calculer stock estimé par type
+  const types=Object.keys(kgRecolte);
+  const stockEstime={};
+  types.forEach(t=>{ stockEstime[t]=Math.max(0,(kgRecolte[t]||0)-(kgVendu[t]||0)); });
+
+  // Total
+  const usesManuel=Object.keys(STOCK_MIEL_MANUEL).length>0;
+  const stockFinal={};
+  types.forEach(t=>{ stockFinal[t]=STOCK_MIEL_MANUEL[t]!==undefined?STOCK_MIEL_MANUEL[t]:stockEstime[t]; });
+  const total=Object.values(stockFinal).reduce((s,v)=>s+v,0);
+
+  // Rendre les barres
+  const maxKg=Math.max(...Object.values(stockFinal),1);
+  const COLORS={'Tilleul':'#D4920A','Châtaignier':'#8B5A20','Sapin':'#007A38',
+    'Fleurs / Montagne':'#2756A8','Montagne':'#6B3FA0','Toutes fleurs':'#B8864A',
+    'Fleurs':'#C8640A','Acacia':'#F0A800','Sarrasin':'#5C3608','Miellat':'#4A3008'};
+  const barsEl=document.getElementById('stock-bars');
+  if(barsEl) barsEl.innerHTML=types.sort((a,b)=>stockFinal[b]-stockFinal[a]).map(t=>{
+    const kg=stockFinal[t];
+    const isManuel=STOCK_MIEL_MANUEL[t]!==undefined;
+    const c=COLORS[t]||'#8B7A20';
+    return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+      <div style="font-size:11px;font-weight:700;color:var(--bark);min-width:130px;display:flex;align-items:center;gap:5px">
+        <span style="width:9px;height:9px;border-radius:50%;background:${c};display:inline-block;flex-shrink:0"></span>
+        ${t}${isManuel?' <span style="font-size:9px;background:var(--green-pale);color:var(--green);padding:1px 5px;border-radius:6px">Réel</span>':''}
+      </div>
+      <div style="flex:1;height:12px;background:var(--cream-deep);border-radius:6px;overflow:hidden">
+        <div style="width:${(kg/maxKg)*100}%;height:100%;background:${c};border-radius:6px;transition:width .6s"></div>
+      </div>
+      <div style="font-family:'Dancing Script',cursive;font-size:16px;color:var(--bark);min-width:60px;text-align:right">${kg.toFixed(1)} kg</div>
+    </div>`;
+  }).join('');
+
+  // Formulaire saisie manuelle
+  const formEl=document.getElementById('stock-manual-form');
+  if(formEl) formEl.innerHTML=types.sort().map(t=>{
+    const val=STOCK_MIEL_MANUEL[t]!==undefined?STOCK_MIEL_MANUEL[t]:stockEstime[t];
+    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <div style="font-size:11px;font-weight:700;color:var(--bark);flex:1">${t}</div>
+      <input type="number" id="sm-${t.replace(/[^a-zA-Z0-9]/g,'_')}" value="${val.toFixed(1)}"
+        min="0" step="0.1"
+        style="width:90px;background:var(--cream);border:1.5px solid var(--cream-deep);border-radius:9px;padding:5px 8px;font-size:12px;font-weight:700;color:var(--bark);text-align:center"
+        placeholder="kg">
+      <span style="font-size:10px;color:var(--bark-pale)">kg</span>
+    </div>`;
+  }).join('');
+
+  // Total
+  const totalEl=document.getElementById('stock-total');
+  if(totalEl) totalEl.innerHTML=total.toFixed(1)+' <span style="font-family:\'Josefin Sans\',sans-serif;font-size:20px;color:var(--bark-pale)">kg</span>';
+  const labelEl=document.getElementById('stock-total-label');
+  if(labelEl) labelEl.textContent=usesManuel?'D’après les stocks saisis manuellement':'Estimation automatique (récolte − ventes)';
+}
+
+async function sauvegarderStockManuel(){
+  const kgRecolte={};
+  SESSIONS.forEach(s=>{ kgRecolte[s.type]=(kgRecolte[s.type]||0)+s.kg; });
+  const types=Object.keys(kgRecolte);
+  const manuel={};
+  types.forEach(t=>{
+    const id='sm-'+t.replace(/[^a-zA-Z0-9]/g,'_');
+    const el=document.getElementById(id);
+    if(el){ const v=parseFloat(el.value); if(!isNaN(v)) manuel[t]=v; }
+  });
+  STOCK_MIEL_MANUEL=manuel;
+  try{
+    await setDoc(doc(db,'users',UID,'config','stock_miel'),{manuel,updated_at:serverTimestamp()});
+    showToast('✅ Stock réel enregistré');
+  }catch(e){showToast('⚠️ Erreur sauvegarde','red');}
+  renderStockMiel();
+}
+
+if(typeof closeModal!=='undefined') window.closeModal=closeModal;
+if(typeof enregistrerRecolte!=='undefined') window.enregistrerRecolte=enregistrerRecolte;
+if(typeof exportCSV!=='undefined') window.exportCSV=exportCSV;
+if(typeof filterYear!=='undefined') window.filterYear=filterYear;
+if(typeof openModal!=='undefined') window.openModal=openModal;
+if(typeof setHistoFilter!=='undefined') window.setHistoFilter=setHistoFilter;
+if(typeof supprimerSession!=='undefined') window.supprimerSession=supprimerSession;
+if(typeof switchVue!=='undefined') window.switchVue=switchVue;
+if(typeof sauvegarderStockManuel!=='undefined') window.sauvegarderStockManuel=sauvegarderStockManuel;
+</script>
+
+
+<script>
+
+// ════ MOBILE SIDEBAR ════
+function toggleMobileSidebar(){
+  const sb=document.getElementById('sidebar'),ov=document.getElementById('sb-overlay');
+  if(!sb||!ov) return;
+  sb.classList.toggle('mobile-open');ov.classList.toggle('open');
+  if(sb.classList.contains('mobile-open')) sb.style.display='flex';
+}
+function closeMobileSidebar(){
+  const sb=document.getElementById('sidebar'),ov=document.getElementById('sb-overlay');
+  if(!sb||!ov) return;
+  sb.classList.remove('mobile-open');ov.classList.remove('open');
+  sb.style.display='';
+}
+
+// ════ PWA SERVICE WORKER ════
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  });
+}
+
+</script>
+
+<nav class="bottom-nav" id="bottom-nav">
+  <a href="https://rucher-9bb59.web.app/01-tableau-de-bord.html" class="bn-item" data-page="tableau-de-bord"><span>🏠</span><span>Accueil</span></a>
+  <a href="https://rucher-9bb59.web.app/02-au-rucher.html" class="bn-item" data-page="au-rucher"><span>🏕️</span><span>Rucher</span></a>
+  <a href="https://rucher-9bb59.web.app/05-recoltes.html" class="bn-item" data-page="recoltes"><span>🍯</span><span>Récoltes</span></a>
+  <a href="https://rucher-9bb59.web.app/06-vente.html" class="bn-item" data-page="vente"><span>🛒</span><span>Vente</span></a>
+  <a href="https://rucher-9bb59.web.app/03-atelier.html" class="bn-item" data-page="atelier"><span>🔧</span><span>Atelier</span></a>
+</nav>
+</body></html>

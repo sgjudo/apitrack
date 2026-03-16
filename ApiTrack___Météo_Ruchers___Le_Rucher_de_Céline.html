@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="theme-color" content="#007A38">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ApiTrack">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/logo.jpg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ApiTrack — Météo Ruchers · Le Rucher de Céline</title>
+<link href="./ApiTrack — Météo Ruchers · Le Rucher de Céline_files/css2" rel="stylesheet">
+<style>
+:root{
+  --honey:#D4920A;--honey-bright:#F0A800;--honey-light:#F5C842;
+  --honey-pale:#FBE8A0;--honey-cream:#FDF3D0;
+  --cream:#FAF0D0;--cream-deep:#F0E0A8;
+  --green:#00B050;--green-dark:#007A38;--green-pale:#D0F2E0;
+  --bark:#5C3608;--bark-mid:#8B5A20;--bark-light:#B8864A;--bark-pale:#D4AA78;
+  --white:#FFFDF4;--shadow:rgba(92,54,8,0.12);--shadow-deep:rgba(92,54,8,0.24);
+  --red:#B03020;--red-pale:#FDEAEA;--blue:#2756A8;--blue-pale:#E8F0FA;
+  --sky:#64B5F6;--sky-dark:#1976D2;--sky-pale:#E3F2FD;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);font-family:'Josefin Sans',sans-serif;color:var(--bark);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='104'%3E%3Cpath d='M30 2l28 16v32L30 66 2 50V18L30 2zm0 8L8 24v24l22 13 22-13V24L30 10z' fill='%2300B050' fill-opacity='0.045'/%3E%3C/svg%3E");}
+/* SIDEBAR */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:70px;background:linear-gradient(180deg,var(--green),var(--green-dark));display:flex;flex-direction:column;align-items:center;padding:18px 0;z-index:100;box-shadow:4px 0 22px var(--shadow-deep);transition:width .38s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+.sidebar:hover{width:235px;}
+.sb-brand{width:100%;padding:0 12px;display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+.sb-logo{width:46px;height:46px;flex-shrink:0;background:linear-gradient(135deg,var(--honey-bright),var(--honey));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 14px rgba(240,168,0,.4);}
+.sb-brand-text{opacity:0;transition:opacity .2s;white-space:nowrap;}
+.sidebar:hover .sb-brand-text{opacity:1;transition-delay:.14s;}
+.sb-name{font-family:'Dancing Script',cursive;font-size:16px;color:var(--honey-pale);line-height:1.1;}
+.sb-sub{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(251,232,160,.55);}
+.nav-grp-label{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(208,242,224,.38);padding:10px 14px 4px;white-space:nowrap;opacity:0;transition:opacity .2s;width:100%;}
+.sidebar:hover .nav-grp-label{opacity:1;}
+.nav-item{width:100%;padding:11px 12px;display:flex;align-items:center;gap:12px;cursor:pointer;border:none;background:none;color:rgba(208,242,224,.72);text-align:left;transition:background .2s,color .2s;position:relative;}
+.nav-item:hover{background:rgba(255,255,255,.1);color:var(--honey-pale);}
+.nav-item.active{background:linear-gradient(90deg,rgba(240,168,0,.22),rgba(240,168,0,.04));color:var(--honey-light);}
+.nav-item.active::before{content:'';position:absolute;left:0;top:18%;bottom:18%;width:3px;background:var(--honey-bright);border-radius:0 3px 3px 0;}
+.nav-icon{font-size:20px;width:46px;text-align:center;flex-shrink:0;}
+.nav-label{font-size:12px;font-weight:600;letter-spacing:.04em;white-space:nowrap;opacity:0;transition:opacity .2s;}
+.sidebar:hover .nav-label{opacity:1;transition-delay:.12s;}
+.nav-sep{width:36px;height:1px;background:rgba(208,242,224,.14);margin:8px auto;transition:width .38s;}
+.sidebar:hover .nav-sep{width:195px;}
+.sb-user{margin-top:auto;width:100%;padding:12px;display:flex;align-items:center;gap:12px;border-top:1px solid rgba(208,242,224,.1);}
+.sb-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--honey),var(--honey-light));display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.sb-user-info{opacity:0;transition:opacity .2s;white-space:nowrap;}
+.sidebar:hover .sb-user-info{opacity:1;transition-delay:.14s;}
+.sb-user-name{font-size:12px;font-weight:600;color:var(--honey-pale);}
+.sb-user-role{font-size:10px;color:rgba(208,242,224,.5);}
+/* LAYOUT */
+.main{margin-left:70px;padding:28px 28px 60px;position:relative;z-index:1;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* HEADER */
+.page-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;animation:fadeUp .5s ease both;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--bark-light);margin-bottom:6px;}
+.breadcrumb .cur{color:var(--green);}
+.pg-title{font-family:'Dancing Script',cursive;font-size:42px;font-weight:700;color:var(--green);line-height:1;}
+.pg-sub{font-family:'Crimson Pro',serif;font-style:italic;font-size:14px;color:var(--bark-mid);margin-top:3px;}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:50px;border:none;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.04em;transition:all .2s;}
+.btn-primary{background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;box-shadow:0 4px 14px rgba(0,176,80,.3);}
+.btn-primary:hover{transform:translateY(-2px);}
+.btn-secondary{background:var(--white);border:1.5px solid var(--cream-deep);color:var(--bark-mid);}
+.btn-secondary:hover{border-color:var(--honey);}
+/* ALERTE API APICOLE */
+.alert-banner{background:linear-gradient(135deg,#FFF8E0,#FFF0B0);border:1.5px solid var(--honey);border-radius:16px;padding:12px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px;animation:fadeUp .5s .02s ease both;}
+.alert-banner-txt{font-size:12px;font-weight:700;color:var(--honey);}
+.alert-banner-sub{font-family:'Crimson Pro',serif;font-style:italic;font-size:11px;color:var(--bark-mid);}
+/* SCORE APICOLE BADGE */
+.score-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;}
+.score-5{background:#D0F2E0;color:#007A38;}
+.score-4{background:#E8F5D0;color:#4A8020;}
+.score-3{background:#FBE8A0;color:#8B5A20;}
+.score-2{background:#FFD0B0;color:#A04010;}
+.score-1{background:#FDEAEA;color:#B03020;}
+/* GRILLE RUCHERS */
+.ruchers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;animation:fadeUp .5s .05s ease both;}
+/* CARTE MÉTÉO RUCHER */
+.meteo-card{background:var(--white);border:1.5px solid var(--cream-deep);border-radius:22px;overflow:hidden;box-shadow:0 4px 16px var(--shadow);transition:transform .25s,border-color .25s;cursor:pointer;}
+.meteo-card:hover{transform:translateY(-4px);border-color:var(--honey);box-shadow:0 10px 28px var(--shadow-deep);}
+.meteo-card.loading .card-body{filter:blur(3px);pointer-events:none;}
+/* HEADER CARTE */
+.card-header{padding:16px 18px 12px;position:relative;overflow:hidden;}
+.card-header::after{content:attr(data-emoji);position:absolute;right:-4px;top:-10px;font-size:64px;opacity:.08;pointer-events:none;}
+.card-location{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--bark-pale);margin-bottom:3px;display:flex;align-items:center;gap:5px;}
+.card-name{font-family:'Dancing Script',cursive;font-size:24px;font-weight:700;color:var(--bark);line-height:1.1;}
+.card-desc{font-family:'Crimson Pro',serif;font-style:italic;font-size:12px;color:var(--bark-mid);margin-top:2px;}
+/* MÉTÉO PRINCIPALE */
+.card-body{padding:0 18px 16px;}
+.meteo-main{display:flex;align-items:center;gap:12px;padding:12px 0 8px;border-bottom:1px solid var(--cream-deep);}
+.meteo-icon{font-size:42px;line-height:1;}
+.meteo-temp{font-family:'Dancing Script',cursive;font-size:46px;color:var(--bark);line-height:1;}
+.meteo-unit{font-size:16px;font-family:'Crimson Pro',serif;color:var(--bark-pale);}
+.meteo-desc{font-size:11px;font-weight:700;color:var(--bark-mid);margin-top:2px;text-transform:capitalize;}
+/* DÉTAILS MÉTÉO */
+.meteo-details{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:10px 0;}
+.detail-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px;background:var(--cream);border-radius:12px;}
+.detail-icon{font-size:15px;}
+.detail-val{font-size:11px;font-weight:700;color:var(--bark);}
+.detail-lab{font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bark-pale);}
+/* SCORE APICOLE */
+.score-section{padding:8px 0 4px;border-top:1px solid var(--cream-deep);}
+.score-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bark-pale);margin-bottom:6px;}
+.score-bar-wrap{display:flex;align-items:center;gap:8px;}
+.score-bar-track{flex:1;height:8px;background:var(--cream-deep);border-radius:4px;overflow:hidden;}
+.score-bar-fill{height:100%;border-radius:4px;transition:width .8s cubic-bezier(.4,0,.2,1);}
+/* PRÉVISIONS 5 JOURS */
+.previsions{display:flex;gap:5px;padding:10px 0 2px;border-top:1px solid var(--cream-deep);}
+.prev-day{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;border-radius:10px;transition:background .2s;}
+.prev-day:hover{background:var(--cream);}
+.prev-label{font-size:8px;font-weight:700;color:var(--bark-pale);text-transform:uppercase;}
+.prev-icon{font-size:18px;}
+.prev-temp{font-size:10px;font-weight:700;color:var(--bark);}
+.prev-score{width:8px;height:8px;border-radius:50%;margin-top:2px;}
+/* LOADER */
+.loader{display:flex;align-items:center;justify-content:center;padding:40px;gap:10px;flex-direction:column;}
+.loader-spin{width:28px;height:28px;border:3px solid var(--cream-deep);border-top-color:var(--green);border-radius:50%;animation:spin 0.8s linear infinite;}
+.loader-txt{font-size:11px;font-weight:700;color:var(--bark-pale);animation:pulse 1.2s ease infinite;}
+/* BADGE LIVE */
+.live-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:var(--green-pale);border-radius:20px;font-size:9px;font-weight:700;color:var(--green);}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.4s ease infinite;}
+/* VUE DÉTAIL */
+.detail-overlay{position:fixed;inset:0;background:rgba(92,54,8,.4);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);}
+.detail-overlay.open{opacity:1;pointer-events:all;}
+.detail-panel{background:var(--white);border-radius:26px;padding:28px;width:560px;max-width:96vw;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px var(--shadow-deep);}
+/* HOURLY CHART */
+.hourly-chart{display:flex;align-items:flex-end;gap:3px;height:80px;margin-top:10px;}
+.h-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;}
+.h-bar{width:100%;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--sky),var(--sky-dark));min-height:2px;transition:height .5s;}
+.h-label{font-size:7px;font-weight:700;color:var(--bark-pale);}
+/* LÉGENDE SCORE */
+.score-legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.sl-item{display:flex;align-items:center;gap:4px;font-size:9px;font-weight:700;color:var(--bark-mid);}
+.sl-dot{width:8px;height:8px;border-radius:50%;}
+/* ALERTE CONDITIONS */
+.cond-alert{padding:10px 14px;border-radius:12px;margin-top:8px;font-size:11px;font-weight:700;}
+.cond-bon{background:var(--green-pale);color:var(--green-dark);}
+.cond-moyen{background:var(--honey-pale);color:var(--honey);}
+.cond-mauvais{background:var(--red-pale);color:var(--red);}
+
+  /* ── AUTH LOADING OVERLAY ── */
+  50%{opacity:1;transform:scale(1)}}
+
+  
+  .sb-logo-link{display:flex;align-items:center;justify-content:center;}
+  .sb-logo-img{width:44px;height:44px;object-fit:contain;border-radius:12px;background:var(--white);flex-shrink:0;}
+  .nav-item{text-decoration:none;display:flex;align-items:center;gap:12px;width:100%;padding:11px 12px;cursor:pointer;border:none;background:none;color:rgba(208,242,224,.72);text-align:left;transition:background .2s,color .2s;position:relative;font-family:'Josefin Sans',sans-serif;font-size:12px;}
+
+  
+  /* ── MOBILE TOPBAR (PWA) ── */
+  .mobile-topbar{display:none;position:fixed;top:0;left:0;right:0;height:54px;background:linear-gradient(135deg,var(--green),var(--green-dark));z-index:300;align-items:center;padding:0 14px;gap:12px;box-shadow:0 2px 12px var(--shadow-deep);}
+  .mobile-menu-btn{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+  .mobile-topbar-title{font-family:'Dancing Script',cursive;font-size:22px;color:var(--honey-pale);flex:1;}
+  .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:299;}
+  .sb-overlay.open{display:block;}
+  .sidebar.mobile-open{width:235px!important;}
+  .sidebar.mobile-open .nav-label,.sidebar.mobile-open .sb-brand-text,.sidebar.mobile-open .nav-grp-label,.sidebar.mobile-open .sb-user-info{opacity:1!important;transition-delay:0s!important;}
+  .sidebar.mobile-open .nav-sep{width:195px!important;}
+  /* ── BOTTOM NAV BAR (PWA) ── */
+  .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--white);border-top:1.5px solid var(--cream-deep);z-index:200;align-items:stretch;padding:0;box-shadow:0 -4px 16px var(--shadow);}
+  .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-decoration:none;color:var(--bark-light);font-size:9px;font-weight:700;letter-spacing:.04em;padding:6px 0;transition:color .15s;border:none;background:none;cursor:pointer;}
+  .bn-item.active{color:var(--green);}
+  .bn-item span:first-child{font-size:20px;line-height:1;}
+  @media(max-width:660px){
+    .mobile-topbar{display:flex;}
+    .bottom-nav{display:flex;}
+  }
+  @media(max-width:900px){
+    .meteo-grid{grid-template-columns:1fr!important;}
+  }
+  @media(max-width:660px){
+    :root{--sb-w:0px;}
+    .sidebar{display:none;} .sidebar.mobile-open{display:flex;width:235px;}
+    .mobile-topbar{display:flex;}
+    .main{margin-left:0;padding:70px 14px 90px;}
+    .page-header,.header-actions{flex-direction:column;gap:10px;}
+    .page-title{font-size:32px;}
+    .weather-cards{grid-template-columns:1fr!important;}
+    .forecast-row{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+    .meteo-ruchers{grid-template-columns:1fr!important;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="ao-text">Le Rucher de Céline</div>
+  <div class="ao-dots"><span></span><span></span><span></span></div>
+
+<div class="mobile-topbar" id="mobile-topbar">
+  <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">☰</button>
+  <div class="mobile-topbar-title">🌤️ Météo Ruchers</div>
+</div>
+<div class="sb-overlay" id="sb-overlay" onclick="closeMobileSidebar()"></div>
+
+
+
+<nav class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <a href="https://rucher-9bb59.web.app/index.html" class="sb-logo-link"><img src="./ApiTrack — Météo Ruchers · Le Rucher de Céline_files/logo.jpg" alt="logo" class="sb-logo-img"></a>
+    <div class="sb-brand-text"><div class="sb-title">ApiTrack</div><div class="sb-sub">Le Rucher de Céline</div></div>
+  </div>
+  <div class="nav-sep"></div>
+  <div class="nav-grp-label">Ruchers</div>
+  <a href="https://rucher-9bb59.web.app/index.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Tableau de bord</span></a>
+  <a href="https://rucher-9bb59.web.app/02-au-rucher.html" class="nav-item"><span class="nav-icon">🏕️</span><span class="nav-label">Au Rucher</span></a>
+  <a href="https://rucher-9bb59.web.app/03-atelier.html" class="nav-item"><span class="nav-icon">🔧</span><span class="nav-label">Atelier</span></a>
+  <div class="nav-sep"></div>
+  <div class="nav-grp-label">Commerce</div>
+  <a href="https://rucher-9bb59.web.app/05-recoltes.html" class="nav-item"><span class="nav-icon">🍯</span><span class="nav-label">Récoltes</span></a>
+  <a href="https://rucher-9bb59.web.app/06-vente.html" class="nav-item"><span class="nav-icon">🛒</span><span class="nav-label">Vente</span></a>
+  <a href="https://rucher-9bb59.web.app/07-achats.html" class="nav-item"><span class="nav-icon">📦</span><span class="nav-label">Achats</span></a>
+  <div class="nav-sep"></div>
+  <div class="nav-grp-label">Élevage &amp; Résultats</div>
+  <a href="https://rucher-9bb59.web.app/04-elevage-reines.html" class="nav-item"><span class="nav-icon">👑</span><span class="nav-label">Élevage Reines</span></a>
+  <a href="https://rucher-9bb59.web.app/08-resultats.html" class="nav-item"><span class="nav-icon">📊</span><span class="nav-label">Résultats</span></a>
+  <a href="https://rucher-9bb59.web.app/09-meteo-ruchers.html" class="nav-item active"><span class="nav-icon">🌤️</span><span class="nav-label">Météo Ruchers</span></a>
+  <div class="nav-sep"></div>
+  <div class="sb-user">
+    <div class="sb-avatar">👩</div>
+    <div class="sb-user-info"><div class="sb-user-name">Christelle</div><div class="sb-user-role">Apicultrice</div></div>
+  </div>
+  <button class="nav-item" onclick="handleLogout()" style="margin-top:4px;color:rgba(208,242,224,.5);"><span class="nav-icon">↩</span><span class="nav-label">Déconnexion</span></button>
+</nav>
+
+
+<!-- DÉTAIL OVERLAY -->
+<div class="detail-overlay" id="detail-overlay" onclick="closeDetail(event)">
+  <div class="detail-panel" id="detail-panel"></div>
+</div>
+
+<div class="main">
+  <div class="page-header">
+    <div>
+      <div class="breadcrumb"><span>🏠</span><span style="color:var(--bark-pale)">›</span><span class="cur">🌤️ Météo Ruchers</span></div>
+      <div class="pg-title">Météo Ruchers</div>
+      <div class="pg-sub">Conditions apicoles en temps réel · 6 ruchers actifs</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="live-badge"><div class="live-dot"></div>Données live</div>
+      <button class="btn btn-secondary" onclick="refreshAll()">↻ Actualiser</button>
+    </div>
+  </div>
+
+  <div class="alert-banner">
+    <span style="font-size:22px">🐝</span>
+    <div>
+      <div class="alert-banner-txt">Score apicole = conditions idéales pour les abeilles</div>
+      <div class="alert-banner-sub">Calculé d'après : température (optimum 18–28°C), vent (&lt;20 km/h), précipitations (0 mm), humidité (40–70%). Météo fournie par Open-Meteo.</div>
+    </div>
+  </div>
+
+  <div class="score-legend" style="margin-bottom:16px">
+    <div class="sl-item"><div class="sl-dot" style="background:#007A38"></div>Excellentes (≥4,5/5)</div>
+    <div class="sl-item"><div class="sl-dot" style="background:#4A8020"></div>Bonnes (3,5–4,4)</div>
+    <div class="sl-item"><div class="sl-dot" style="background:#D4920A"></div>Moyennes (2,5–3,4)</div>
+    <div class="sl-item"><div class="sl-dot" style="background:#A04010"></div>Défavorables (1,5–2,4)</div>
+    <div class="sl-item"><div class="sl-dot" style="background:#B03020"></div>Mauvaises (&lt;1,5)</div>
+  </div>
+
+  <div class="ruchers-grid" id="ruchers-grid">
+    <div class="meteo-card" id="card-5876" onclick="openDetail(&#39;5876&#39;)">
+      <div class="card-header" data-emoji="🌼">
+        <div class="card-location">📍 La Fouillouse · 8 ruches</div>
+        <div class="card-name">Tilleul-La Fouillouse</div>
+        <div class="card-desc">Transhumance tilleul</div>
+      </div>
+      <div class="card-body">
+    <div class="meteo-main">
+      <div class="meteo-icon">⛅</div>
+      <div>
+        <div style="display:flex;align-items:baseline;gap:2px">
+          <div class="meteo-temp">11</div>
+          <div class="meteo-unit">°C</div>
+        </div>
+        <div class="meteo-desc">Partiellement nuageux</div>
+        <div style="font-size:10px;font-weight:700;color:var(--bark-pale)">Ressenti 8°C</div>
+      </div>
+      <div style="margin-left:auto">
+        <div class="score-badge score-4">🐝 3.5/5</div>
+        <div style="font-size:9px;font-weight:700;color:#4A8020;text-align:center;margin-top:3px">Bonnes</div>
+      </div>
+    </div>
+    <div class="meteo-details">
+      <div class="detail-item">
+        <div class="detail-icon">💧</div>
+        <div class="detail-val">0.0 mm</div>
+        <div class="detail-lab">Pluie</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">🌬️</div>
+        <div class="detail-val">11 km/h</div>
+        <div class="detail-lab">Vent</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">💦</div>
+        <div class="detail-val">64%</div>
+        <div class="detail-lab">Humidité</div>
+      </div>
+    </div>
+    <div class="score-section">
+      <div class="score-label">Score apicole</div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:70%;background:#4A8020"></div></div>
+        <span style="font-family:&#39;Dancing Script&#39;,cursive;font-size:18px;color:#4A8020;min-width:38px;text-align:right">3.5</span>
+      </div>
+      <div class="cond-alert cond-bon" style="margin-top:8px">✓ Bonnes conditions — ideal pour visiter les ruches et observer la miellée.</div>
+    </div>
+    <div class="previsions">
+      <div class="prev-day">
+        <div class="prev-label">Mar</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">14°/3°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Mer</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">13°/2°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Jeu</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">15°/1°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Ven</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">14°/2°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Sam</div>
+        <div class="prev-icon">⛈️</div>
+        <div class="prev-temp">15°/2°</div>
+        <div class="prev-score" style="background:#A04010"></div>
+      </div>
+    </div></div>
+    </div>
+    <div class="meteo-card" id="card-5946" onclick="openDetail(&#39;5946&#39;)">
+      <div class="card-header" data-emoji="🌲">
+        <div class="card-location">📍 Chambles · 8 ruches</div>
+        <div class="card-name">Châtaignier-Chambles</div>
+        <div class="card-desc">Transhumance châtaignier</div>
+      </div>
+      <div class="card-body">
+    <div class="meteo-main">
+      <div class="meteo-icon">☁️</div>
+      <div>
+        <div style="display:flex;align-items:baseline;gap:2px">
+          <div class="meteo-temp">9</div>
+          <div class="meteo-unit">°C</div>
+        </div>
+        <div class="meteo-desc">Nuageux</div>
+        <div style="font-size:10px;font-weight:700;color:var(--bark-pale)">Ressenti 7°C</div>
+      </div>
+      <div style="margin-left:auto">
+        <div class="score-badge score-3">🐝 2.5/5</div>
+        <div style="font-size:9px;font-weight:700;color:#D4920A;text-align:center;margin-top:3px">Moyennes</div>
+      </div>
+    </div>
+    <div class="meteo-details">
+      <div class="detail-item">
+        <div class="detail-icon">💧</div>
+        <div class="detail-val">0.0 mm</div>
+        <div class="detail-lab">Pluie</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">🌬️</div>
+        <div class="detail-val">10 km/h</div>
+        <div class="detail-lab">Vent</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">💦</div>
+        <div class="detail-val">62%</div>
+        <div class="detail-lab">Humidité</div>
+      </div>
+    </div>
+    <div class="score-section">
+      <div class="score-label">Score apicole</div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:50%;background:#D4920A"></div></div>
+        <span style="font-family:&#39;Dancing Script&#39;,cursive;font-size:18px;color:#D4920A;min-width:38px;text-align:right">2.5</span>
+      </div>
+      <div class="cond-alert cond-moyen" style="margin-top:8px">⚠️ Conditions moyennes — visite possible mais activité des abeilles réduite.</div>
+    </div>
+    <div class="previsions">
+      <div class="prev-day">
+        <div class="prev-label">Mar</div>
+        <div class="prev-icon">☁️</div>
+        <div class="prev-temp">12°/3°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Mer</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">12°/3°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Jeu</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">14°/0°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Ven</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">13°/1°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Sam</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">11°/1°</div>
+        <div class="prev-score" style="background:#A04010"></div>
+      </div>
+    </div></div>
+    </div>
+    <div class="meteo-card" id="card-5763" onclick="openDetail(&#39;5763&#39;)">
+      <div class="card-header" data-emoji="⛰️">
+        <div class="card-location">📍 Bellegarde-en-Forez · 12 ruches</div>
+        <div class="card-name">La Montagne</div>
+        <div class="card-desc">Rucher principal</div>
+      </div>
+      <div class="card-body">
+    <div class="meteo-main">
+      <div class="meteo-icon">⛅</div>
+      <div>
+        <div style="display:flex;align-items:baseline;gap:2px">
+          <div class="meteo-temp">10</div>
+          <div class="meteo-unit">°C</div>
+        </div>
+        <div class="meteo-desc">Partiellement nuageux</div>
+        <div style="font-size:10px;font-weight:700;color:var(--bark-pale)">Ressenti 7°C</div>
+      </div>
+      <div style="margin-left:auto">
+        <div class="score-badge score-4">🐝 3.5/5</div>
+        <div style="font-size:9px;font-weight:700;color:#4A8020;text-align:center;margin-top:3px">Bonnes</div>
+      </div>
+    </div>
+    <div class="meteo-details">
+      <div class="detail-item">
+        <div class="detail-icon">💧</div>
+        <div class="detail-val">0.0 mm</div>
+        <div class="detail-lab">Pluie</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">🌬️</div>
+        <div class="detail-val">11 km/h</div>
+        <div class="detail-lab">Vent</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">💦</div>
+        <div class="detail-val">63%</div>
+        <div class="detail-lab">Humidité</div>
+      </div>
+    </div>
+    <div class="score-section">
+      <div class="score-label">Score apicole</div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:70%;background:#4A8020"></div></div>
+        <span style="font-family:&#39;Dancing Script&#39;,cursive;font-size:18px;color:#4A8020;min-width:38px;text-align:right">3.5</span>
+      </div>
+      <div class="cond-alert cond-bon" style="margin-top:8px">✓ Bonnes conditions — ideal pour visiter les ruches et observer la miellée.</div>
+    </div>
+    <div class="previsions">
+      <div class="prev-day">
+        <div class="prev-label">Mar</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">13°/2°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Mer</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">12°/3°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Jeu</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">14°/0°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Ven</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">13°/1°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Sam</div>
+        <div class="prev-icon">☁️</div>
+        <div class="prev-temp">12°/1°</div>
+        <div class="prev-score" style="background:#A04010"></div>
+      </div>
+    </div></div>
+    </div>
+    <div class="meteo-card" id="card-5764" onclick="openDetail(&#39;5764&#39;)">
+      <div class="card-header" data-emoji="🏡">
+        <div class="card-location">📍 Saint-Galmier · 14 ruches</div>
+        <div class="card-name">Dupré</div>
+        <div class="card-desc">Rucher partagé</div>
+      </div>
+      <div class="card-body">
+    <div class="meteo-main">
+      <div class="meteo-icon">⛅</div>
+      <div>
+        <div style="display:flex;align-items:baseline;gap:2px">
+          <div class="meteo-temp">11</div>
+          <div class="meteo-unit">°C</div>
+        </div>
+        <div class="meteo-desc">Partiellement nuageux</div>
+        <div style="font-size:10px;font-weight:700;color:var(--bark-pale)">Ressenti 8°C</div>
+      </div>
+      <div style="margin-left:auto">
+        <div class="score-badge score-4">🐝 3.5/5</div>
+        <div style="font-size:9px;font-weight:700;color:#4A8020;text-align:center;margin-top:3px">Bonnes</div>
+      </div>
+    </div>
+    <div class="meteo-details">
+      <div class="detail-item">
+        <div class="detail-icon">💧</div>
+        <div class="detail-val">0.0 mm</div>
+        <div class="detail-lab">Pluie</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">🌬️</div>
+        <div class="detail-val">11 km/h</div>
+        <div class="detail-lab">Vent</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">💦</div>
+        <div class="detail-val">63%</div>
+        <div class="detail-lab">Humidité</div>
+      </div>
+    </div>
+    <div class="score-section">
+      <div class="score-label">Score apicole</div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:70%;background:#4A8020"></div></div>
+        <span style="font-family:&#39;Dancing Script&#39;,cursive;font-size:18px;color:#4A8020;min-width:38px;text-align:right">3.5</span>
+      </div>
+      <div class="cond-alert cond-bon" style="margin-top:8px">✓ Bonnes conditions — ideal pour visiter les ruches et observer la miellée.</div>
+    </div>
+    <div class="previsions">
+      <div class="prev-day">
+        <div class="prev-label">Mar</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">14°/2°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Mer</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">14°/1°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Jeu</div>
+        <div class="prev-icon">⛅</div>
+        <div class="prev-temp">15°/2°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Ven</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">14°/2°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Sam</div>
+        <div class="prev-icon">☁️</div>
+        <div class="prev-temp">13°/2°</div>
+        <div class="prev-score" style="background:#A04010"></div>
+      </div>
+    </div></div>
+    </div>
+    <div class="meteo-card" id="card-6087" onclick="openDetail(&#39;6087&#39;)">
+      <div class="card-header" data-emoji="🌴">
+        <div class="card-location">📍 Saint-Jeures · 7 ruches</div>
+        <div class="card-name">Sapin-Saint Jeures</div>
+        <div class="card-desc">Transhumance sapin</div>
+      </div>
+      <div class="card-body">
+    <div class="meteo-main">
+      <div class="meteo-icon">☁️</div>
+      <div>
+        <div style="display:flex;align-items:baseline;gap:2px">
+          <div class="meteo-temp">8</div>
+          <div class="meteo-unit">°C</div>
+        </div>
+        <div class="meteo-desc">Nuageux</div>
+        <div style="font-size:10px;font-weight:700;color:var(--bark-pale)">Ressenti 4°C</div>
+      </div>
+      <div style="margin-left:auto">
+        <div class="score-badge score-2">🐝 2.0/5</div>
+        <div style="font-size:9px;font-weight:700;color:#A04010;text-align:center;margin-top:3px">Défavorables</div>
+      </div>
+    </div>
+    <div class="meteo-details">
+      <div class="detail-item">
+        <div class="detail-icon">💧</div>
+        <div class="detail-val">0.0 mm</div>
+        <div class="detail-lab">Pluie</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">🌬️</div>
+        <div class="detail-val">15 km/h</div>
+        <div class="detail-lab">Vent</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">💦</div>
+        <div class="detail-val">66%</div>
+        <div class="detail-lab">Humidité</div>
+      </div>
+    </div>
+    <div class="score-section">
+      <div class="score-label">Score apicole</div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:40%;background:#A04010"></div></div>
+        <span style="font-family:&#39;Dancing Script&#39;,cursive;font-size:18px;color:#A04010;min-width:38px;text-align:right">2.0</span>
+      </div>
+      <div class="cond-alert cond-mauvais" style="margin-top:8px">❌ Conditions défavorables — éviter les interventions, les abeilles restent en ruche.</div>
+    </div>
+    <div class="previsions">
+      <div class="prev-day">
+        <div class="prev-label">Mar</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">11°/1°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Mer</div>
+        <div class="prev-icon">☁️</div>
+        <div class="prev-temp">12°/2°</div>
+        <div class="prev-score" style="background:#A04010"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Jeu</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">11°/-1°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Ven</div>
+        <div class="prev-icon">🌫️</div>
+        <div class="prev-temp">11°/0°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Sam</div>
+        <div class="prev-icon">☁️</div>
+        <div class="prev-temp">9°/2°</div>
+        <div class="prev-score" style="background:#B03020"></div>
+      </div>
+    </div></div>
+    </div>
+    <div class="meteo-card" id="card-6181" onclick="openDetail(&#39;6181&#39;)">
+      <div class="card-header" data-emoji="🏔️">
+        <div class="card-location">📍 Garnier · 8 ruches</div>
+        <div class="card-name">Sapin-Bruyère-Garnier</div>
+        <div class="card-desc">Transhumance sapin bruyère</div>
+      </div>
+      <div class="card-body">
+    <div class="meteo-main">
+      <div class="meteo-icon">⛅</div>
+      <div>
+        <div style="display:flex;align-items:baseline;gap:2px">
+          <div class="meteo-temp">11</div>
+          <div class="meteo-unit">°C</div>
+        </div>
+        <div class="meteo-desc">Partiellement nuageux</div>
+        <div style="font-size:10px;font-weight:700;color:var(--bark-pale)">Ressenti 7°C</div>
+      </div>
+      <div style="margin-left:auto">
+        <div class="score-badge score-3">🐝 3.0/5</div>
+        <div style="font-size:9px;font-weight:700;color:#D4920A;text-align:center;margin-top:3px">Moyennes</div>
+      </div>
+    </div>
+    <div class="meteo-details">
+      <div class="detail-item">
+        <div class="detail-icon">💧</div>
+        <div class="detail-val">0.0 mm</div>
+        <div class="detail-lab">Pluie</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">🌬️</div>
+        <div class="detail-val">23 km/h</div>
+        <div class="detail-lab">Vent</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">💦</div>
+        <div class="detail-val">54%</div>
+        <div class="detail-lab">Humidité</div>
+      </div>
+    </div>
+    <div class="score-section">
+      <div class="score-label">Score apicole</div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:60%;background:#D4920A"></div></div>
+        <span style="font-family:&#39;Dancing Script&#39;,cursive;font-size:18px;color:#D4920A;min-width:38px;text-align:right">3.0</span>
+      </div>
+      <div class="cond-alert cond-moyen" style="margin-top:8px">⚠️ Conditions moyennes — visite possible mais activité des abeilles réduite.</div>
+    </div>
+    <div class="previsions">
+      <div class="prev-day">
+        <div class="prev-label">Mar</div>
+        <div class="prev-icon">☁️</div>
+        <div class="prev-temp">14°/4°</div>
+        <div class="prev-score" style="background:#A04010"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Mer</div>
+        <div class="prev-icon">🌧️</div>
+        <div class="prev-temp">11°/5°</div>
+        <div class="prev-score" style="background:#A04010"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Jeu</div>
+        <div class="prev-icon">⛅</div>
+        <div class="prev-temp">13°/3°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Ven</div>
+        <div class="prev-icon">☁️</div>
+        <div class="prev-temp">14°/3°</div>
+        <div class="prev-score" style="background:#D4920A"></div>
+      </div><div class="prev-day">
+        <div class="prev-label">Sam</div>
+        <div class="prev-icon">☁️</div>
+        <div class="prev-temp">7°/3°</div>
+        <div class="prev-score" style="background:#A04010"></div>
+      </div>
+    </div></div>
+    </div></div>
+</div>
+
+<script>
+// Détecteur de blocage Firebase SDK — si le module ne démarre pas en 6s, afficher aide
+window._fbLoadTimer = setTimeout(function() {
+  if (!window._fbLoaded) {
+    var msg = document.createElement('div');
+    msg.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#B03020;color:#fff;padding:14px 20px;font-family:sans-serif;font-size:13px;font-weight:700;text-align:center;';
+    msg.innerHTML = '⚠️ Connexion Firebase lente. <a href="javascript:location.reload()" style="color:#FBE8A0;text-decoration:underline;">Recharger la page</a> · <a href="login.html" style="color:#FBE8A0;text-decoration:underline;">Retour connexion</a>';
+    document.body.appendChild(msg);
+  }
+}, 10000);
+</script>
+<script type="module">
+// ════ FIREBASE AUTH GUARD ════
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+window._fbLoaded = true;
+const FB={apiKey:"AIzaSyBMwN1idPo4QdWQn0sG-bB7o-SfXbK8SGg",authDomain:"rucher-9bb59.firebaseapp.com",projectId:"rucher-9bb59",storageBucket:"rucher-9bb59.firebasestorage.app",messagingSenderId:"1041501775027",appId:"1:1041501775027:web:dc9bfe120366b0696d3cc6"};
+const app=initializeApp(FB),auth=getAuth(app);
+let UID=null;
+const _authTO=setTimeout(()=>window.location.replace('login.html'),8000);
+onAuthStateChanged(auth,async user=>{
+  if(!user){window.location.replace('login.html');return;}
+  UID = user.uid;
+  const el=document.querySelector('.sb-user-name');
+  if(el) el.textContent=(user.displayName||'Apicultrice').split(' ')[0];
+  // ── Partage collaborateur ──
+  const OWNER_UID = 'qQK5KKjiMrSRVhebGNBcHPxBnx02';
+  if (UID !== OWNER_UID) {
+    try {
+      const sharedSnap = await getDoc(doc(db,'users',UID,'config','shared'));
+      if (sharedSnap.exists() && sharedSnap.data().ownerUid) {
+        UID = sharedSnap.data().ownerUid;
+      } else {
+        await setDoc(doc(db,'users',UID,'config','shared'), {ownerUid: OWNER_UID, updated_at: serverTimestamp()});
+        UID = OWNER_UID;
+      }
+    } catch(e) { console.warn('shared:', e); UID = OWNER_UID; }
+  }
+  initMeteo(); // lancer la météo après auth
+});
+window.handleLogout=async()=>{if(confirm('Se déconnecter ?')){await signOut(auth);window.location.href='login.html';}};
+
+// ── RUCHERS (vraies coordonnées GPS Beekube) ──
+const RUCHERS = [
+  {id:'5876', nom:'Tilleul-La Fouillouse', lieu:'La Fouillouse', lat:45.5009884, lng:4.3157199, desc:'Transhumance tilleul', emoji:'&#x1F33C;', ruches:8},
+  {id:'5946', nom:'Ch\u00e2taignier-Chambles', lieu:'Chambles', lat:45.4420000, lng:4.2373000, desc:'Transhumance ch\u00e2taignier', emoji:'&#x1F332;', ruches:8},
+  {id:'5763', nom:'La Montagne', lieu:'Bellegarde-en-Forez', lat:45.6585050, lng:4.3290150, desc:'Rucher principal', emoji:'&#x26F0;&#xFE0F;', ruches:12},
+  {id:'5764', nom:'Dupr\u00e9', lieu:'Saint-Galmier', lat:45.5903147, lng:4.3183716, desc:'Rucher partag\u00e9', emoji:'&#x1F3E1;', ruches:14},
+  {id:'6087', nom:'Sapin-Saint Jeures', lieu:'Saint-Jeures', lat:45.0956681, lng:4.2050915, desc:'Transhumance sapin', emoji:'&#x1F334;', ruches:7},
+  {id:'6181', nom:'Sapin-Bruy\u00e8re-Garnier', lieu:'Garnier', lat:44.8211399, lng:4.4243774, desc:'Transhumance sapin bruy\u00e8re', emoji:'&#x1F3D4;&#xFE0F;', ruches:8},
+];
+
+// ── CODES WMO → icône + description ──
+function wmoInfo(code){
+  if(code===0) return {ic:'&#x2600;&#xFE0F;',desc:'Ciel d\u00e9gag\u00e9'};
+  if(code<=2)  return {ic:'&#x26C5;',desc:'Partiellement nuageux'};
+  if(code<=3)  return {ic:'&#x2601;&#xFE0F;',desc:'Nuageux'};
+  if(code<=49) return {ic:'&#x1F32B;&#xFE0F;',desc:'Brouillard'};
+  if(code<=59) return {ic:'&#x1F327;&#xFE0F;',desc:'Bruine'};
+  if(code<=69) return {ic:'&#x1F327;&#xFE0F;',desc:'Pluie'};
+  if(code<=79) return {ic:'&#x1F328;&#xFE0F;',desc:'Neige'};
+  if(code<=82) return {ic:'&#x26C8;&#xFE0F;',desc:'Averses'};
+  if(code<=99) return {ic:'&#x26A1;',desc:'Orage'};
+  return {ic:'&#x2601;&#xFE0F;',desc:'Variable'};
+}
+
+// ── SCORE APICOLE (0–5) ──
+function scoreApicole(temp, vent, pluie, humidite){
+  let s = 5;
+  // Température : optimum 18–28°C
+  if(temp < 10 || temp > 35) s -= 2.5;
+  else if(temp < 14 || temp > 32) s -= 1.5;
+  else if(temp < 18 || temp > 30) s -= 0.5;
+  // Vent : au-delà de 20 km/h les abeilles ne sortent pas bien
+  if(vent > 40) s -= 2;
+  else if(vent > 25) s -= 1.2;
+  else if(vent > 15) s -= 0.5;
+  // Pluie
+  if(pluie > 5) s -= 2;
+  else if(pluie > 1) s -= 1;
+  else if(pluie > 0) s -= 0.3;
+  // Humidité : idéal 40–70%
+  if(humidite > 90 || humidite < 25) s -= 0.8;
+  else if(humidite > 80 || humidite < 35) s -= 0.3;
+  return Math.max(0, Math.min(5, Math.round(s * 10) / 10));
+}
+
+function scoreColor(s){
+  if(s >= 4.5) return '#007A38';
+  if(s >= 3.5) return '#4A8020';
+  if(s >= 2.5) return '#D4920A';
+  if(s >= 1.5) return '#A04010';
+  return '#B03020';
+}
+
+function scoreLabel(s){
+  if(s >= 4.5) return 'Excellentes';
+  if(s >= 3.5) return 'Bonnes';
+  if(s >= 2.5) return 'Moyennes';
+  if(s >= 1.5) return 'D\u00e9favorables';
+  return 'Mauvaises';
+}
+
+function scoreClass(s){
+  if(s >= 4.5) return 'score-5';
+  if(s >= 3.5) return 'score-4';
+  if(s >= 2.5) return 'score-3';
+  if(s >= 1.5) return 'score-2';
+  return 'score-1';
+}
+
+function condAlert(s){
+  if(s >= 3.5) return {cls:'cond-bon', msg:'&#x2713; Bonnes conditions \u2014 ideal pour visiter les ruches et observer la miell\u00e9e.'};
+  if(s >= 2.5) return {cls:'cond-moyen', msg:'&#x26A0;&#xFE0F; Conditions moyennes \u2014 visite possible mais activit\u00e9 des abeilles r\u00e9duite.'};
+  return {cls:'cond-mauvais', msg:'&#x274C; Conditions d\u00e9favorables \u2014 \u00e9viter les interventions, les abeilles restent en ruche.'};
+}
+
+const jours = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+
+let DATA_CACHE = {};
+
+// ── CHARGER MÉTÉO OPEN-METEO ──
+async function fetchMeteo(rucher){
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${rucher.lat}&longitude=${rucher.lng}`
+    + `&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m`
+    + `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max`
+    + `&hourly=temperature_2m,precipitation,wind_speed_10m`
+    + `&timezone=Europe%2FParis&forecast_days=6`;
+  const resp = await fetch(url);
+  if(!resp.ok) throw new Error('API indisponible');
+  return resp.json();
+}
+
+// ── RENDU CARTE ──
+function renderCard(rucher, data){
+  const c = data.current;
+  const wmo = wmoInfo(c.weather_code);
+  const score = scoreApicole(c.temperature_2m, c.wind_speed_10m, c.precipitation, c.relative_humidity_2m);
+  const scol = scoreColor(score);
+  const slab = scoreLabel(score);
+  const cond = condAlert(score);
+
+  // Prévisions 5 jours
+  const daily = data.daily;
+  const prevs = Array.from({length:5},(_,i)=>{
+    const d = new Date(daily.time[i+1]);
+    const sc = scoreApicole(
+      (daily.temperature_2m_max[i+1]+daily.temperature_2m_min[i+1])/2,
+      daily.wind_speed_10m_max[i+1], daily.precipitation_sum[i+1], 60
+    );
+    return {
+      label: jours[d.getDay()],
+      icon: wmoInfo(daily.weather_code[i+1]).ic,
+      tmax: Math.round(daily.temperature_2m_max[i+1]),
+      tmin: Math.round(daily.temperature_2m_min[i+1]),
+      score: sc, scol: scoreColor(sc),
+    };
+  });
+
+  const el = document.getElementById('card-'+rucher.id);
+  el.classList.remove('loading');
+  el.querySelector('.card-body').innerHTML = `
+    <div class="meteo-main">
+      <div class="meteo-icon">${wmo.ic}</div>
+      <div>
+        <div style="display:flex;align-items:baseline;gap:2px">
+          <div class="meteo-temp">${Math.round(c.temperature_2m)}</div>
+          <div class="meteo-unit">°C</div>
+        </div>
+        <div class="meteo-desc">${wmo.desc}</div>
+        <div style="font-size:10px;font-weight:700;color:var(--bark-pale)">Ressenti ${Math.round(c.apparent_temperature)}°C</div>
+      </div>
+      <div style="margin-left:auto">
+        <div class="score-badge ${scoreClass(score)}">${wmo.ic.includes('2600')||wmo.ic.includes('26C5')?'&#x1F41D;':'&#x1F41D;'} ${score.toFixed(1)}/5</div>
+        <div style="font-size:9px;font-weight:700;color:${scol};text-align:center;margin-top:3px">${slab}</div>
+      </div>
+    </div>
+    <div class="meteo-details">
+      <div class="detail-item">
+        <div class="detail-icon">&#x1F4A7;</div>
+        <div class="detail-val">${c.precipitation.toFixed(1)} mm</div>
+        <div class="detail-lab">Pluie</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">&#x1F32C;&#xFE0F;</div>
+        <div class="detail-val">${Math.round(c.wind_speed_10m)} km/h</div>
+        <div class="detail-lab">Vent</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">&#x1F4A6;</div>
+        <div class="detail-val">${c.relative_humidity_2m}%</div>
+        <div class="detail-lab">Humidit\u00e9</div>
+      </div>
+    </div>
+    <div class="score-section">
+      <div class="score-label">Score apicole</div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:${(score/5)*100}%;background:${scol}"></div></div>
+        <span style="font-family:'Dancing Script',cursive;font-size:18px;color:${scol};min-width:38px;text-align:right">${score.toFixed(1)}</span>
+      </div>
+      <div class="cond-alert ${cond.cls}" style="margin-top:8px">${cond.msg}</div>
+    </div>
+    <div class="previsions">
+      ${prevs.map(p=>`<div class="prev-day">
+        <div class="prev-label">${p.label}</div>
+        <div class="prev-icon">${p.icon}</div>
+        <div class="prev-temp">${p.tmax}°/${p.tmin}°</div>
+        <div class="prev-score" style="background:${p.scol}"></div>
+      </div>`).join('')}
+    </div>`;
+
+  // Cache pour détail
+  DATA_CACHE[rucher.id] = {rucher, data, score, wmo};
+}
+
+// ── RENDU INITIAL (squelettes) ──
+function initGrid(){
+  document.getElementById('ruchers-grid').innerHTML = RUCHERS.map(r=>`
+    <div class="meteo-card loading" id="card-${r.id}" onclick="openDetail('${r.id}')">
+      <div class="card-header" data-emoji="${r.emoji}">
+        <div class="card-location">&#x1F4CD; ${r.lieu} &middot; ${r.ruches} ruches</div>
+        <div class="card-name">${r.nom}</div>
+        <div class="card-desc">${r.desc}</div>
+      </div>
+      <div class="card-body">
+        <div class="loader">
+          <div class="loader-spin"></div>
+          <div class="loader-txt">Chargement m\u00e9t\u00e9o…</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+async function loadAll(){
+  for(const rucher of RUCHERS){
+    try {
+      const data = await fetchMeteo(rucher);
+      renderCard(rucher, data);
+    } catch(e) {
+      const el = document.getElementById('card-'+rucher.id);
+      el.classList.remove('loading');
+      el.querySelector('.card-body').innerHTML = `
+        <div style="padding:20px;text-align:center;color:var(--bark-pale)">
+          <div style="font-size:28px;margin-bottom:6px">&#x26A0;&#xFE0F;</div>
+          <div style="font-size:12px;font-weight:700">M\u00e9t\u00e9o indisponible</div>
+          <div style="font-size:10px;font-family:'Crimson Pro',serif;font-style:italic;margin-top:4px">V\u00e9rifier la connexion internet</div>
+        </div>`;
+    }
+  }
+}
+
+function refreshAll(){
+  initGrid();
+  loadAll();
+}
+
+// ── DÉTAIL RUCHER ──
+function openDetail(id){
+  const cached = DATA_CACHE[id];
+  if(!cached) return;
+  const {rucher, data, score, wmo} = cached;
+  const cond = condAlert(score);
+
+  // Données horaires (heures suivantes)
+  const now = new Date();
+  const hourly = data.hourly;
+  const startIdx = hourly.time.findIndex(t=> new Date(t) >= now);
+  const nextHours = Array.from({length:12},(_,i)=>{
+    const idx = (startIdx+i);
+    if(idx >= hourly.time.length) return null;
+    return {
+      h: new Date(hourly.time[idx]).getHours()+'h',
+      temp: Math.round(hourly.temperature_2m[idx]),
+      rain: hourly.precipitation[idx],
+      wind: Math.round(hourly.wind_speed_10m[idx]),
+    };
+  }).filter(Boolean);
+
+  const maxTemp = Math.max(...nextHours.map(h=>h.temp),1);
+
+  document.getElementById('detail-panel').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+      <div>
+        <div style="font-size:22px;margin-bottom:3px">${rucher.emoji}</div>
+        <div style="font-family:'Dancing Script',cursive;font-size:30px;font-weight:700;color:var(--green)">${rucher.nom}</div>
+        <div style="font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;color:var(--bark-mid)">${rucher.lieu} &middot; ${rucher.ruches} ruches &middot; ${rucher.desc}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="score-badge ${scoreClass(score)}" style="font-size:13px;padding:6px 16px">${score.toFixed(1)}/5</div>
+        <div style="font-size:10px;font-weight:700;color:${scoreColor(score)};margin-top:4px">${scoreLabel(score)}</div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:14px;padding:14px;background:var(--cream);border-radius:16px;margin-bottom:14px">
+      <div style="font-size:48px">${wmo.ic}</div>
+      <div>
+        <div style="font-family:'Dancing Script',cursive;font-size:42px;color:var(--bark);line-height:1">${Math.round(data.current.temperature_2m)}°C</div>
+        <div style="font-size:12px;font-weight:700;color:var(--bark-mid)">${wmo.desc}</div>
+      </div>
+      <div style="margin-left:auto;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="text-align:center;background:var(--white);border-radius:10px;padding:8px 12px">
+          <div style="font-size:13px">&#x1F4A7;</div>
+          <div style="font-size:12px;font-weight:700">${data.current.precipitation.toFixed(1)} mm</div>
+          <div style="font-size:8px;font-weight:700;color:var(--bark-pale);text-transform:uppercase">Pluie</div>
+        </div>
+        <div style="text-align:center;background:var(--white);border-radius:10px;padding:8px 12px">
+          <div style="font-size:13px">&#x1F32C;&#xFE0F;</div>
+          <div style="font-size:12px;font-weight:700">${Math.round(data.current.wind_speed_10m)} km/h</div>
+          <div style="font-size:8px;font-weight:700;color:var(--bark-pale);text-transform:uppercase">Vent</div>
+        </div>
+        <div style="text-align:center;background:var(--white);border-radius:10px;padding:8px 12px">
+          <div style="font-size:13px">&#x1F4A6;</div>
+          <div style="font-size:12px;font-weight:700">${data.current.relative_humidity_2m}%</div>
+          <div style="font-size:8px;font-weight:700;color:var(--bark-pale);text-transform:uppercase">Humidit\u00e9</div>
+        </div>
+        <div style="text-align:center;background:var(--white);border-radius:10px;padding:8px 12px">
+          <div style="font-size:13px">&#x1F321;&#xFE0F;</div>
+          <div style="font-size:12px;font-weight:700">${Math.round(data.current.apparent_temperature)}°C</div>
+          <div style="font-size:8px;font-weight:700;color:var(--bark-pale);text-transform:uppercase">Ressenti</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cond-alert ${cond.cls}" style="margin-bottom:14px">${cond.msg}</div>
+
+    <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bark-pale);margin-bottom:6px">&#x1F570;&#xFE0F; Temp\u00e9rature les 12 prochaines heures</div>
+    <div class="hourly-chart">
+      ${nextHours.map(h=>`<div class="h-col">
+        <div class="h-bar" style="height:${Math.max(4,(h.temp/maxTemp)*72)}px"></div>
+        <div style="font-size:9px;font-weight:700;color:var(--bark)">${h.temp}°</div>
+        <div class="h-label">${h.h}</div>
+      </div>`).join('')}
+    </div>
+
+    <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bark-pale);margin:14px 0 8px">&#x1F4C5; Pr\u00e9visions 5 jours</div>
+    ${Array.from({length:5},(_,i)=>{
+      const d = new Date(data.daily.time[i+1]);
+      const sc = scoreApicole((data.daily.temperature_2m_max[i+1]+data.daily.temperature_2m_min[i+1])/2, data.daily.wind_speed_10m_max[i+1], data.daily.precipitation_sum[i+1], 60);
+      const wi = wmoInfo(data.daily.weather_code[i+1]);
+      return `<div style="display:flex;align-items:center;gap:12px;padding:8px 12px;background:var(--cream);border-radius:12px;margin-bottom:6px">
+        <div style="font-size:18px;width:30px;text-align:center">${wi.ic}</div>
+        <div style="font-weight:700;font-size:12px;min-width:36px">${jours[d.getDay()]}</div>
+        <div style="font-family:'Crimson Pro',serif;font-size:12px;color:var(--bark-mid);flex:1">${wi.desc}</div>
+        <div style="font-size:11px;font-weight:700;color:var(--bark-mid)">${Math.round(data.daily.temperature_2m_max[i+1])}° / ${Math.round(data.daily.temperature_2m_min[i+1])}°</div>
+        <div style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;background:${scoreColor(sc)}20;color:${scoreColor(sc)}">${sc.toFixed(1)}</div>
+      </div>`;
+    }).join('')}
+
+    <div style="text-align:right;margin-top:10px">
+      <button class="btn btn-secondary" onclick="closeDetail()" style="font-size:11px">Fermer</button>
+    </div>`;
+
+  document.getElementById('detail-overlay').classList.add('open');
+}
+
+function closeDetail(e){
+  if(!e || e.target===document.getElementById('detail-overlay'))
+    document.getElementById('detail-overlay').classList.remove('open');
+}
+
+// ── INIT ──
+initGrid();
+loadAll();
+
+// ── Exposer les fonctions pour les onclick HTML (requis avec type="module") ──
+if(typeof closeDetail!=='undefined') window.closeDetail=closeDetail;
+if(typeof openDetail!=='undefined') window.openDetail=openDetail;
+if(typeof refreshAll!=='undefined') window.refreshAll=refreshAll;
+</script>
+
+
+<script>
+
+// ════ MOBILE SIDEBAR ════
+function toggleMobileSidebar(){
+  const sb=document.getElementById('sidebar'),ov=document.getElementById('sb-overlay');
+  if(!sb||!ov) return;
+  sb.classList.toggle('mobile-open');ov.classList.toggle('open');
+  if(sb.classList.contains('mobile-open')) sb.style.display='flex';
+}
+function closeMobileSidebar(){
+  const sb=document.getElementById('sidebar'),ov=document.getElementById('sb-overlay');
+  if(!sb||!ov) return;
+  sb.classList.remove('mobile-open');ov.classList.remove('open');
+  sb.style.display='';
+}
+
+// ════ PWA SERVICE WORKER ════
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  });
+}
+
+</script>
+
+<nav class="bottom-nav" id="bottom-nav">
+  <a href="https://rucher-9bb59.web.app/01-tableau-de-bord.html" class="bn-item" data-page="tableau-de-bord"><span>🏠</span><span>Accueil</span></a>
+  <a href="https://rucher-9bb59.web.app/02-au-rucher.html" class="bn-item" data-page="au-rucher"><span>🏕️</span><span>Rucher</span></a>
+  <a href="https://rucher-9bb59.web.app/05-recoltes.html" class="bn-item" data-page="recoltes"><span>🍯</span><span>Récoltes</span></a>
+  <a href="https://rucher-9bb59.web.app/06-vente.html" class="bn-item" data-page="vente"><span>🛒</span><span>Vente</span></a>
+  <a href="https://rucher-9bb59.web.app/03-atelier.html" class="bn-item" data-page="atelier"><span>🔧</span><span>Atelier</span></a>
+</nav>
+</body></html>

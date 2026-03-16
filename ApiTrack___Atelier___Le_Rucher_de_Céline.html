@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="theme-color" content="#007A38">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ApiTrack">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/logo.jpg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ApiTrack — Atelier · Le Rucher de Céline</title>
+<link href="./ApiTrack — Atelier · Le Rucher de Céline_files/css2" rel="stylesheet">
+<style>
+  :root{
+    --honey:#D4920A;--honey-bright:#F0A800;--honey-light:#F5C842;
+    --honey-pale:#FBE8A0;--honey-cream:#FDF3D0;
+    --cream:#FAF0D0;--cream-deep:#F0E0A8;
+    --green:#00B050;--green-dark:#007A38;--green-pale:#D0F2E0;
+    --bark:#5C3608;--bark-mid:#8B5A20;--bark-light:#B8864A;--bark-pale:#D4AA78;
+    --white:#FFFDF4;
+    --shadow:rgba(92,54,8,0.12);--shadow-deep:rgba(92,54,8,0.24);
+    --red:#B03020;--red-pale:#FDEAEA;
+    --blue:#2756A8;--blue-pale:#E8F0FA;
+    --orange:#D46A0A;--orange-pale:#FDE8D0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--cream);font-family:'Josefin Sans',sans-serif;color:var(--bark);min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='104'%3E%3Cpath d='M30 2l28 16v32L30 66 2 50V18L30 2zm0 8L8 24v24l22 13 22-13V24L30 10z' fill='%2300B050' fill-opacity='0.045'/%3E%3Cpath d='M30 66l28 16v32L30 130 2 114V82L30 66zm0 8L8 88v24l22 13 22-13V88L30 74z' fill='%2300B050' fill-opacity='0.045'/%3E%3C/svg%3E");}
+
+  /* ── SIDEBAR ── */
+  .sidebar{position:fixed;left:0;top:0;bottom:0;width:70px;background:linear-gradient(180deg,var(--green) 0%,var(--green-dark) 100%);display:flex;flex-direction:column;align-items:center;padding:18px 0;z-index:100;box-shadow:4px 0 22px var(--shadow-deep);transition:width .38s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+  .sidebar:hover{width:235px;}
+  .sb-brand{width:100%;padding:0 12px;display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+  .sb-logo{width:46px;height:46px;flex-shrink:0;background:linear-gradient(135deg,var(--honey-bright),var(--honey));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 14px rgba(240,168,0,.4);}
+  .sb-brand-text{opacity:0;transition:opacity .2s;white-space:nowrap;}
+  .sidebar:hover .sb-brand-text{opacity:1;transition-delay:.14s;}
+  .sb-name{font-family:'Dancing Script',cursive;font-size:16px;color:var(--honey-pale);line-height:1.1;}
+  .sb-sub{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(251,232,160,.55);}
+  .nav-grp-label{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(208,242,224,.38);padding:10px 14px 4px;white-space:nowrap;opacity:0;transition:opacity .2s;width:100%;}
+  .sidebar:hover .nav-grp-label{opacity:1;transition-delay:.1s;}
+  .nav-item{width:100%;padding:11px 12px;display:flex;align-items:center;gap:12px;cursor:pointer;border:none;background:none;color:rgba(208,242,224,.72);text-align:left;transition:background .2s,color .2s;position:relative;}
+  .nav-item:hover{background:rgba(255,255,255,.1);color:var(--honey-pale);}
+  .nav-item.active{background:linear-gradient(90deg,rgba(240,168,0,.22),rgba(240,168,0,.04));color:var(--honey-light);}
+  .nav-item.active::before{content:'';position:absolute;left:0;top:18%;bottom:18%;width:3px;background:var(--honey-bright);border-radius:0 3px 3px 0;}
+  .nav-icon{font-size:20px;width:46px;text-align:center;flex-shrink:0;position:relative;}
+  .nav-label{font-size:12px;font-weight:600;letter-spacing:.04em;white-space:nowrap;opacity:0;transition:opacity .2s;}
+  .sidebar:hover .nav-label{opacity:1;transition-delay:.12s;}
+  .nav-alert{position:absolute;top:-2px;right:4px;width:14px;height:14px;background:var(--red);border-radius:50%;border:2px solid var(--green-dark);font-size:8px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;}
+  .nav-sep{width:36px;height:1px;background:rgba(208,242,224,.14);margin:8px auto;transition:width .38s;}
+  .sidebar:hover .nav-sep{width:195px;}
+  .sb-user{margin-top:auto;width:100%;padding:12px;display:flex;align-items:center;gap:12px;border-top:1px solid rgba(208,242,224,.1);}
+  .sb-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--honey),var(--honey-light));display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;border:2px solid rgba(255,255,255,.18);}
+  .sb-user-info{opacity:0;transition:opacity .2s;white-space:nowrap;}
+  .sidebar:hover .sb-user-info{opacity:1;transition-delay:.14s;}
+  .sb-user-name{font-size:12px;font-weight:600;color:var(--honey-pale);}
+  .sb-user-role{font-size:10px;color:rgba(208,242,224,.5);}
+
+  /* ── MAIN ── */
+  .main{margin-left:70px;min-height:100vh;position:relative;z-index:1;padding:32px 40px 60px;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ── HEADER ── */
+  .page-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;animation:fadeUp .5s ease both;}
+  .breadcrumb{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--bark-light);margin-bottom:6px;}
+  .breadcrumb .sep{color:var(--bark-pale);}
+  .breadcrumb .cur{color:var(--green);}
+  .pg-title{font-family:'Dancing Script',cursive;font-size:44px;font-weight:700;color:var(--green);line-height:1;}
+  .pg-sub{font-family:'Crimson Pro',serif;font-style:italic;font-size:15px;color:var(--bark-mid);margin-top:4px;}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:50px;border:none;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:.04em;transition:all .2s;}
+  .btn-primary{background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;box-shadow:0 4px 14px rgba(0,176,80,.3);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,176,80,.42);}
+  .btn-secondary{background:var(--white);border:1.5px solid var(--cream-deep);color:var(--bark-mid);}
+  .btn-secondary:hover{border-color:var(--honey);color:var(--bark);}
+
+  /* ── ALERTES STOCK BAS ── */
+  .alert-strip{background:linear-gradient(135deg,#FFF0EE,#FDEAEA);border:1.5px solid #F0C0B8;border-radius:18px;padding:13px 20px;margin-bottom:22px;display:flex;align-items:center;gap:12px;box-shadow:0 3px 12px rgba(176,48,32,.08);animation:fadeUp .5s .04s ease both;}
+  .alert-strip-text{font-size:13px;font-weight:700;color:var(--red);}
+  .alert-strip-detail{font-family:'Crimson Pro',serif;font-size:12px;color:#9A3020;font-style:italic;}
+
+  /* ── FILTRES CATÉGORIES ── */
+  .cat-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;animation:fadeUp .5s .05s ease both;}
+  .cat-tab{display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:50px;border:1.5px solid var(--cream-deep);background:var(--white);cursor:pointer;font-size:12px;font-weight:700;color:var(--bark-mid);transition:all .2s;white-space:nowrap;box-shadow:0 2px 6px var(--shadow);}
+  .cat-tab:hover{border-color:var(--honey);color:var(--bark);}
+  .cat-tab.active{background:var(--green);border-color:var(--green);color:#fff;box-shadow:0 4px 12px rgba(0,176,80,.3);}
+  .cat-tab .ct-count{font-size:10px;background:rgba(255,255,255,.25);padding:1px 7px;border-radius:10px;}
+  .cat-tab:not(.active) .ct-count{background:var(--cream-deep);color:var(--bark-light);}
+
+  /* ── GRILLE ARTICLES ── */
+  .stock-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;animation:fadeUp .55s .08s ease both;}
+
+  /* ── ARTICLE CARD ── */
+  .art-card{background:var(--white);border:2px solid var(--cream-deep);border-radius:20px;padding:18px 16px 14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 3px 12px var(--shadow);transition:transform .25s,box-shadow .25s,border-color .25s;position:relative;}
+  .art-card:hover{transform:translateY(-5px);box-shadow:0 10px 26px var(--shadow-deep);border-color:var(--honey);}
+  .art-card.low{border-color:#F0C0B8;}
+  .art-card.out{border-color:var(--red);}
+  .art-alert-badge{position:absolute;top:-8px;right:12px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.05em;}
+  .badge-low{background:var(--orange-pale);color:var(--orange);}
+  .badge-out{background:var(--red-pale);color:var(--red);}
+  .art-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+  .art-icon{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .art-name{font-size:14px;font-weight:700;color:var(--bark);line-height:1.3;}
+  .art-cat{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--bark-pale);margin-top:2px;}
+  .art-menu-btn{width:28px;height:28px;border-radius:8px;background:var(--cream);border:1.5px solid var(--cream-deep);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--bark-pale);font-size:14px;flex-shrink:0;transition:all .2s;}
+  .art-menu-btn:hover{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+
+  /* Quantité */
+  .art-qty-wrap{display:flex;align-items:center;justify-content:space-between;}
+  .qty-controls{display:flex;align-items:center;gap:6px;}
+  .qty-btn{width:30px;height:30px;border-radius:9px;border:1.5px solid var(--cream-deep);background:var(--cream);cursor:pointer;font-size:16px;font-weight:700;color:var(--bark-mid);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+  .qty-btn:hover{background:var(--green);border-color:var(--green);color:#fff;}
+  .qty-val{font-family:'Dancing Script',cursive;font-size:30px;color:var(--bark);min-width:42px;text-align:center;line-height:1;}
+  .qty-unit{font-size:11px;font-weight:700;color:var(--bark-pale);text-align:right;}
+
+  /* Barre de stock */
+  .stock-bar-wrap{display:flex;flex-direction:column;gap:3px;}
+  .stock-bar{height:6px;background:var(--cream-deep);border-radius:3px;overflow:hidden;}
+  .stock-fill{height:100%;border-radius:3px;transition:width .5s ease,background .3s;}
+  .stock-info{display:flex;justify-content:space-between;font-size:10px;font-weight:700;}
+  .stock-min{color:var(--bark-pale);}
+  .stock-status-ok{color:var(--green);}
+  .stock-status-low{color:var(--orange);}
+  .stock-status-out{color:var(--red);}
+
+  /* Notes */
+  .art-note{font-family:'Crimson Pro',serif;font-style:italic;font-size:11px;color:var(--bark-mid);border-top:1px solid var(--cream-deep);padding-top:8px;line-height:1.4;}
+
+  /* Dernière modif */
+  .art-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--cream-deep);padding-top:8px;}
+  .art-date{font-size:10px;color:var(--bark-pale);font-weight:600;}
+  .art-location{font-size:10px;font-weight:700;background:var(--cream);border-radius:6px;padding:2px 8px;color:var(--bark-light);}
+
+  /* ── DRAWER ARTICLE ── */
+  .overlay{position:fixed;inset:0;background:rgba(92,54,8,.35);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s;}
+  .overlay.open{opacity:1;pointer-events:all;}
+  .drawer{position:fixed;right:-520px;top:0;bottom:0;width:500px;background:var(--white);z-index:201;box-shadow:-8px 0 40px var(--shadow-deep);transition:right .38s cubic-bezier(.4,0,.2,1);overflow-y:auto;display:flex;flex-direction:column;}
+  .drawer.open{right:0;}
+  .dw-header{padding:22px 26px 18px;border-bottom:1.5px solid var(--cream-deep);flex-shrink:0;background:linear-gradient(135deg,var(--cream),var(--white));position:sticky;top:0;z-index:10;}
+  .dw-title-row{display:flex;align-items:center;justify-content:space-between;}
+  .dw-title{font-family:'Dancing Script',cursive;font-size:26px;font-weight:700;color:var(--green);}
+  .dw-sub{font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;color:var(--bark-mid);margin-top:2px;}
+  .dw-close{width:34px;height:34px;border-radius:9px;background:var(--cream);border:1.5px solid var(--cream-deep);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;color:var(--bark-light);transition:all .2s;}
+  .dw-close:hover{background:#FDEAEA;border-color:var(--red);color:var(--red);}
+  .dw-body{padding:22px 26px;flex:1;display:flex;flex-direction:column;gap:18px;}
+  .dw-footer{padding:18px 26px;border-top:1.5px solid var(--cream-deep);flex-shrink:0;background:var(--white);position:sticky;bottom:0;display:flex;gap:10px;}
+  .form-section{display:flex;flex-direction:column;gap:9px;}
+  .form-sec-title{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--bark-pale);padding-bottom:6px;border-bottom:1.5px solid var(--cream-deep);}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .form-group{display:flex;flex-direction:column;gap:4px;}
+  .form-label{font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--bark-mid);}
+  .form-input,.form-select,.form-textarea{background:var(--cream);border:1.5px solid var(--cream-deep);border-radius:11px;padding:9px 13px;font-family:'Josefin Sans',sans-serif;font-size:13px;color:var(--bark);transition:border-color .2s;outline:none;width:100%;}
+  .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--green);background:var(--white);box-shadow:0 0 0 3px rgba(0,176,80,.1);}
+  .form-textarea{resize:vertical;min-height:70px;line-height:1.5;}
+
+  /* Mouvement de stock */
+  .mvt-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .mvt-btn{padding:14px 12px;border-radius:14px;border:2px solid var(--cream-deep);background:var(--cream);cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:12px;font-weight:700;transition:all .2s;text-align:center;}
+  .mvt-btn:hover{transform:translateY(-2px);}
+  .mvt-btn.entree{border-color:var(--green);color:var(--green);}
+  .mvt-btn.entree:hover,.mvt-btn.entree.active{background:var(--green);color:#fff;box-shadow:0 4px 12px rgba(0,176,80,.3);}
+  .mvt-btn.sortie{border-color:var(--orange);color:var(--orange);}
+  .mvt-btn.sortie:hover,.mvt-btn.sortie.active{background:var(--orange);color:#fff;box-shadow:0 4px 12px rgba(212,106,10,.3);}
+  .mvt-btn.perte{border-color:var(--red);color:var(--red);}
+  .mvt-btn.perte:hover,.mvt-btn.perte.active{background:var(--red);color:#fff;}
+  .mvt-btn.inventaire{border-color:var(--blue);color:var(--blue);}
+  .mvt-btn.inventaire:hover,.mvt-btn.inventaire.active{background:var(--blue);color:#fff;}
+
+  /* Historique mouvements */
+  .histo-mvt{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--cream);border-radius:11px;margin-bottom:6px;}
+  .hm-sign{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+  .hm-plus{background:var(--green-pale);color:var(--green);}
+  .hm-minus{background:var(--orange-pale);color:var(--orange);}
+  .hm-perte{background:var(--red-pale);color:var(--red);}
+  .hm-inv{background:var(--blue-pale);color:var(--blue);}
+  .hm-body{flex:1;}
+  .hm-label{font-size:12px;font-weight:700;color:var(--bark);}
+  .hm-note{font-family:'Crimson Pro',serif;font-style:italic;font-size:11px;color:var(--bark-mid);}
+  .hm-date{font-size:10px;font-weight:700;color:var(--bark-pale);white-space:nowrap;}
+  .hm-qty{font-family:'Dancing Script',cursive;font-size:18px;font-weight:700;white-space:nowrap;}
+
+  /* Bilan global */
+  .bilan-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;animation:fadeUp .55s .06s ease both;}
+  .bilan-card{background:var(--white);border:1.5px solid var(--cream-deep);border-radius:18px;padding:14px 16px;box-shadow:0 3px 10px var(--shadow);position:relative;overflow:hidden;}
+  .bilan-card::after{content:attr(data-icon);position:absolute;right:-2px;bottom:-6px;font-size:44px;opacity:.07;line-height:1;pointer-events:none;}
+  .bilan-val{font-family:'Dancing Script',cursive;font-size:28px;color:var(--bark);}
+  .bilan-lab{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bark-pale);margin-top:2px;}
+
+  @media(max-width:1100px){.stock-grid{grid-template-columns:repeat(2,1fr)}.bilan-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:700px){.main{padding:20px 16px}.stock-grid{grid-template-columns:1fr}.drawer{width:100%;right:-100%}}
+  .art-card.drag-over{border-color:var(--green);background:rgba(0,176,80,.06);transform:scale(1.02);}
+  .art-card[draggable]{cursor:grab;}
+  .art-card[draggable]:active{cursor:grabbing;}
+
+  /* ── AUTH LOADING OVERLAY ── */
+  50%{opacity:1;transform:scale(1)}}
+
+  
+  .sb-logo-link{display:flex;align-items:center;justify-content:center;}
+  .sb-logo-img{width:44px;height:44px;object-fit:contain;border-radius:12px;background:var(--white);flex-shrink:0;}
+  .nav-item{text-decoration:none;display:flex;align-items:center;gap:12px;width:100%;padding:11px 12px;cursor:pointer;border:none;background:none;color:rgba(208,242,224,.72);text-align:left;transition:background .2s,color .2s;position:relative;font-family:'Josefin Sans',sans-serif;font-size:12px;}
+
+  
+  /* ── MOBILE TOPBAR (PWA) ── */
+  .mobile-topbar{display:none;position:fixed;top:0;left:0;right:0;height:54px;background:linear-gradient(135deg,var(--green),var(--green-dark));z-index:300;align-items:center;padding:0 14px;gap:12px;box-shadow:0 2px 12px var(--shadow-deep);}
+  .mobile-menu-btn{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+  .mobile-topbar-title{font-family:'Dancing Script',cursive;font-size:22px;color:var(--honey-pale);flex:1;}
+  .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:299;}
+  .sb-overlay.open{display:block;}
+  .sidebar.mobile-open{width:235px!important;}
+  .sidebar.mobile-open .nav-label,.sidebar.mobile-open .sb-brand-text,.sidebar.mobile-open .nav-grp-label,.sidebar.mobile-open .sb-user-info{opacity:1!important;transition-delay:0s!important;}
+  .sidebar.mobile-open .nav-sep{width:195px!important;}
+  /* ── BOTTOM NAV BAR (PWA) ── */
+  .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--white);border-top:1.5px solid var(--cream-deep);z-index:200;align-items:stretch;padding:0;box-shadow:0 -4px 16px var(--shadow);}
+  .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-decoration:none;color:var(--bark-light);font-size:9px;font-weight:700;letter-spacing:.04em;padding:6px 0;transition:color .15s;border:none;background:none;cursor:pointer;}
+  .bn-item.active{color:var(--green);}
+  .bn-item span:first-child{font-size:20px;line-height:1;}
+  @media(max-width:660px){
+    .mobile-topbar{display:flex;}
+    .bottom-nav{display:flex;}
+  }
+  @media(max-width:660px){
+    :root{--sb-w:0px;}
+    .sidebar{display:none;} .sidebar.mobile-open{display:flex;width:235px;}
+    .mobile-topbar{display:flex;}
+    .main{margin-left:0;padding:70px 14px 90px;}
+    .page-header,.header-actions{flex-direction:column;gap:10px;}
+    .page-title{font-size:32px;}
+    .stock-grid{grid-template-columns:1fr!important;}
+    .bilan-grid{grid-template-columns:1fr 1fr!important;}
+    .drawer{width:100%;right:-100%;border-radius:20px 20px 0 0;top:auto;height:92vh;}
+    .drawer.open{right:0;}
+    .form-row{grid-template-columns:1fr!important;}
+  }
+  @media(max-width:380px){
+    .bilan-grid{grid-template-columns:1fr!important;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="ao-text">Le Rucher de Céline</div>
+  <div class="ao-dots"><span></span><span></span><span></span></div>
+
+<div class="mobile-topbar" id="mobile-topbar">
+  <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">☰</button>
+  <div class="mobile-topbar-title">🔧 Atelier</div>
+</div>
+<div class="sb-overlay" id="sb-overlay" onclick="closeMobileSidebar()"></div>
+
+
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <a href="https://rucher-9bb59.web.app/index.html" class="sb-logo-link"><img src="./ApiTrack — Atelier · Le Rucher de Céline_files/logo.jpg" alt="logo" class="sb-logo-img"></a>
+    <div class="sb-brand-text"><div class="sb-title">ApiTrack</div><div class="sb-sub">Le Rucher de Céline</div></div>
+  </div>
+  <div class="nav-sep"></div>
+  <div class="nav-grp-label">Ruchers</div>
+  <a href="https://rucher-9bb59.web.app/index.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Tableau de bord</span></a>
+  <a href="https://rucher-9bb59.web.app/02-au-rucher.html" class="nav-item"><span class="nav-icon">🏕️</span><span class="nav-label">Au Rucher</span></a>
+  <a href="https://rucher-9bb59.web.app/03-atelier.html" class="nav-item active"><span class="nav-icon">🔧</span><span class="nav-label">Atelier</span></a>
+  <div class="nav-sep"></div>
+  <div class="nav-grp-label">Commerce</div>
+  <a href="https://rucher-9bb59.web.app/05-recoltes.html" class="nav-item"><span class="nav-icon">🍯</span><span class="nav-label">Récoltes</span></a>
+  <a href="https://rucher-9bb59.web.app/06-vente.html" class="nav-item"><span class="nav-icon">🛒</span><span class="nav-label">Vente</span></a>
+  <a href="https://rucher-9bb59.web.app/07-achats.html" class="nav-item"><span class="nav-icon">📦</span><span class="nav-label">Achats</span></a>
+  <div class="nav-sep"></div>
+  <div class="nav-grp-label">Élevage &amp; Résultats</div>
+  <a href="https://rucher-9bb59.web.app/04-elevage-reines.html" class="nav-item"><span class="nav-icon">👑</span><span class="nav-label">Élevage Reines</span></a>
+  <a href="https://rucher-9bb59.web.app/08-resultats.html" class="nav-item"><span class="nav-icon">📊</span><span class="nav-label">Résultats</span></a>
+  <a href="https://rucher-9bb59.web.app/09-meteo-ruchers.html" class="nav-item"><span class="nav-icon">🌤️</span><span class="nav-label">Météo Ruchers</span></a>
+  <div class="nav-sep"></div>
+  <div class="sb-user">
+    <div class="sb-avatar">👩</div>
+    <div class="sb-user-info"><div class="sb-user-name">Christelle</div><div class="sb-user-role">Apicultrice</div></div>
+  </div>
+  <button class="nav-item" onclick="handleLogout()" style="margin-top:4px;color:rgba(208,242,224,.5);"><span class="nav-icon">↩</span><span class="nav-label">Déconnexion</span></button>
+</nav>
+
+
+<!-- OVERLAY + DRAWER -->
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="dw-header">
+    <div class="dw-title-row">
+      <div>
+        <div class="dw-title" id="dw-title">Article</div>
+        <div class="dw-sub" id="dw-sub">—</div>
+      </div>
+      <button class="dw-close" onclick="closeDrawer()">✕</button>
+    </div>
+  </div>
+  <div class="dw-body">
+    <!-- Mouvement rapide -->
+    <div class="form-section">
+      <div class="form-sec-title">📦 Mouvement de stock</div>
+      <div class="mvt-btns">
+        <div class="mvt-btn entree" onclick="selMvt(this,&#39;entree&#39;)">➕ Entrée<br><span style="font-size:10px;font-weight:400;opacity:.75">Achat / réception</span></div>
+        <div class="mvt-btn sortie" onclick="selMvt(this,&#39;sortie&#39;)">➖ Sortie<br><span style="font-size:10px;font-weight:400;opacity:.75">Utilisation rucher</span></div>
+        <div class="mvt-btn perte" onclick="selMvt(this,&#39;perte&#39;)">🗑️ Perte<br><span style="font-size:10px;font-weight:400;opacity:.75">Casse / périmé</span></div>
+        <div class="mvt-btn inventaire" onclick="selMvt(this,&#39;inventaire&#39;)">📋 Inventaire<br><span style="font-size:10px;font-weight:400;opacity:.75">Correction manuelle</span></div>
+      </div>
+      <div class="form-row" style="margin-top:4px">
+        <div class="form-group">
+          <label class="form-label">Quantité</label>
+          <input type="number" class="form-input" id="mvt-qty" min="1" value="1" placeholder="ex: 5">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" id="mvt-date">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Note (optionnel)</label>
+        <input type="text" class="form-input" id="mvt-note" placeholder="ex: Achat Icko, Rucher Montagne…">
+      </div>
+    </div>
+
+    <!-- Modifier article -->
+    <div class="form-section">
+      <div class="form-sec-title">⚙️ Paramètres de l'article</div>
+      <div class="form-group">
+        <label class="form-label">Nom de l'article</label>
+        <input type="text" class="form-input" id="ed-name" placeholder="Nom de l&#39;article…">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Stock actuel</label>
+          <input type="number" class="form-input" id="ed-qty" min="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Seuil d'alerte</label>
+          <input type="number" class="form-input" id="ed-min" min="0">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Unité</label>
+          <select class="form-select" id="ed-unit">
+            <option>unité(s)</option><option>kg</option><option>litre(s)</option><option>dose(s)</option><option>rouleau(x)</option><option>boîte(s)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Emplacement</label>
+          <input type="text" class="form-input" id="ed-loc" placeholder="ex: Atelier, Garage…">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">🔗 Lien Rucher (déduction auto)</label>
+        <select class="form-select" id="ed-rucher-link">
+          <option value="">— Aucun lien —</option>
+          <option value="Cadres batis">🖼️ Cadres bâtis au rucher</option>
+          <option value="Cadres cires">🌿 Cadres cirés au rucher</option>
+          <option value="Hausses">🏠 Hausses au rucher</option>
+        </select>
+        <div style="font-size:10px;color:var(--bark-pale);margin-top:3px;">La pose de ce cadre au rucher décrémentera ce stock automatiquement.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes / fournisseur</label>
+        <textarea class="form-textarea" id="ed-note" placeholder="Fournisseur, numéro de lot, observations…"></textarea>
+      </div>
+    </div>
+
+    <!-- Historique -->
+    <div class="form-section">
+      <div class="form-sec-title">📋 Historique des mouvements</div>
+      <div id="dw-histo"></div>
+    </div>
+  </div>
+  <div class="dw-footer">
+    <button class="btn btn-primary" style="flex:1" onclick="saveMvt()">💾 Enregistrer</button>
+    <button class="btn btn-secondary" onclick="closeDrawer()">Annuler</button>
+    <button class="btn btn-secondary" onclick="deleteCurrentItem()" style="color:var(--red);border-color:rgba(176,48,32,.3);" title="Supprimer">🗑️</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- BREADCRUMB + TITRE -->
+  <div class="page-header">
+    <div>
+      <div class="breadcrumb"><span>🏠 Accueil</span><span class="sep">›</span><span class="cur">🔧 Atelier</span></div>
+      <div class="pg-title">Atelier</div>
+      <div class="pg-sub">Gestion des stocks · Pré-saison 2026 · Cliquez sur un article pour le modifier</div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="btn btn-secondary">📊 Exporter inventaire</button>
+      <button class="btn btn-primary" onclick="openNewArticle()">＋ Nouvel article</button>
+    </div>
+  </div>
+
+  <!-- ALERTE STOCK BAS -->
+  <div class="alert-strip" id="alert-strip" style="display: flex;">
+    <span style="font-size:22px;flex-shrink:0">🔴</span>
+    <div>
+      <div class="alert-strip-text" id="alert-strip-text">0 article épuisé · 3 stocks bas</div>
+      <div class="alert-strip-detail" id="alert-strip-detail">Apivar® (bandelettes), VarroMed® (acide formique), Candi protéiné</div>
+    </div>
+  </div>
+
+  <!-- BILAN GLOBAL -->
+  <div class="bilan-grid">
+    <div class="bilan-card" data-icon="📦"><div class="bilan-val" id="b-total">21</div><div class="bilan-lab">Articles suivis</div></div>
+    <div class="bilan-card" data-icon="✅"><div class="bilan-val" id="b-ok" style="color:var(--green)">18</div><div class="bilan-lab">Stock suffisant</div></div>
+    <div class="bilan-card" data-icon="⚠️"><div class="bilan-val" id="b-low" style="color:var(--orange)">3</div><div class="bilan-lab">Stock bas</div></div>
+    <div class="bilan-card" data-icon="🚨"><div class="bilan-val" id="b-out" style="color:var(--red)">0</div><div class="bilan-lab">Épuisé</div></div>
+  </div>
+
+  <!-- FILTRES -->
+  <div class="cat-tabs" id="cat-tabs"><div class="cat-tab active">📦 Tout <span class="ct-count">21</span></div><div class="cat-tab">🏠 Hausses &amp; Corps <span class="ct-count">4</span></div><div class="cat-tab">🖼️ Cadres &amp; Cires <span class="ct-count">3</span></div><div class="cat-tab">💊 Traitements <span class="ct-count">4</span><span style="width:7px;height:7px;background:var(--red);border-radius:50%;display:inline-block;margin-left:2px"></span></div><div class="cat-tab">🍽️ Nourrissage <span class="ct-count">3</span><span style="width:7px;height:7px;background:var(--red);border-radius:50%;display:inline-block;margin-left:2px"></span></div><div class="cat-tab">🫙 Pots &amp; Emballages <span class="ct-count">4</span></div><div class="cat-tab">📐 Partitions &amp; Réducteurs <span class="ct-count">3</span></div></div>
+
+  <!-- GRILLE ARTICLES -->
+  <div class="stock-grid" id="stock-grid"><div class="art-card " data-id="1" draggable="true">
+      <div style="position:absolute;top:-8px;left:12px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--green-pale);color:var(--green-dark);border:1px solid var(--green)">🔗 Hausses</div>
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">🏠</div>
+          <div>
+            <div class="art-name">Hausse Dadant 10 cadres</div>
+            <div class="art-cat">Hausses &amp; Corps</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(1)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(1,-1)">−</button>
+          <div class="qty-val">12</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(1,+1)">+</button>
+        </div>
+        <div class="qty-unit">unité(s)<br><span style="color:var(--bark-pale)">min. 5</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:96%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 5 unité(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      <div class="art-note">Bois blanc traité. Utilisées 118x en 2024-2025.</div>
+      <div class="art-footer">
+        <div class="art-date">Modifié le 10 mars 2025</div>
+        <div class="art-location">📍 Atelier</div>
+      </div>
+    </div><div class="art-card " data-id="3" draggable="true">
+      
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">🏠</div>
+          <div>
+            <div class="art-name">Ruchette 6 cadres polystyrène</div>
+            <div class="art-cat">Hausses &amp; Corps</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(3)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(3,-1)">−</button>
+          <div class="qty-val">3</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(3,+1)">+</button>
+        </div>
+        <div class="qty-unit">unité(s)<br><span style="color:var(--bark-pale)">min. 2</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:60%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 2 unité(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      <div class="art-note">Pour nuclei et essaims. Stock bas pour la saison.</div>
+      <div class="art-footer">
+        <div class="art-date">Modifié le 20 avr. 2024</div>
+        <div class="art-location">📍 Atelier</div>
+      </div>
+    </div><div class="art-card " data-id="2" draggable="true">
+      
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">🏠</div>
+          <div>
+            <div class="art-name">Corps Dadant 10 cadres</div>
+            <div class="art-cat">Hausses &amp; Corps</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(2)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(2,-1)">−</button>
+          <div class="qty-val">4</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(2,+1)">+</button>
+        </div>
+        <div class="qty-unit">unité(s)<br><span style="color:var(--bark-pale)">min. 3</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:53.333333333333336%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 3 unité(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      <div class="art-note">Corps de rechange et essaimage.</div>
+      <div class="art-footer">
+        <div class="art-date">Modifié le 1 juin 2025</div>
+        <div class="art-location">📍 Atelier</div>
+      </div>
+    </div><div class="art-card " data-id="4" draggable="true">
+      
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">🖼️</div>
+          <div>
+            <div class="art-name">Cadres Dadant</div>
+            <div class="art-cat">Cadres &amp; Cires</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(4)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(4,-1)">−</button>
+          <div class="qty-val">45</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(4,+1)">+</button>
+        </div>
+        <div class="qty-unit">unité(s)<br><span style="color:var(--bark-pale)">min. 20</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:90%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 20 unité(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      <div class="art-note">Cadres bois assemblés avec fil.</div>
+      <div class="art-footer">
+        <div class="art-date">Modifié le 20 févr. 2025</div>
+        <div class="art-location">📍 Atelier</div>
+      </div>
+    </div><div class="art-card " data-id="5" draggable="true">
+      
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">🌿</div>
+          <div>
+            <div class="art-name">Cire gaufrée Dadant 10c</div>
+            <div class="art-cat">Cadres &amp; Cires</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(5)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(5,-1)">−</button>
+          <div class="qty-val">125</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(5,+1)">+</button>
+        </div>
+        <div class="qty-unit">kg<br><span style="color:var(--bark-pale)">min. 3</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:100%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 3 kg</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      <div class="art-note">⚠️ Stock bas — commander avant mai.</div>
+      <div class="art-footer">
+        <div class="art-date">Modifié le 15 mars 2026</div>
+        <div class="art-location">📍 Atelier</div>
+      </div>
+    </div><div class="art-card " data-id="6" draggable="true">
+      <div style="position:absolute;top:-8px;left:12px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--green-pale);color:var(--green-dark);border:1px solid var(--green)">🔗 Cadres batis</div>
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">🖼️</div>
+          <div>
+            <div class="art-name">Cadres batis</div>
+            <div class="art-cat">Cadres &amp; Cires</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(6)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(6,-1)">−</button>
+          <div class="qty-val">18</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(6,+1)">+</button>
+        </div>
+        <div class="qty-unit">unité(s)<br><span style="color:var(--bark-pale)">min. 12</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:60%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 12 unité(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      
+      <div class="art-footer">
+        <div class="art-date">Aucun mouvement</div>
+        <div class="art-location">📍 Atelier</div>
+      </div>
+    </div><div class="art-card low" data-id="7" draggable="true">
+      <div class="art-alert-badge badge-low">⚠️ Stock bas</div>
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--orange-pale)">💊</div>
+          <div>
+            <div class="art-name">Apivar® (bandelettes)</div>
+            <div class="art-cat">Traitements</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(7)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(7,-1)">−</button>
+          <div class="qty-val">2</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(7,+1)">+</button>
+        </div>
+        <div class="qty-unit">boîte(s)<br><span style="color:var(--bark-pale)">min. 3</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:26.666666666666668%;background:var(--orange)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 3 boîte(s)</span>
+          <span class="stock-status-low">⚠️ Bas</span>
+        </div>
+      </div>
+      <div class="art-note">81 interventions en 2024-2025. Stock bas — commander avant automne.</div>
+      <div class="art-footer">
+        <div class="art-date">Modifié le 1 juil. 2025</div>
+        <div class="art-location">📍 Réfrigérateur atelier</div>
+      </div>
+    </div><div class="art-card low" data-id="8" draggable="true">
+      <div class="art-alert-badge badge-low">⚠️ Stock bas</div>
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--orange-pale)">💊</div>
+          <div>
+            <div class="art-name">VarroMed® (acide formique)</div>
+            <div class="art-cat">Traitements</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(8)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(8,-1)">−</button>
+          <div class="qty-val">1</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(8,+1)">+</button>
+        </div>
+        <div class="qty-unit">boîte(s)<br><span style="color:var(--bark-pale)">min. 2</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:20%;background:var(--orange)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 2 boîte(s)</span>
+          <span class="stock-status-low">⚠️ Bas</span>
+        </div>
+      </div>
+      <div class="art-note">23 interventions. Stock épuisé — commander.</div>
+      <div class="art-footer">
+        <div class="art-date">Modifié le 1 mai 2025</div>
+        <div class="art-location">📍 Atelier — endroit frais</div>
+      </div>
+    </div><div class="art-card " data-id="9" draggable="true">
+      
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">💊</div>
+          <div>
+            <div class="art-name">Oxybee® (acide oxalique sublimation)</div>
+            <div class="art-cat">Traitements</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(9)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(9,-1)">−</button>
+          <div class="qty-val">4</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(9,+1)">+</button>
+        </div>
+        <div class="qty-unit">boîte(s)<br><span style="color:var(--bark-pale)">min. 2</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:80%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 2 boîte(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      <div class="art-note">23 interventions. Stock OK.</div>
+      <div class="art-footer">
+        <div class="art-date">Modifié le 10 janv. 2025</div>
+        <div class="art-location">📍 Atelier</div>
+      </div>
+    </div><div class="art-card " data-id="10" draggable="true">
+      
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">💊</div>
+          <div>
+            <div class="art-name">Acide oxalique — Languette</div>
+            <div class="art-cat">Traitements</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(10)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(10,-1)">−</button>
+          <div class="qty-val">3</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(10,+1)">+</button>
+        </div>
+        <div class="qty-unit">boîte(s)<br><span style="color:var(--bark-pale)">min. 2</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:60%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 2 boîte(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      <div class="art-note">22 interventions en 2024-2025.</div>
+      <div class="art-footer">
+        <div class="art-date">Aucun mouvement</div>
+        <div class="art-location">📍 Atelier</div>
+      </div>
+    </div><div class="art-card " data-id="11" draggable="true">
+      
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">🍽️</div>
+          <div>
+            <div class="art-name">Sirop de sucre 50/50 (5L)</div>
+            <div class="art-cat">Nourrissage</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(11)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(11,-1)">−</button>
+          <div class="qty-val">8</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(11,+1)">+</button>
+        </div>
+        <div class="qty-unit">bidon(s)<br><span style="color:var(--bark-pale)">min. 5</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:64%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 5 bidon(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      <div class="art-note">176 nourrissages en 2024-2025. Prévoir stock printemps.</div>
+      <div class="art-footer">
+        <div class="art-date">Modifié le 1 avr. 2025</div>
+        <div class="art-location">📍 Garage</div>
+      </div>
+    </div><div class="art-card " data-id="12" draggable="true">
+      
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">🍬</div>
+          <div>
+            <div class="art-name">Candi (2,5 kg)</div>
+            <div class="art-cat">Nourrissage</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(12)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(12,-1)">−</button>
+          <div class="qty-val">6</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(12,+1)">+</button>
+        </div>
+        <div class="qty-unit">paquet(s)<br><span style="color:var(--bark-pale)">min. 4</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:60%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 4 paquet(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      <div class="art-note">32 nourrissages. Utile hiver/printemps.</div>
+      <div class="art-footer">
+        <div class="art-date">Modifié le 5 janv. 2025</div>
+        <div class="art-location">📍 Garage</div>
+      </div>
+    </div><div class="art-card low" data-id="13" draggable="true">
+      <div class="art-alert-badge badge-low">⚠️ Stock bas</div>
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--orange-pale)">🌼</div>
+          <div>
+            <div class="art-name">Candi protéiné</div>
+            <div class="art-cat">Nourrissage</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(13)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(13,-1)">−</button>
+          <div class="qty-val">1</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(13,+1)">+</button>
+        </div>
+        <div class="qty-unit">kg<br><span style="color:var(--bark-pale)">min. 2</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:20%;background:var(--orange)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 2 kg</span>
+          <span class="stock-status-low">⚠️ Bas</span>
+        </div>
+      </div>
+      <div class="art-note">20 interventions. Stock bas — à recompléter.</div>
+      <div class="art-footer">
+        <div class="art-date">Modifié le 1 févr. 2025</div>
+        <div class="art-location">📍 Réfrigérateur</div>
+      </div>
+    </div><div class="art-card " data-id="14" draggable="true">
+      
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">🫙</div>
+          <div>
+            <div class="art-name">Pots 500g hexagonaux</div>
+            <div class="art-cat">Pots &amp; Emballages</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(14)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(14,-1)">−</button>
+          <div class="qty-val">320</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(14,+1)">+</button>
+        </div>
+        <div class="qty-unit">unité(s)<br><span style="color:var(--bark-pale)">min. 100</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:100%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 100 unité(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      <div class="art-note">Miel de fleurs principalement.</div>
+      <div class="art-footer">
+        <div class="art-date">Modifié le 1 juin 2025</div>
+        <div class="art-location">📍 Cave</div>
+      </div>
+    </div><div class="art-card " data-id="15" draggable="true">
+      
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">🫙</div>
+          <div>
+            <div class="art-name">Pots 250g hexagonaux</div>
+            <div class="art-cat">Pots &amp; Emballages</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(15)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(15,-1)">−</button>
+          <div class="qty-val">210</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(15,+1)">+</button>
+        </div>
+        <div class="qty-unit">unité(s)<br><span style="color:var(--bark-pale)">min. 80</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:100%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 80 unité(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      
+      <div class="art-footer">
+        <div class="art-date">Modifié le 1 juin 2025</div>
+        <div class="art-location">📍 Cave</div>
+      </div>
+    </div><div class="art-card " data-id="16" draggable="true">
+      
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">📦</div>
+          <div>
+            <div class="art-name">Étiquettes Miel de Fleurs</div>
+            <div class="art-cat">Pots &amp; Emballages</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(16)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(16,-1)">−</button>
+          <div class="qty-val">180</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(16,+1)">+</button>
+        </div>
+        <div class="qty-unit">unité(s)<br><span style="color:var(--bark-pale)">min. 100</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:72%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 100 unité(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      <div class="art-note">Lot 2025 — à renouveler si nouvelle récolte.</div>
+      <div class="art-footer">
+        <div class="art-date">Aucun mouvement</div>
+        <div class="art-location">📍 Atelier</div>
+      </div>
+    </div><div class="art-card " data-id="17" draggable="true">
+      
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">📦</div>
+          <div>
+            <div class="art-name">Étiquettes Miel Acacia / Tilleul / Châtaignier</div>
+            <div class="art-cat">Pots &amp; Emballages</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(17)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(17,-1)">−</button>
+          <div class="qty-val">40</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(17,+1)">+</button>
+        </div>
+        <div class="qty-unit">feuille(s)<br><span style="color:var(--bark-pale)">min. 20</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:80%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 20 feuille(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      <div class="art-note">Impression maison. OK pour la saison.</div>
+      <div class="art-footer">
+        <div class="art-date">Aucun mouvement</div>
+        <div class="art-location">📍 Atelier</div>
+      </div>
+    </div><div class="art-card " data-id="19" draggable="true">
+      
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">📐</div>
+          <div>
+            <div class="art-name">Partition Dadant (bois)</div>
+            <div class="art-cat">Partitions &amp; Réducteurs</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(19)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(19,-1)">−</button>
+          <div class="qty-val">8</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(19,+1)">+</button>
+        </div>
+        <div class="qty-unit">unité(s)<br><span style="color:var(--bark-pale)">min. 4</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:80%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 4 unité(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      <div class="art-note">4 interventions avec partition en 2024-2025.</div>
+      <div class="art-footer">
+        <div class="art-date">Modifié le 10 avr. 2024</div>
+        <div class="art-location">📍 Atelier</div>
+      </div>
+    </div><div class="art-card " data-id="20" draggable="true">
+      
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">🔒</div>
+          <div>
+            <div class="art-name">Réducteur d'entrée</div>
+            <div class="art-cat">Partitions &amp; Réducteurs</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(20)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(20,-1)">−</button>
+          <div class="qty-val">15</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(20,+1)">+</button>
+        </div>
+        <div class="qty-unit">unité(s)<br><span style="color:var(--bark-pale)">min. 6</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:100%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 6 unité(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      <div class="art-note">Hivernal et anti-frelon. Vérifier état avant saison.</div>
+      <div class="art-footer">
+        <div class="art-date">Aucun mouvement</div>
+        <div class="art-location">📍 Atelier</div>
+      </div>
+    </div><div class="art-card " data-id="22" draggable="true">
+      
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">📐</div>
+          <div>
+            <div class="art-name">Grille à reine</div>
+            <div class="art-cat">Partitions &amp; Réducteurs</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(22)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(22,-1)">−</button>
+          <div class="qty-val">7</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(22,+1)">+</button>
+        </div>
+        <div class="qty-unit">unité(s)<br><span style="color:var(--bark-pale)">min. 4</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:70%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 4 unité(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      <div class="art-note">Pour les hausses et divisions.</div>
+      <div class="art-footer">
+        <div class="art-date">Aucun mouvement</div>
+        <div class="art-location">📍 Atelier</div>
+      </div>
+    </div><div class="art-card " data-id="23" draggable="true">
+      <div style="position:absolute;top:-8px;left:12px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--green-pale);color:var(--green-dark);border:1px solid var(--green)">🔗 Cadres cires</div>
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:var(--green-pale)">📦</div>
+          <div>
+            <div class="art-name">Cadres cirés</div>
+            <div class="art-cat">Hausses &amp; Corps</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(23)">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(23,-1)">−</button>
+          <div class="qty-val">90</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(23,+1)">+</button>
+        </div>
+        <div class="qty-unit">unité(s)<br><span style="color:var(--bark-pale)">min. 5</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:100%;background:var(--green)"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : 5 unité(s)</span>
+          <span class="stock-status-ok">✓ OK</span>
+        </div>
+      </div>
+      
+      <div class="art-footer">
+        <div class="art-date">Modifié le 24 févr. 2026</div>
+        <div class="art-location">📍 Atelier</div>
+      </div>
+    </div><div style="background: none; border: 2px dashed var(--cream-deep); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; padding: 30px; min-height: 200px; transition: border-color 0.2s, background 0.2s;"><div style="width:46px;height:46px;border-radius:14px;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:22px;transition:background .2s">＋</div><div style="font-size:12px;font-weight:600;color:var(--bark-light)">Ajouter un article</div></div></div>
+
+</main>
+
+<script>
+// Détecteur de blocage Firebase SDK — si le module ne démarre pas en 6s, afficher aide
+window._fbLoadTimer = setTimeout(function() {
+  if (!window._fbLoaded) {
+    var msg = document.createElement('div');
+    msg.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#B03020;color:#fff;padding:14px 20px;font-family:sans-serif;font-size:13px;font-weight:700;text-align:center;';
+    msg.innerHTML = '⚠️ Connexion Firebase lente. <a href="javascript:location.reload()" style="color:#FBE8A0;text-decoration:underline;">Recharger la page</a> · <a href="login.html" style="color:#FBE8A0;text-decoration:underline;">Retour connexion</a>';
+    document.body.appendChild(msg);
+  }
+}, 10000);
+</script>
+<script type="module">
+// ════ FIREBASE AUTH + FIRESTORE ════
+import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut }
+                           from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp }
+                           from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+window._fbLoaded = true; // ← module ES6 démarré, annule la bannière rouge
+
+window._fbLoaded = true;
+const FB={apiKey:"AIzaSyBMwN1idPo4QdWQn0sG-bB7o-SfXbK8SGg",authDomain:"rucher-9bb59.firebaseapp.com",projectId:"rucher-9bb59",storageBucket:"rucher-9bb59.firebasestorage.app",messagingSenderId:"1041501775027",appId:"1:1041501775027:web:dc9bfe120366b0696d3cc6"};
+const app=initializeApp(FB),auth=getAuth(app),db=getFirestore(app);
+let UID=null;
+const _authTO=setTimeout(()=>window.location.replace('login.html'),8000);
+onAuthStateChanged(auth,async user=>{
+  if(!user){window.location.replace('login.html');return;}
+  UID=user.uid;
+  clearTimeout(_authTO);
+  // ── Partage collaborateur : utiliser l'UID propriétaire si différent ──
+  const OWNER_UID = 'qQK5KKjiMrSRVhebGNBcHPxBnx02';
+  if (UID !== OWNER_UID) {
+    try {
+      const sharedSnap = await getDoc(doc(db,'users',UID,'config','shared'));
+      if (sharedSnap.exists() && sharedSnap.data().ownerUid) {
+        UID = sharedSnap.data().ownerUid;
+      } else {
+        // Premier login collaborateur : enregistrer le lien
+        await setDoc(doc(db,'users',UID,'config','shared'), {ownerUid: OWNER_UID, updated_at: serverTimestamp()});
+        UID = OWNER_UID;
+      }
+    } catch(e) { console.warn('shared config:', e); UID = OWNER_UID; }
+  }
+  const el=document.querySelector('.sb-user-name');
+  if(el) el.textContent=(user.displayName||'Apicultrice').split(' ')[0];
+  initData();
+});
+window.handleLogout=async()=>{if(confirm('Se déconnecter ?')){await signOut(auth);window.location.href='login.html';}};
+
+// ── Données stock initiales (seed au 1er login) ──
+const STOCK_SEED = [
+  // HAUSSES & CORPS
+  {id:1, cat:'hausses', icon:'🏠', name:'Hausse Dadant 10 cadres', unit:'unité(s)', qty:12, min:5, loc:'Atelier', rucher_link:'Hausses', note:'Bois blanc traité. Utilisées 118x en 2024-2025.', history:[
+    {type:'entree', qty:6, date:'2025-03-10', note:'Achat printemps'},
+    {type:'sortie', qty:4, date:'2025-05-08', note:'Pose ruchers'},
+    {type:'entree', qty:10, date:'2024-03-15', note:'Stock initial'},
+  ]},
+  {id:2, cat:'hausses', icon:'🏠', name:'Corps Dadant 10 cadres', unit:'unité(s)', qty:4, min:3, loc:'Atelier', note:'Corps de rechange et essaimage.', history:[
+    {type:'sortie', qty:2, date:'2025-06-01', note:'Division La Montagne'},
+  ]},
+  {id:3, cat:'hausses', icon:'🏠', name:'Ruchette 6 cadres polystyrène', unit:'unité(s)', qty:3, min:2, loc:'Atelier', note:'Pour nuclei et essaims. Stock bas pour la saison.', history:[
+    {type:'entree', qty:5, date:'2024-04-20', note:'Commande Icko'},
+    {type:'sortie', qty:2, date:'2025-05-15', note:'Essaims'},
+  ]},
+
+  // CADRES & CIRES
+  {id:4, cat:'cadres', icon:'🖼️', name:'Cadres Dadant assemblés', unit:'unité(s)', qty:45, min:20, loc:'Atelier', rucher_link:'Cadres batis', note:'Cadres bois assemblés avec fil.', history:[
+    {type:'entree', qty:30, date:'2025-02-20', note:'Assemblage hivernal'},
+    {type:'sortie', qty:15, date:'2025-05-01', note:'Pose cadres cirage'},
+  ]},
+  {id:5, cat:'cadres', icon:'🌿', name:'Cire gaufrée Dadant 10c', unit:'kg', qty:2.5, min:3, loc:'Atelier', rucher_link:'Cadres cires', note:'⚠️ Stock bas — commander avant mai.', history:[
+    {type:'entree', qty:5, date:'2024-12-10', note:'Achat hiver'},
+    {type:'sortie', qty:2.5, date:'2025-04-15', note:'Cirage cadres'},
+  ]},
+  {id:6, cat:'cadres', icon:'🖼️', name:'Cadres Ruchette 6c assemblés', unit:'unité(s)', qty:18, min:12, loc:'Atelier', rucher_link:'Cadres batis', note:'', history:[]},
+
+  // TRAITEMENTS
+  {id:7, cat:'traitements', icon:'💊', name:'Apivar® (bandelettes)', unit:'boîte(s)', qty:2, min:3, loc:'Réfrigérateur atelier', note:'81 interventions en 2024-2025. Stock bas — commander avant automne.', history:[
+    {type:'entree', qty:5, date:'2025-07-01', note:'Achat été 2025'},
+    {type:'sortie', qty:3, date:'2025-08-01', note:'Traitement varroa automne'},
+  ]},
+  {id:8, cat:'traitements', icon:'💊', name:'VarroMed® (acide formique)', unit:'boîte(s)', qty:1, min:2, loc:'Atelier — endroit frais', note:'23 interventions. Stock épuisé — commander.', history:[
+    {type:'entree', qty:3, date:'2025-05-01', note:'Commande printemps'},
+    {type:'sortie', qty:2, date:'2025-06-10', note:'Traitement été'},
+  ]},
+  {id:9, cat:'traitements', icon:'💊', name:'Oxybee® (acide oxalique sublimation)', unit:'boîte(s)', qty:4, min:2, loc:'Atelier', note:'23 interventions. Stock OK.', history:[
+    {type:'entree', qty:6, date:'2025-01-10', note:'Hivernal'},
+    {type:'sortie', qty:2, date:'2025-03-01', note:'Traitement hivernal'},
+  ]},
+  {id:10, cat:'traitements', icon:'💊', name:'Acide oxalique — Languette', unit:'boîte(s)', qty:3, min:2, loc:'Atelier', note:'22 interventions en 2024-2025.', history:[]},
+
+  // NOURRISSAGE
+  {id:11, cat:'nourrissage', icon:'🍽️', name:'Sirop de sucre 50/50 (5L)', unit:'bidon(s)', qty:8, min:5, loc:'Garage', note:'176 nourrissages en 2024-2025. Prévoir stock printemps.', history:[
+    {type:'entree', qty:12, date:'2025-04-01', note:'Printemps'},
+    {type:'sortie', qty:4, date:'2025-05-15', note:'Nourrissages mai'},
+  ]},
+  {id:12, cat:'nourrissage', icon:'🍬', name:'Candi (2,5 kg)', unit:'paquet(s)', qty:6, min:4, loc:'Garage', note:'32 nourrissages. Utile hiver/printemps.', history:[
+    {type:'entree', qty:10, date:'2025-01-05', note:'Stock hivernal'},
+    {type:'sortie', qty:4, date:'2025-02-10', note:'Nourrissage hivernal'},
+  ]},
+  {id:13, cat:'nourrissage', icon:'🌼', name:'Complément protéiné (pollen)', unit:'kg', qty:1.5, min:2, loc:'Réfrigérateur', note:'20 interventions. Stock bas — à recompléter.', history:[
+    {type:'entree', qty:3, date:'2025-02-01', note:'Stimulation printanière'},
+    {type:'sortie', qty:1.5, date:'2025-03-15', note:'Nourrissage'},
+  ]},
+
+  // POTS & EMBALLAGES
+  {id:14, cat:'emballages', icon:'🫙', name:'Pots 500g hexagonaux', unit:'unité(s)', qty:320, min:100, loc:'Cave', note:'Miel de fleurs principalement.', history:[
+    {type:'entree', qty:500, date:'2025-06-01', note:'Commande mise en pot'},
+    {type:'sortie', qty:180, date:'2025-07-20', note:'Mise en pots récolte été'},
+  ]},
+  {id:15, cat:'emballages', icon:'🫙', name:'Pots 250g hexagonaux', unit:'unité(s)', qty:210, min:80, loc:'Cave', note:'', history:[
+    {type:'entree', qty:300, date:'2025-06-01', note:''},
+    {type:'sortie', qty:90, date:'2025-07-20', note:'Mise en pots'},
+  ]},
+  {id:16, cat:'emballages', icon:'📦', name:'Étiquettes Miel de Fleurs', unit:'unité(s)', qty:180, min:100, loc:'Atelier', note:'Lot 2025 — à renouveler si nouvelle récolte.', history:[]},
+  {id:17, cat:'emballages', icon:'📦', name:'Étiquettes Miel Acacia / Tilleul / Châtaignier', unit:'feuille(s)', qty:40, min:20, loc:'Atelier', note:'Impression maison. OK pour la saison.', history:[]},
+  {id:18, cat:'emballages', icon:'🛍️', name:'Sacs kraft logos Rucher de Céline', unit:'unité(s)', qty:85, min:30, loc:'Cave', note:'Pour marchés et vente directe.', history:[]},
+
+  // PARTITIONS & RÉDUCTEURS
+  {id:19, cat:'partitions', icon:'📐', name:'Partition Dadant (bois)', unit:'unité(s)', qty:8, min:4, loc:'Atelier', note:'4 interventions avec partition en 2024-2025.', history:[
+    {type:'entree', qty:4, date:'2024-04-10', note:'Stock initial'},
+  ]},
+  {id:20, cat:'partitions', icon:'🔒', name:'Réducteur d\'entrée bois', unit:'unité(s)', qty:15, min:6, loc:'Atelier', note:'Hivernal et anti-frelon. Vérifier état avant saison.', history:[]},
+  {id:21, cat:'partitions', icon:'🔒', name:'Grille anti-frelon asiatique', unit:'unité(s)', qty:0, min:6, loc:'Atelier', note:'⚠️ ÉPUISÉ — commander avant juin (période frelons).', history:[
+    {type:'sortie', qty:6, date:'2025-07-01', note:'Pose sur ruchers'},
+  ]},
+  {id:22, cat:'partitions', icon:'📐', name:'Grille à reine', unit:'unité(s)', qty:7, min:4, loc:'Atelier', note:'Pour les hausses et divisions.', history:[]},
+]; // fin STOCK_SEED
+
+let STOCK = []; // chargé depuis Firestore
+
+// ── FIREBASE INIT ──
+// Chemin Firestore : /users/{uid}/stock (doc 4 segments : users/uid/stock/main)
+// IMPORTANT : chemin 4 segments obligatoire
+const STOCK_PATH = () => doc(db,'users',UID,'stock','main');
+
+async function initData() {
+  try {
+    const snap = await getDoc(STOCK_PATH());
+    if (snap.exists() && snap.data().articles?.length) {
+      STOCK = snap.data().articles.map((a,i) => ({...a, _order: a._order ?? i}));
+      STOCK.sort((a,b) => (a._order||0)-(b._order||0));
+    } else {
+      // 1er login ou migration : tenter l'ancien chemin
+      try {
+        const old = await getDoc(doc(db,'users',UID,'data','stock'));
+        if (old.exists() && old.data().articles?.length) {
+          STOCK = old.data().articles.map((a,i) => ({...a, _order: a._order ?? i}));
+        } else {
+          STOCK = JSON.parse(JSON.stringify(STOCK_SEED)).map((a,i) => ({...a, _order:i}));
+        }
+      } catch(_) {
+        STOCK = JSON.parse(JSON.stringify(STOCK_SEED)).map((a,i) => ({...a, _order:i}));
+      }
+      await setDoc(STOCK_PATH(),{ articles:STOCK, updated_at:serverTimestamp() });
+    }
+  } catch(e) {
+    console.error('Atelier Firestore:', e);
+    STOCK = JSON.parse(JSON.stringify(STOCK_SEED)).map((a,i) => ({...a, _order:i}));
+  }
+  renderTabs(); renderGrid(); updateBilan();
+}
+
+async function persistStock() {
+  if(!UID) return;
+  try {
+    await setDoc(STOCK_PATH(),{ articles:STOCK, updated_at:serverTimestamp() });
+  } catch(e) { console.warn('persist stock:', e); }
+}
+
+const CATS = [
+  {id:'all', label:'Tout', icon:'📦'},
+  {id:'hausses', label:'Hausses & Corps', icon:'🏠'},
+  {id:'cadres', label:'Cadres & Cires', icon:'🖼️'},
+  {id:'traitements', label:'Traitements', icon:'💊'},
+  {id:'nourrissage', label:'Nourrissage', icon:'🍽️'},
+  {id:'emballages', label:'Pots & Emballages', icon:'🫙'},
+  {id:'partitions', label:'Partitions & Réducteurs', icon:'📐'},
+];
+
+let currentCat = 'all';
+let currentItem = null;
+let selectedMvt = null;
+
+// ── HELPERS ──
+function getStatus(item){
+  if(item.qty <= 0) return 'out';
+  if(item.qty <= item.min) return 'low';
+  return 'ok';
+}
+function stockPct(item){
+  const max = Math.max(item.qty, item.min * 2.5, 1);
+  return Math.min(100, (item.qty / max) * 100);
+}
+function fmtDate(d){
+  if(!d) return '';
+  return new Date(d).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'});
+}
+function catLabel(id){return CATS.find(c=>c.id===id)?.label||id;}
+
+// ── BILAN ──
+function updateBilan(){
+  const items = STOCK;
+  const low = items.filter(i=>getStatus(i)==='low').length;
+  const out = items.filter(i=>getStatus(i)==='out').length;
+  const ok  = items.filter(i=>getStatus(i)==='ok').length;
+  document.getElementById('b-total').textContent = items.length;
+  document.getElementById('b-ok').textContent = ok;
+  document.getElementById('b-low').textContent = low;
+  document.getElementById('b-out').textContent = out;
+  const total_alert = low + out;
+  const strip = document.getElementById('alert-strip');
+  if(total_alert === 0){
+    strip.style.display='none';
+  } else {
+    strip.style.display='flex';
+    const names = items.filter(i=>getStatus(i)!=='ok').slice(0,4).map(i=>i.name).join(', ');
+    document.getElementById('alert-strip-text').textContent =
+      `${out} article${out>1?'s':''} épuisé${out>1?'s':''} · ${low} stock${low>1?'s':''} bas`;
+    document.getElementById('alert-strip-detail').textContent = names + (total_alert>4?'…':'');
+  }
+}
+
+// ── TABS CATÉGORIES ──
+function renderTabs(){
+  const el = document.getElementById('cat-tabs');
+  el.innerHTML = '';
+  CATS.forEach(c => {
+    const items = c.id === 'all' ? STOCK : STOCK.filter(i=>i.cat===c.id);
+    if(items.length === 0 && c.id !== 'all') return;
+    const hasAlert = items.some(i=>getStatus(i)!=='ok');
+    const btn = document.createElement('div');
+    btn.className = 'cat-tab' + (currentCat===c.id?' active':'');
+    btn.innerHTML = `${c.icon} ${c.label} <span class="ct-count">${items.length}</span>${hasAlert&&currentCat!==c.id?'<span style="width:7px;height:7px;background:var(--red);border-radius:50%;display:inline-block;margin-left:2px"></span>':''}`;
+    btn.onclick = () => { currentCat = c.id; renderTabs(); renderGrid(); };
+    el.appendChild(btn);
+  });
+}
+
+// ── GRILLE ARTICLES ──
+function renderGrid(){
+  const items = currentCat === 'all' ? [...STOCK] : STOCK.filter(i=>i.cat===currentCat);
+  // Trier par _order
+  items.sort((a,b) => (a._order||0)-(b._order||0));
+  const el = document.getElementById('stock-grid');
+  el.innerHTML = '';
+
+  items.forEach(item => {
+    const status = getStatus(item);
+    const pct = stockPct(item);
+    const fillColor = status==='ok'?'var(--green)':status==='low'?'var(--orange)':'var(--red)';
+    const catIc = CATS.find(c=>c.id===item.cat)?.icon||'📦';
+
+    const card = document.createElement('div');
+    card.className = `art-card ${status==='low'?'low':status==='out'?'out':''}`;
+    card.dataset.id = item.id;
+    card.draggable = true;
+    card.onclick = (e) => { if(!e.target.closest('.qty-btn,.art-menu-btn,.qty-drag-handle')) openDrawerById(item.id); };
+    // Drag & drop
+    card.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', String(item.id)); card.style.opacity='0.45'; });
+    card.addEventListener('dragend',   e => { card.style.opacity='1'; document.querySelectorAll('.art-card').forEach(c=>c.classList.remove('drag-over')); });
+    card.addEventListener('dragover',  e => { e.preventDefault(); card.classList.add('drag-over'); });
+    card.addEventListener('dragleave', e => { card.classList.remove('drag-over'); });
+    card.addEventListener('drop', e => {
+      e.preventDefault(); card.classList.remove('drag-over');
+      const srcId = parseInt(e.dataTransfer.getData('text/plain'));
+      const dstId = item.id;
+      if (srcId === dstId) return;
+      const srcItem = STOCK.find(i=>i.id===srcId);
+      const dstItem = STOCK.find(i=>i.id===dstId);
+      if (!srcItem || !dstItem) return;
+      const srcOrd = srcItem._order ?? 0;
+      srcItem._order = dstItem._order ?? 0;
+      dstItem._order = srcOrd;
+      renderGrid(); renderTabs();
+      persistStock();
+    });
+
+    const badgeHtml = status==='low'
+      ? `<div class="art-alert-badge badge-low">⚠️ Stock bas</div>`
+      : status==='out'
+      ? `<div class="art-alert-badge badge-out">🚨 Épuisé</div>`
+      : '';
+
+    const linkedBadge = item.rucher_link
+      ? `<div style="position:absolute;top:-8px;left:12px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--green-pale);color:var(--green-dark);border:1px solid var(--green)">🔗 ${item.rucher_link}</div>`
+      : '';
+    card.innerHTML = `
+      ${badgeHtml}${linkedBadge}
+      <div class="art-top">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex:1">
+          <div class="art-icon" style="background:${status==='ok'?'var(--green-pale)':status==='low'?'var(--orange-pale)':'var(--red-pale)'}">${item.icon}</div>
+          <div>
+            <div class="art-name">${item.name}</div>
+            <div class="art-cat">${catLabel(item.cat)}</div>
+          </div>
+        </div>
+        <div class="art-menu-btn" onclick="event.stopPropagation();openDrawerById(${item.id})">✏️</div>
+      </div>
+      <div class="art-qty-wrap">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(${item.id},-1)">−</button>
+          <div class="qty-val">${item.qty}</div>
+          <button class="qty-btn" onclick="event.stopPropagation();adjustQty(${item.id},+1)">+</button>
+        </div>
+        <div class="qty-unit">${item.unit}<br><span style="color:var(--bark-pale)">min. ${item.min}</span></div>
+      </div>
+      <div class="stock-bar-wrap">
+        <div class="stock-bar"><div class="stock-fill" style="width:${pct}%;background:${fillColor}"></div></div>
+        <div class="stock-info">
+          <span class="stock-min">Seuil : ${item.min} ${item.unit}</span>
+          <span class="${status==='ok'?'stock-status-ok':status==='low'?'stock-status-low':'stock-status-out'}">${status==='ok'?'✓ OK':status==='low'?'⚠️ Bas':'✗ Épuisé'}</span>
+        </div>
+      </div>
+      ${item.note?`<div class="art-note">${item.note}</div>`:''}
+      <div class="art-footer">
+        <div class="art-date">${item.history.length>0?'Modifié le '+fmtDate(item.history[0].date):'Aucun mouvement'}</div>
+        <div class="art-location">📍 ${item.loc}</div>
+      </div>
+    `;
+    el.appendChild(card);
+  });
+
+  // Bouton ajouter
+  const add = document.createElement('div');
+  add.style.cssText='background:none;border:2px dashed var(--cream-deep);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;padding:30px;min-height:200px;transition:border-color .2s,background .2s;';
+  add.innerHTML=`<div style="width:46px;height:46px;border-radius:14px;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:22px;transition:background .2s">＋</div><div style="font-size:12px;font-weight:600;color:var(--bark-light)">Ajouter un article</div>`;
+  add.onmouseenter=()=>{add.style.borderColor='var(--green)';add.style.background='rgba(0,176,80,.04)';add.querySelector('div').style.background='var(--green)';};
+  add.onmouseleave=()=>{add.style.borderColor='var(--cream-deep)';add.style.background='none';add.querySelector('div').style.background='var(--green-pale)';};
+  add.onclick=openNewArticle;
+  el.appendChild(add);
+}
+
+// ── AJUSTEMENT RAPIDE ──
+function adjustQty(id, delta){
+  const item = STOCK.find(i=>i.id===id);
+  if(!item) return;
+  item.qty = Math.max(0, item.qty + delta);
+  item.history.unshift({type: delta>0?'entree':'sortie', qty:Math.abs(delta), date:new Date().toISOString().split('T')[0], note:'Ajustement rapide'});
+  renderGrid(); updateBilan();
+}
+
+// ── DRAWER ──
+function openDrawer(item){
+  currentItem = item;
+  document.getElementById('dw-title').textContent = item.name;
+  const edName = document.getElementById('ed-name'); if(edName) edName.value = item.name;
+  document.getElementById('dw-sub').textContent = `${catLabel(item.cat)} · ${item.loc}`;
+  document.getElementById('ed-qty').value = item.qty;
+  document.getElementById('ed-min').value = item.min;
+  document.getElementById('ed-loc').value = item.loc;
+  document.getElementById('ed-note').value = item.note || '';
+  const rlEl = document.getElementById('ed-rucher-link');
+  if (rlEl) rlEl.value = item.rucher_link || '';
+  const unitSel = document.getElementById('ed-unit');
+  for(let o of unitSel.options){ if(o.value===item.unit) o.selected=true; }
+  document.getElementById('mvt-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('mvt-qty').value = 1;
+  document.getElementById('mvt-note').value = '';
+  selectedMvt = null;
+  document.querySelectorAll('.mvt-btn').forEach(b=>b.classList.remove('active'));
+  // Historique
+  const histo = document.getElementById('dw-histo');
+  if(item.history.length===0){
+    histo.innerHTML='<div style="font-family:\'Crimson Pro\',serif;font-style:italic;font-size:13px;color:var(--bark-pale)">Aucun mouvement enregistré</div>';
+  } else {
+    histo.innerHTML = item.history.map(h=>{
+      const cls = h.type==='entree'?'hm-plus':h.type==='sortie'?'hm-minus':h.type==='perte'?'hm-perte':'hm-inv';
+      const sign = h.type==='entree'?'+':h.type==='inventaire'?'=':'-';
+      const col = h.type==='entree'?'var(--green)':h.type==='sortie'?'var(--orange)':h.type==='perte'?'var(--red)':'var(--blue)';
+      const label = {entree:'Entrée',sortie:'Sortie',perte:'Perte',inventaire:'Inventaire'}[h.type]||h.type;
+      return `<div class="histo-mvt">
+        <div class="hm-sign ${cls}">${sign}</div>
+        <div class="hm-body">
+          <div class="hm-label">${label}</div>
+          ${h.note?`<div class="hm-note">${h.note}</div>`:''}
+        </div>
+        <div class="hm-qty" style="color:${col}">${sign}${h.qty} ${item.unit}</div>
+        <div class="hm-date">${fmtDate(h.date)}</div>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeDrawer(){
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  document.body.style.overflow='';
+}
+function selMvt(el, type){
+  document.querySelectorAll('.mvt-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  selectedMvt = type;
+}
+function saveMvt(){
+  if(!currentItem) return;
+  const qty = parseInt(document.getElementById('mvt-qty').value)||0;
+  const date = document.getElementById('mvt-date').value;
+  const note = document.getElementById('mvt-note').value;
+  // Appliquer mouvement
+  if(selectedMvt && qty > 0){
+    if(selectedMvt==='entree') currentItem.qty += qty;
+    else if(selectedMvt==='sortie'||selectedMvt==='perte') currentItem.qty = Math.max(0, currentItem.qty - qty);
+    else if(selectedMvt==='inventaire') currentItem.qty = qty;
+    currentItem.history.unshift({type:selectedMvt, qty, date, note});
+  }
+  // Sauvegarder paramètres
+  currentItem.qty  = parseInt(document.getElementById('ed-qty').value) || currentItem.qty;
+  currentItem.min  = parseInt(document.getElementById('ed-min').value) || currentItem.min;
+  const newName = document.getElementById('ed-name')?.value?.trim();
+  if (newName) { currentItem.name = newName; document.getElementById('dw-title').textContent = newName; }
+  currentItem.loc  = document.getElementById('ed-loc').value || currentItem.loc;
+  currentItem.note = document.getElementById('ed-note').value;
+  const rlSel = document.getElementById('ed-rucher-link');
+  if (rlSel) currentItem.rucher_link = rlSel.value || '';
+  const btn = document.querySelector('.dw-footer .btn-primary');
+  btn.textContent = '✓ Enregistré !';
+  setTimeout(async ()=>{
+    btn.textContent='💾 Enregistrer';
+    closeDrawer(); renderGrid(); renderTabs(); updateBilan();
+    await persistStock();
+  }, 1000);
+}
+// ── Ouvrir le drawer par ID ──
+function openDrawerById(id) {
+  const item = STOCK.find(i => i.id === id);
+  if (item) openDrawer(item);
+}
+
+// ── Supprimer l'article courant ──
+function deleteCurrentItem() {
+  if (!currentItem) return;
+  if (!confirm('Supprimer "' + currentItem.name + '" ?')) return;
+  STOCK = STOCK.filter(i => i.id !== currentItem.id);
+  closeDrawer();
+  renderGrid(); renderTabs(); updateBilan();
+  persistStock();
+  showToast('Article supprime');
+}
+
+// ── Toast ──
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bark);color:var(--honey-pale);padding:10px 20px;border-radius:50px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.25);';
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2800);
+}
+
+// ── Ajouter un nouvel article ──
+function openNewArticle(){
+  const maxId = STOCK.reduce((m, i) => Math.max(m, i.id||0), 0);
+  const newItem = {
+    id: maxId + 1, cat: currentCat==='all'?'hausses':currentCat,
+    icon:'📦', name:'Nouvel article', unit:'unité(s)', qty:0, min:5, loc:'Atelier', note:'', history:[]
+  };
+  STOCK.push(newItem);
+  renderGrid(); renderTabs(); updateBilan();
+  persistStock();
+  openDrawer(STOCK[STOCK.length - 1]);
+}
+
+// ── INIT déclenché par onAuthStateChanged ──
+
+// ── Exposer les fonctions pour les onclick HTML (requis avec type="module") ──
+// Exposer la fonction de décrémentation pour 02-au-rucher (cross-page via Firestore)
+// Cette fonction est appelée dans 02-au-rucher._saveVisiteFirestore()
+window.closeDrawer        = closeDrawer;
+window.openDrawer         = openDrawer;
+window.openDrawerById     = openDrawerById;
+window.openNewArticle     = openNewArticle;
+window.saveMvt            = saveMvt;
+window.selMvt             = selMvt;
+window.adjustQty          = adjustQty;
+window.deleteCurrentItem  = deleteCurrentItem;
+</script>
+
+
+<script>
+
+// ════ MOBILE SIDEBAR ════
+function toggleMobileSidebar(){
+  const sb=document.getElementById('sidebar'),ov=document.getElementById('sb-overlay');
+  if(!sb||!ov) return;
+  sb.classList.toggle('mobile-open');ov.classList.toggle('open');
+  if(sb.classList.contains('mobile-open')) sb.style.display='flex';
+}
+function closeMobileSidebar(){
+  const sb=document.getElementById('sidebar'),ov=document.getElementById('sb-overlay');
+  if(!sb||!ov) return;
+  sb.classList.remove('mobile-open');ov.classList.remove('open');
+  sb.style.display='';
+}
+
+// ════ PWA SERVICE WORKER ════
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  });
+}
+
+</script>
+
+<nav class="bottom-nav" id="bottom-nav">
+  <a href="https://rucher-9bb59.web.app/01-tableau-de-bord.html" class="bn-item" data-page="tableau-de-bord"><span>🏠</span><span>Accueil</span></a>
+  <a href="https://rucher-9bb59.web.app/02-au-rucher.html" class="bn-item" data-page="au-rucher"><span>🏕️</span><span>Rucher</span></a>
+  <a href="https://rucher-9bb59.web.app/05-recoltes.html" class="bn-item" data-page="recoltes"><span>🍯</span><span>Récoltes</span></a>
+  <a href="https://rucher-9bb59.web.app/06-vente.html" class="bn-item" data-page="vente"><span>🛒</span><span>Vente</span></a>
+  <a href="https://rucher-9bb59.web.app/03-atelier.html" class="bn-item" data-page="atelier"><span>🔧</span><span>Atelier</span></a>
+</nav>
+</body></html>

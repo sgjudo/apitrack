@@ -1,0 +1,37 @@
+{
+  "name": "ApiTrack — Le Rucher de Céline",
+  "short_name": "ApiTrack",
+  "description": "Gestion apicole — Le Rucher de Céline",
+  "start_url": "/01-tableau-de-bord.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FAF0D0",
+  "theme_color": "#007A38",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Au Rucher",
+      "url": "/02-au-rucher.html",
+      "icons": [{ "src": "/logo.jpg", "sizes": "96x96" }]
+    },
+    {
+      "name": "Récoltes",
+      "url": "/05-recoltes.html",
+      "icons": [{ "src": "/logo.jpg", "sizes": "96x96" }]
+    }
+  ]
+}
